@@ -133,7 +133,7 @@ Welcome to the **Programming Languages Documentation Hub** — your comprehensiv
 
 **Legend:**
 - 🟢 **Complete** (8 languages)
-- 🟡 **In Progress** (0 languages)  
+- 🟡 **In Progress** (0 languages)
 - 🔴 **Planned** (9 languages)
 
 </div>
@@ -280,9 +280,9 @@ Special thanks to:
 
 ### ⭐ **If you find this helpful, please give it a star!**
 
-[![Stars](https://img.shields.io/github/stars/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/programming-docs)
-[![Forks](https://img.shields.io/github/forks/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/programming-docs)
-[![Watchers](https://img.shields.io/github/watchers/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/programming-docs)
+[![Stars](https://img.shields.io/github/stars/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
+[![Forks](https://img.shields.io/github/forks/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
+[![Watchers](https://img.shields.io/github/watchers/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
 
 ---
 
