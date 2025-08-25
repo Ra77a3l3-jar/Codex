@@ -6539,29 +6539,338 @@ T findMax(const std::vector<T>& vec) {
 
 int main() {
     std::cout << "=== Concepts Demo ===" << std::endl;
-
+    
     // Numeric concept
     std::cout << "multiply(5, 3) = " << multiply(5, 3) << std::endl;
     std::cout << "multiply(2.5, 4.0) = " << multiply(2.5, 4.0) << std::endl;
-
+    
     // Printable concept
     print(42);
     print(std::string("Hello, Concepts!"));
     print(3.14159);
-
+    
     // Container concept
     std::vector<int> numbers = {1, 2, 3, 4, 5};
     printContainer(numbers);
-
+    
     std::string text = "Hello";
     printContainer(text);  // string is a container of chars
-
+    
     // Comparable concept
     std::cout << "Max in vector: " << findMax(numbers) << std::endl;
-
+    
     return 0;
 }
 ```
+
+### ⚠️ Common Pitfalls
+
+1. **Template Instantiation Errors**: Errors only appear when templates are instantiated
+2. **Specialization Ambiguity**: Multiple specializations can match the same type
+3. **SFINAE Complexity**: Substitution Failure Is Not An Error can be hard to debug
+4. **Concept Requirements**: C++20 concepts must be carefully designed
+5. **Compilation Time**: Heavy template usage can slow compilation
+
+### ✅ Best Practices
+
+1. **Prefer Concepts**: Use C++20 concepts instead of SFINAE when possible
+2. **Template Constraints**: Always constrain your templates appropriately
+3. **Clear Error Messages**: Design templates to give meaningful error messages
+4. **Avoid Deep Nesting**: Keep template specialization hierarchies simple
+5. **Document Requirements**: Clearly document what types your templates expect
+
+### 🏋️ Exercises
+
+#### 🏋️ Exercise 1: Advanced Template Library
+**Difficulty:** 🔴 Advanced  
+**Estimated Time:** 45 minutes
+
+Create a comprehensive template library that demonstrates function templates, class templates, specialization, and C++20 concepts.
+
+<details>
+<summary>💡 Click to see hints</summary>
+
+- Create a generic container template with specializations
+- Use concepts to constrain template parameters
+- Include both partial and full specializations
+- Add SFINAE examples for older C++ versions
+- Demonstrate template metaprogramming techniques
+
+</details>
+
+<details>
+<summary>✅ Click to see solution</summary>
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <type_traits>
+#include <concepts>
+#include <string>
+#include <memory>
+
+// C++20 Concepts
+template<typename T>
+concept Arithmetic = std::is_arithmetic_v<T>;
+
+template<typename T>
+concept Printable = requires(T t) {
+    std::cout << t;
+};
+
+template<typename T>
+concept Comparable = requires(T a, T b) {
+    { a < b } -> std::convertible_to<bool>;
+    { a > b } -> std::convertible_to<bool>;
+};
+
+// Primary template for a generic container
+template<typename T, size_t N = 10>
+class Container {
+private:
+    T data[N];
+    size_t current_size = 0;
+    
+public:
+    Container() = default;
+    
+    void push(const T& item) requires Printable<T> {
+        if (current_size < N) {
+            data[current_size++] = item;
+            std::cout << "Added: " << item << std::endl;
+        } else {
+            std::cout << "Container full!" << std::endl;
+        }
+    }
+    
+    T& operator[](size_t index) {
+        return data[index];
+    }
+    
+    const T& operator[](size_t index) const {
+        return data[index];
+    }
+    
+    size_t size() const { return current_size; }
+    constexpr size_t capacity() const { return N; }
+    
+    void display() const requires Printable<T> {
+        std::cout << "Container contents: ";
+        for (size_t i = 0; i < current_size; ++i) {
+            std::cout << data[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+    T findMax() const requires Comparable<T> {
+        if (current_size == 0) throw std::runtime_error("Empty container");
+        
+        T max_val = data[0];
+        for (size_t i = 1; i < current_size; ++i) {
+            if (data[i] > max_val) {
+                max_val = data[i];
+            }
+        }
+        return max_val;
+    }
+};
+
+// Partial specialization for pointers
+template<typename T, size_t N>
+class Container<T*, N> {
+private:
+    T* data[N];
+    size_t current_size = 0;
+    
+public:
+    Container() {
+        for (size_t i = 0; i < N; ++i) {
+            data[i] = nullptr;
+        }
+    }
+    
+    ~Container() {
+        for (size_t i = 0; i < current_size; ++i) {
+            delete data[i];
+        }
+    }
+    
+    void push(T* item) {
+        if (current_size < N) {
+            data[current_size++] = item;
+            std::cout << "Added pointer to: " << *item << std::endl;
+        } else {
+            std::cout << "Container full!" << std::endl;
+        }
+    }
+    
+    T* operator[](size_t index) {
+        return data[index];
+    }
+    
+    size_t size() const { return current_size; }
+    constexpr size_t capacity() const { return N; }
+    
+    void display() const {
+        std::cout << "Pointer container contents: ";
+        for (size_t i = 0; i < current_size; ++i) {
+            if (data[i]) {
+                std::cout << *data[i] << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+};
+
+// Full specialization for strings
+template<size_t N>
+class Container<std::string, N> {
+private:
+    std::string data[N];
+    size_t current_size = 0;
+    
+public:
+    Container() = default;
+    
+    void push(const std::string& item) {
+        if (current_size < N) {
+            data[current_size++] = item;
+            std::cout << "Added string: \"" << item << "\"" << std::endl;
+        } else {
+            std::cout << "String container full!" << std::endl;
+        }
+    }
+    
+    std::string& operator[](size_t index) {
+        return data[index];
+    }
+    
+    const std::string& operator[](size_t index) const {
+        return data[index];
+    }
+    
+    size_t size() const { return current_size; }
+    constexpr size_t capacity() const { return N; }
+    
+    void display() const {
+        std::cout << "String container contents:" << std::endl;
+        for (size_t i = 0; i < current_size; ++i) {
+            std::cout << "  [" << i << "]: \"" << data[i] << "\"" << std::endl;
+        }
+    }
+    
+    std::string concatenateAll() const {
+        std::string result;
+        for (size_t i = 0; i < current_size; ++i) {
+            if (i > 0) result += " ";
+            result += data[i];
+        }
+        return result;
+    }
+};
+
+// Template metaprogramming example
+template<int N>
+struct Factorial {
+    static constexpr int value = N * Factorial<N-1>::value;
+};
+
+template<>
+struct Factorial<0> {
+    static constexpr int value = 1;
+};
+
+// SFINAE example for backward compatibility
+template<typename T>
+typename std::enable_if_t<std::is_arithmetic_v<T>, T>
+safe_divide(T a, T b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero");
+    }
+    return a / b;
+}
+
+template<typename T>
+typename std::enable_if_t<!std::is_arithmetic_v<T>, std::string>
+safe_divide(T a, T b) {
+    return "Cannot divide non-arithmetic types";
+}
+
+// Variadic template example
+template<typename First, typename... Rest>
+auto sum(First first, Rest... rest) {
+    if constexpr (sizeof...(rest) == 0) {
+        return first;
+    } else {
+        return first + sum(rest...);
+    }
+}
+
+// Template alias
+template<typename T>
+using SmartContainer = Container<std::unique_ptr<T>, 5>;
+
+int main() {
+    std::cout << "=== Advanced Template Library Demo ===" << std::endl;
+    
+    // Primary template
+    Container<int, 5> intContainer;
+    intContainer.push(1);
+    intContainer.push(5);
+    intContainer.push(3);
+    intContainer.display();
+    std::cout << "Max value: " << intContainer.findMax() << std::endl;
+    
+    std::cout << std::endl;
+    
+    // Pointer specialization
+    Container<int*, 3> ptrContainer;
+    ptrContainer.push(new int(10));
+    ptrContainer.push(new int(20));
+    ptrContainer.push(new int(15));
+    ptrContainer.display();
+    
+    std::cout << std::endl;
+    
+    // String specialization
+    Container<std::string, 4> stringContainer;
+    stringContainer.push("Hello");
+    stringContainer.push("World");
+    stringContainer.push("Template");
+    stringContainer.push("Specialization");
+    stringContainer.display();
+    std::cout << "Concatenated: \"" << stringContainer.concatenateAll() << "\"" << std::endl;
+    
+    std::cout << std::endl;
+    
+    // Template metaprogramming
+    std::cout << "Factorial<5>::value = " << Factorial<5>::value << std::endl;
+    std::cout << "Factorial<0>::value = " << Factorial<0>::value << std::endl;
+    
+    // SFINAE examples
+    std::cout << "safe_divide(10.0, 2.0) = " << safe_divide(10.0, 2.0) << std::endl;
+    std::cout << "safe_divide(string, string) = " << safe_divide(std::string("a"), std::string("b")) << std::endl;
+    
+    // Variadic templates
+    std::cout << "sum(1, 2, 3, 4, 5) = " << sum(1, 2, 3, 4, 5) << std::endl;
+    std::cout << "sum(1.1, 2.2, 3.3) = " << sum(1.1, 2.2, 3.3) << std::endl;
+    
+    return 0;
+}
+```
+
+**Explanation:**
+- Comprehensive template library with primary template and specializations
+- C++20 concepts used for template constraints
+- Template metaprogramming with compile-time factorial calculation
+- SFINAE for backward compatibility with older C++ standards
+- Variadic templates for flexible function parameters
+- Proper resource management in pointer specialization
+- Advanced template techniques combined in practical examples
+
+</details>
+
+[Back to top](#-c-documentation)
 
 [Back to top](#-c-documentation)
 
@@ -7102,10 +7411,358 @@ int main() {
     demonstrateModifyingAlgorithms();
     demonstrateSortingAlgorithms();
     demonstrateNumericAlgorithms();
-
+    
     return 0;
 }
 ```
+
+### Function Objects
+
+#### Custom Function Objects and Predicates
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <functional>
+#include <string>
+
+// Custom function object (functor)
+class MultiplyBy {
+private:
+    int factor;
+    
+public:
+    MultiplyBy(int f) : factor(f) {}
+    
+    int operator()(int value) const {
+        return value * factor;
+    }
+};
+
+// Predicate function object
+class IsEven {
+public:
+    bool operator()(int value) const {
+        return value % 2 == 0;
+    }
+};
+
+// Stateful function object
+class Counter {
+private:
+    mutable int count = 0;
+    
+public:
+    int operator()(int value) const {
+        return ++count;
+    }
+    
+    int getCount() const { return count; }
+};
+
+void demonstrateFunctionObjects() {
+    std::cout << "=== Function Objects Demo ===" << std::endl;
+    
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    // Using custom function object
+    std::vector<int> doubled(numbers.size());
+    std::transform(numbers.begin(), numbers.end(), doubled.begin(), MultiplyBy(2));
+    
+    std::cout << "Doubled: ";
+    for (int n : doubled) std::cout << n << " ";
+    std::cout << std::endl;
+    
+    // Using predicate function object
+    auto evenCount = std::count_if(numbers.begin(), numbers.end(), IsEven());
+    std::cout << "Even numbers count: " << evenCount << std::endl;
+    
+    // Using stateful function object
+    Counter counter;
+    std::for_each(numbers.begin(), numbers.end(), counter);
+    std::cout << "Processed " << counter.getCount() << " elements" << std::endl;
+    
+    // Standard function objects
+    std::sort(numbers.begin(), numbers.end(), std::greater<int>());
+    std::cout << "Sorted descending: ";
+    for (int n : numbers) std::cout << n << " ";
+    std::cout << std::endl;
+}
+
+int main() {
+    demonstrateFunctionObjects();
+    return 0;
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Iterator Invalidation**: Modifying containers while iterating can invalidate iterators
+2. **Algorithm Requirements**: Not all algorithms work with all iterator types
+3. **Performance Considerations**: Choose appropriate containers for your use case
+4. **Memory Management**: Be careful with raw pointers in containers
+5. **Exception Safety**: STL operations can throw exceptions
+
+### ✅ Best Practices
+
+1. **Use Range-Based Loops**: Prefer range-based for loops when possible
+2. **Choose Right Container**: Select containers based on performance requirements
+3. **Const Correctness**: Use const iterators when not modifying data
+4. **Algorithm Selection**: Use appropriate STL algorithms instead of manual loops
+5. **Smart Pointers**: Use smart pointers instead of raw pointers in containers
+
+### 🏋️ Exercises
+
+#### 🏋️ Exercise 1: Custom Container with STL Integration
+**Difficulty:** 🟡 Intermediate  
+**Estimated Time:** 40 minutes
+
+Create a custom container that integrates seamlessly with STL algorithms and follows STL conventions.
+
+<details>
+<summary>💡 Click to see hints</summary>
+
+- Implement proper iterator types and member functions
+- Follow STL naming conventions (begin(), end(), size(), etc.)
+- Make your container work with range-based for loops
+- Include proper type aliases (value_type, iterator, etc.)
+- Test with various STL algorithms
+
+</details>
+
+<details>
+<summary>✅ Click to see solution</summary>
+
+```cpp
+#include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <numeric>
+
+template<typename T, size_t Capacity>
+class CircularBuffer {
+public:
+    using value_type = T;
+    using size_type = size_t;
+    using difference_type = std::ptrdiff_t;
+    using reference = T&;
+    using const_reference = const T&;
+    using pointer = T*;
+    using const_pointer = const T*;
+    
+private:
+    T buffer[Capacity];
+    size_type head = 0;
+    size_type count = 0;
+    
+public:
+    // Iterator class
+    class iterator {
+    private:
+        CircularBuffer* container;
+        size_type index;
+        
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using reference = T&;
+        
+        iterator(CircularBuffer* c, size_type i) : container(c), index(i) {}
+        
+        reference operator*() { return (*container)[index]; }
+        pointer operator->() { return &(*container)[index]; }
+        
+        iterator& operator++() { ++index; return *this; }
+        iterator operator++(int) { iterator tmp = *this; ++index; return tmp; }
+        
+        iterator& operator--() { --index; return *this; }
+        iterator operator--(int) { iterator tmp = *this; --index; return tmp; }
+        
+        iterator& operator+=(difference_type n) { index += n; return *this; }
+        iterator& operator-=(difference_type n) { index -= n; return *this; }
+        
+        iterator operator+(difference_type n) const { return iterator(container, index + n); }
+        iterator operator-(difference_type n) const { return iterator(container, index - n); }
+        
+        difference_type operator-(const iterator& other) const { return index - other.index; }
+        
+        reference operator[](difference_type n) { return (*container)[index + n]; }
+        
+        bool operator==(const iterator& other) const { return index == other.index; }
+        bool operator!=(const iterator& other) const { return index != other.index; }
+        bool operator<(const iterator& other) const { return index < other.index; }
+        bool operator>(const iterator& other) const { return index > other.index; }
+        bool operator<=(const iterator& other) const { return index <= other.index; }
+        bool operator>=(const iterator& other) const { return index >= other.index; }
+    };
+    
+    class const_iterator {
+    private:
+        const CircularBuffer* container;
+        size_type index;
+        
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = const T*;
+        using reference = const T&;
+        
+        const_iterator(const CircularBuffer* c, size_type i) : container(c), index(i) {}
+        
+        reference operator*() const { return (*container)[index]; }
+        pointer operator->() const { return &(*container)[index]; }
+        
+        const_iterator& operator++() { ++index; return *this; }
+        const_iterator operator++(int) { const_iterator tmp = *this; ++index; return tmp; }
+        
+        const_iterator& operator--() { --index; return *this; }
+        const_iterator operator--(int) { const_iterator tmp = *this; --index; return tmp; }
+        
+        const_iterator& operator+=(difference_type n) { index += n; return *this; }
+        const_iterator& operator-=(difference_type n) { index -= n; return *this; }
+        
+        const_iterator operator+(difference_type n) const { return const_iterator(container, index + n); }
+        const_iterator operator-(difference_type n) const { return const_iterator(container, index - n); }
+        
+        difference_type operator-(const const_iterator& other) const { return index - other.index; }
+        
+        reference operator[](difference_type n) const { return (*container)[index + n]; }
+        
+        bool operator==(const const_iterator& other) const { return index == other.index; }
+        bool operator!=(const const_iterator& other) const { return index != other.index; }
+        bool operator<(const const_iterator& other) const { return index < other.index; }
+        bool operator>(const const_iterator& other) const { return index > other.index; }
+        bool operator<=(const const_iterator& other) const { return index <= other.index; }
+        bool operator>=(const const_iterator& other) const { return index >= other.index; }
+    };
+    
+    CircularBuffer() = default;
+    
+    void push_back(const T& value) {
+        if (count < Capacity) {
+            buffer[(head + count) % Capacity] = value;
+            ++count;
+        } else {
+            buffer[head] = value;
+            head = (head + 1) % Capacity;
+        }
+    }
+    
+    void pop_front() {
+        if (count > 0) {
+            head = (head + 1) % Capacity;
+            --count;
+        }
+    }
+    
+    reference operator[](size_type index) {
+        return buffer[(head + index) % Capacity];
+    }
+    
+    const_reference operator[](size_type index) const {
+        return buffer[(head + index) % Capacity];
+    }
+    
+    reference front() { return buffer[head]; }
+    const_reference front() const { return buffer[head]; }
+    
+    reference back() { return buffer[(head + count - 1) % Capacity]; }
+    const_reference back() const { return buffer[(head + count - 1) % Capacity]; }
+    
+    iterator begin() { return iterator(this, 0); }
+    iterator end() { return iterator(this, count); }
+    
+    const_iterator begin() const { return const_iterator(this, 0); }
+    const_iterator end() const { return const_iterator(this, count); }
+    
+    const_iterator cbegin() const { return const_iterator(this, 0); }
+    const_iterator cend() const { return const_iterator(this, count); }
+    
+    size_type size() const { return count; }
+    constexpr size_type max_size() const { return Capacity; }
+    bool empty() const { return count == 0; }
+    bool full() const { return count == Capacity; }
+    
+    void clear() {
+        head = 0;
+        count = 0;
+    }
+};
+
+int main() {
+    std::cout << "=== Custom Container STL Integration Demo ===" << std::endl;
+    
+    CircularBuffer<int, 5> buffer;
+    
+    // Fill the buffer
+    for (int i = 1; i <= 7; ++i) {
+        buffer.push_back(i * 10);
+        std::cout << "Added " << (i * 10) << ", buffer size: " << buffer.size() << std::endl;
+    }
+    
+    // Use with range-based for loop
+    std::cout << "Buffer contents: ";
+    for (const auto& value : buffer) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // Use with STL algorithms
+    auto maxElement = std::max_element(buffer.begin(), buffer.end());
+    if (maxElement != buffer.end()) {
+        std::cout << "Maximum element: " << *maxElement << std::endl;
+    }
+    
+    // Transform elements
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), 
+                   [](int x) { return x / 10; });
+    
+    std::cout << "After transformation: ";
+    for (const auto& value : buffer) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // Use accumulate
+    int sum = std::accumulate(buffer.begin(), buffer.end(), 0);
+    std::cout << "Sum of elements: " << sum << std::endl;
+    
+    // Sort the buffer
+    std::sort(buffer.begin(), buffer.end(), std::greater<int>());
+    
+    std::cout << "After sorting (descending): ";
+    for (const auto& value : buffer) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // Find element
+    auto found = std::find(buffer.begin(), buffer.end(), 5);
+    if (found != buffer.end()) {
+        std::cout << "Found element 5 at position: " 
+                  << std::distance(buffer.begin(), found) << std::endl;
+    }
+    
+    return 0;
+}
+```
+
+**Explanation:**
+- Complete STL-compatible circular buffer implementation
+- Proper iterator implementation with all required operations
+- STL-style member functions and type aliases
+- Integration with range-based for loops and STL algorithms
+- Demonstrates advanced iterator concepts and STL design principles
+- Shows how custom containers can seamlessly work with existing STL code
+
+</details>
+
+[Back to top](#-c-documentation)
 
 [Back to top](#-c-documentation)
 
@@ -7377,10 +8034,176 @@ void demonstrateTransactionRollback() {
 int main() {
     demonstrateRAIIExceptionSafety();
     demonstrateTransactionRollback();
-
+    
     return 0;
 }
 ```
+
+### Error Codes
+
+#### Alternative Error Handling Approaches
+
+```cpp
+#include <iostream>
+#include <optional>
+#include <variant>
+#include <string>
+#include <system_error>
+
+// Custom error codes
+enum class FileError {
+    SUCCESS = 0,
+    FILE_NOT_FOUND,
+    PERMISSION_DENIED,
+    DISK_FULL,
+    INVALID_FORMAT
+};
+
+// Error category for custom errors
+class FileErrorCategory : public std::error_category {
+public:
+    const char* name() const noexcept override {
+        return "file_error";
+    }
+    
+    std::string message(int ev) const override {
+        switch (static_cast<FileError>(ev)) {
+            case FileError::SUCCESS: return "Success";
+            case FileError::FILE_NOT_FOUND: return "File not found";
+            case FileError::PERMISSION_DENIED: return "Permission denied";
+            case FileError::DISK_FULL: return "Disk full";
+            case FileError::INVALID_FORMAT: return "Invalid file format";
+            default: return "Unknown error";
+        }
+    }
+};
+
+const FileErrorCategory& file_error_category() {
+    static FileErrorCategory instance;
+    return instance;
+}
+
+std::error_code make_error_code(FileError e) {
+    return std::error_code(static_cast<int>(e), file_error_category());
+}
+
+// Make FileError compatible with std::error_code
+namespace std {
+    template<>
+    struct is_error_code_enum<FileError> : true_type {};
+}
+
+// Result type using std::variant
+template<typename T, typename E>
+class Result {
+private:
+    std::variant<T, E> data;
+    
+public:
+    Result(const T& value) : data(value) {}
+    Result(const E& error) : data(error) {}
+    
+    bool hasValue() const {
+        return std::holds_alternative<T>(data);
+    }
+    
+    bool hasError() const {
+        return std::holds_alternative<E>(data);
+    }
+    
+    const T& getValue() const {
+        return std::get<T>(data);
+    }
+    
+    const E& getError() const {
+        return std::get<E>(data);
+    }
+    
+    T valueOr(const T& defaultValue) const {
+        return hasValue() ? getValue() : defaultValue;
+    }
+};
+
+// Example functions using different error handling approaches
+std::optional<std::string> readFileOptional(const std::string& filename) {
+    if (filename.empty()) {
+        return std::nullopt;
+    }
+    if (filename == "missing.txt") {
+        return std::nullopt;
+    }
+    return "File contents: " + filename;
+}
+
+Result<std::string, FileError> readFileResult(const std::string& filename) {
+    if (filename.empty()) {
+        return FileError::INVALID_FORMAT;
+    }
+    if (filename == "missing.txt") {
+        return FileError::FILE_NOT_FOUND;
+    }
+    if (filename == "protected.txt") {
+        return FileError::PERMISSION_DENIED;
+    }
+    return std::string("File contents: " + filename);
+}
+
+std::pair<std::string, std::error_code> readFileErrorCode(const std::string& filename) {
+    if (filename.empty()) {
+        return {"", make_error_code(FileError::INVALID_FORMAT)};
+    }
+    if (filename == "missing.txt") {
+        return {"", make_error_code(FileError::FILE_NOT_FOUND)};
+    }
+    if (filename == "protected.txt") {
+        return {"", make_error_code(FileError::PERMISSION_DENIED)};
+    }
+    return {"File contents: " + filename, make_error_code(FileError::SUCCESS)};
+}
+
+void demonstrateErrorCodes() {
+    std::cout << "=== Error Code Handling Demo ===" << std::endl;
+    
+    // Using std::optional
+    std::cout << "1. Using std::optional:" << std::endl;
+    auto opt1 = readFileOptional("test.txt");
+    if (opt1) {
+        std::cout << "Success: " << *opt1 << std::endl;
+    } else {
+        std::cout << "Failed to read file" << std::endl;
+    }
+    
+    auto opt2 = readFileOptional("missing.txt");
+    if (!opt2) {
+        std::cout << "File not found (optional approach)" << std::endl;
+    }
+    
+    // Using Result type
+    std::cout << "\n2. Using Result type:" << std::endl;
+    auto result1 = readFileResult("test.txt");
+    if (result1.hasValue()) {
+        std::cout << "Success: " << result1.getValue() << std::endl;
+    } else {
+        std::cout << "Error: " << static_cast<int>(result1.getError()) << std::endl;
+    }
+    
+    auto result2 = readFileResult("protected.txt");
+    if (result2.hasError()) {
+        std::cout << "Access denied: " << static_cast<int>(result2.getError()) << std::endl;
+    }
+    
+    // Using std::error_code
+    std::cout << "\n3. Using std::error_code:" << std::endl;
+    auto [content, ec] = readFileErrorCode("test.txt");
+    if (!ec) {
+        std::cout << "Success: " << content << std::endl;
+    } else {
+        std::cout << "Error: " << ec.message() << std::endl;
+    }
+    
+    auto [content2, ec2] = readFileErrorCode("missing.txt");
+    if (ec2) {
+        std::cout << "Error (" << ec
 
 [Back to top](#-c-documentation)
 
@@ -7911,7 +8734,762 @@ void demonstrateProducerConsumer() {
 int main() {
     demonstrateMutex();
     demonstrateProducerConsumer();
+    
+    return 0;
+}
+```
 
+### Atomic Operations
+
+#### Lock-free Programming with Atomics
+
+```cpp
+#include <iostream>
+#include <atomic>
+#include <thread>
+#include <vector>
+#include <chrono>
+
+class LockFreeStack {
+private:
+    struct Node {
+        std::atomic<Node*> next;
+        int data;
+        
+        Node(int value) : data(value), next(nullptr) {}
+    };
+    
+    std::atomic<Node*> head{nullptr};
+    
+public:
+    void push(int value) {
+        Node* newNode = new Node(value);
+        Node* prevHead = head.load();
+        
+        do {
+            newNode->next = prevHead;
+        } while (!head.compare_exchange_weak(prevHead, newNode));
+    }
+    
+    bool pop(int& result) {
+        Node* prevHead = head.load();
+        
+        while (prevHead && !head.compare_exchange_weak(prevHead, prevHead->next)) {
+            // Keep trying
+        }
+        
+        if (!prevHead) {
+            return false;
+        }
+        
+        result = prevHead->data;
+        delete prevHead;
+        return true;
+    }
+    
+    bool empty() const {
+        return head.load() == nullptr;
+    }
+};
+
+void demonstrateAtomicOperations() {
+    std::cout << "=== Atomic Operations Demo ===" << std::endl;
+    
+    // Basic atomic operations
+    std::atomic<int> counter{0};
+    std::atomic<bool> flag{false};
+    
+    const int numThreads = 4;
+    const int increments = 10000;
+    
+    std::vector<std::thread> threads;
+    
+    auto start = std::chrono::high_resolution_clock::now();
+    
+    // Launch threads that increment counter
+    for (int i = 0; i < numThreads; ++i) {
+        threads.emplace_back([&counter, increments]() {
+            for (int j = 0; j < increments; ++j) {
+                counter.fetch_add(1, std::memory_order_relaxed);
+            }
+        });
+    }
+    
+    // Wait for completion
+    for (auto& t : threads) {
+        t.join();
+    }
+    
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    
+    std::cout << "Expected count: " << (numThreads * increments) << std::endl;
+    std::cout << "Actual count: " << counter.load() << std::endl;
+    std::cout << "Time taken: " << duration.count() << "ms" << std::endl;
+    
+    // Test lock-free stack
+    std::cout << "\nTesting lock-free stack:" << std::endl;
+    LockFreeStack stack;
+    
+    // Push some values
+    for (int i = 1; i <= 5; ++i) {
+        stack.push(i * 10);
+        std::cout << "Pushed: " << (i * 10) << std::endl;
+    }
+    
+    // Pop values
+    int value;
+    while (stack.pop(value)) {
+        std::cout << "Popped: " << value << std::endl;
+    }
+}
+
+// Memory ordering examples
+void demonstrateMemoryOrdering() {
+    std::cout << "\n=== Memory Ordering Demo ===" << std::endl;
+    
+    std::atomic<int> x{0}, y{0};
+    std::atomic<int> r1{0}, r2{0};
+    
+    std::thread t1([&]() {
+        x.store(1, std::memory_order_release);
+        r1.store(y.load(std::memory_order_acquire));
+    });
+    
+    std::thread t2([&]() {
+        y.store(1, std::memory_order_release);
+        r2.store(x.load(std::memory_order_acquire));
+    });
+    
+    t1.join();
+    t2.join();
+    
+    std::cout << "r1: " << r1.load() << ", r2: " << r2.load() << std::endl;
+    std::cout << "Memory ordering ensures proper synchronization" << std::endl;
+}
+
+int main() {
+    demonstrateAtomicOperations();
+    demonstrateMemoryOrdering();
+    
+    return 0;
+}
+```
+
+### Parallel Algorithms
+
+#### C++17 Execution Policies
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <execution>
+#include <chrono>
+#include <numeric>
+#include <random>
+
+void demonstrateParallelAlgorithms() {
+    std::cout << "=== Parallel Algorithms Demo ===" << std::endl;
+    
+    // Create large vector for testing
+    const size_t size = 1000000;
+    std::vector<int> data(size);
+    
+    // Fill with random data
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(1, 1000);
+    
+    std::generate(data.begin(), data.end(), [&]() { return dis(gen); });
+    
+    // Test sequential vs parallel sort
+    std::vector<int> seqData = data;
+    std::vector<int> parData = data;
+    
+    // Sequential sort
+    auto start = std::chrono::high_resolution_clock::now();
+    std::sort(seqData.begin(), seqData.end());
+    auto end = std::chrono::high_resolution_clock::now();
+    auto seqTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    
+    // Parallel sort
+    start = std::chrono::high_resolution_clock::now();
+    std::sort(std::execution::par, parData.begin(), parData.end());
+    end = std::chrono::high_resolution_clock::now();
+    auto parTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    
+    std::cout << "Sequential sort time: " << seqTime.count() << "ms" << std::endl;
+    std::cout << "Parallel sort time: " << parTime.count() << "ms" << std::endl;
+    std::cout << "Speedup: " << (double)seqTime.count() / parTime.count() << "x" << std::endl;
+    
+    // Verify results are identical
+    bool same = std::equal(seqData.begin(), seqData.end(), parData.begin());
+    std::cout << "Results identical: " << (same ? "Yes" : "No") << std::endl;
+    
+    // Other parallel algorithms
+    std::vector<int> input(1000000, 1);
+    
+    // Parallel accumulate
+    start = std::chrono::high_resolution_clock::now();
+    long long seqSum = std::accumulate(input.begin(), input.end(), 0LL);
+    end = std::chrono::high_resolution_clock::now();
+    auto seqAccumTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    
+    start = std::chrono::high_resolution_clock::now();
+    long long parSum = std::reduce(std::execution::par, input.begin(), input.end(), 0LL);
+    end = std::chrono::high_resolution_clock::now();
+    auto parAccumTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    
+    std::cout << "\nAccumulation results:" << std::endl;
+    std::cout << "Sequential sum: " << seqSum << " (" << seqAccumTime.count() << "μs)" << std::endl;
+    std::cout << "Parallel sum: " << parSum << " (" << parAccumTime.count() << "μs)" << std::endl;
+    
+    // Parallel transform
+    std::vector<int> squares(input.size());
+    start = std::chrono::high_resolution_clock::now();
+    std::transform(std::execution::par, input.begin(), input.end(), squares.begin(),
+                   [](int x) { return x * x; });
+    end = std::chrono::high_resolution_clock::now();
+    auto transformTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    
+    std::cout << "Parallel transform time: " << transformTime.count() << "ms" << std::endl;
+}
+
+int main() {
+    demonstrateParallelAlgorithms();
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## 🔄 Modern C++ Features
+
+**📊 Chapter 11 of 14**
+
+🎯 **Learning Objectives:**
+- Master move semantics and perfect forwarding
+- Understand range-based loops and structured bindings
+- Learn about modules and coroutines in C++20
+- Explore other modern C++ features and best practices
+
+⏱️ **Estimated Reading Time:** 30 minutes
+
+📋 **Prerequisites:** Understanding of templates and object-oriented programming
+
+### Move Semantics
+
+#### Understanding Move Operations
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <utility>
+#include <chrono>
+
+class Resource {
+private:
+    std::vector<int> data;
+    std::string name;
+    
+public:
+    // Constructor
+    Resource(const std::string& n, size_t size) : name(n), data(size, 42) {
+        std::cout << "Resource '" << name << "' created with " << size << " elements" << std::endl;
+    }
+    
+    // Copy constructor
+    Resource(const Resource& other) : name(other.name + "_copy"), data(other.data) {
+        std::cout << "Resource copied: " << name << std::endl;
+    }
+    
+    // Move constructor
+    Resource(Resource&& other) noexcept : name(std::move(other.name)), data(std::move(other.data)) {
+        std::cout << "Resource moved: " << name << std::endl;
+        other.name = "moved_from";
+    }
+    
+    // Copy assignment
+    Resource& operator=(const Resource& other) {
+        if (this != &other) {
+            name = other.name + "_assigned";
+            data = other.data;
+            std::cout << "Resource copy-assigned: " << name << std::endl;
+        }
+        return *this;
+    }
+    
+    // Move assignment
+    Resource& operator=(Resource&& other) noexcept {
+        if (this != &other) {
+            name = std::move(other.name);
+            data = std::move(other.data);
+            std::cout << "Resource move-assigned: " << name << std::endl;
+            other.name = "moved_from";
+        }
+        return *this;
+    }
+    
+    // Destructor
+    ~Resource() {
+        std::cout << "Resource destroyed: " << name << std::endl;
+    }
+    
+    const std::string& getName() const { return name; }
+    size_t getSize() const { return data.size(); }
+};
+
+void demonstrateMoveSemantics() {
+    std::cout << "=== Move Semantics Demo ===" << std::endl;
+    
+    // Create resource
+    Resource res1("Original", 1000000);
+    
+    // Copy vs Move timing
+    auto start = std::chrono::high_resolution_clock::now();
+    Resource res2 = res1;  // Copy constructor
+    auto end = std::chrono::high_resolution_clock::now();
+    auto copyTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    
+    start = std::chrono::high_resolution_clock::now();
+    Resource res3 = std::move(res1);  // Move constructor
+    end = std::chrono::high_resolution_clock::now();
+    auto moveTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    
+    std::cout << "Copy time: " << copyTime.count() << "μs" << std::endl;
+    std::cout << "Move time: " << moveTime.count() << "μs" << std::endl;
+    std::cout << "Original resource after move: " << res1.getName() << std::endl;
+}
+
+// Perfect forwarding example
+template<typename T>
+void processValue(T&& value) {
+    std::cout << "Processing: " << value << std::endl;
+    // Forward the value to another function
+    someFunction(std::forward<T>(value));
+}
+
+void someFunction(const std::string& s) {
+    std::cout << "someFunction called with lvalue: " << s << std::endl;
+}
+
+void someFunction(std::string&& s) {
+    std::cout << "someFunction called with rvalue: " << s << std::endl;
+}
+
+int main() {
+    demonstrateMoveSemantics();
+    
+    // Perfect forwarding
+    std::string str = "Hello";
+    processValue(str);                    // Forwards as lvalue
+    processValue(std::string("World"));   // Forwards as rvalue
+    processValue("Temporary");            // Forwards as rvalue
+    
+    return 0;
+}
+```
+
+### Range-based Loops
+
+#### Modern Iteration Techniques
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+#include <ranges>
+
+void demonstrateBasicRangeLoops() {
+    std::cout << "=== Basic Range-based Loops ===" << std::endl;
+    
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    
+    // Basic range-based for loop
+    std::cout << "Numbers: ";
+    for (const auto& num : numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    // Modifying elements
+    std::cout << "Doubling numbers: ";
+    for (auto& num : numbers) {
+        num *= 2;
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    
+    // With maps
+    std::map<std::string, int> ages = {{"Alice", 25}, {"Bob", 30}, {"Charlie", 35}};
+    
+    std::cout << "Ages:" << std::endl;
+    for (const auto& [name, age] : ages) {  // C++17 structured binding
+        std::cout << name << ": " << age << " years old" << std::endl;
+    }
+}
+
+void demonstrateRangesLibrary() {
+    std::cout << "\n=== C++20 Ranges Library ===" << std::endl;
+    
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    
+    // Filter and transform with ranges
+    auto evenSquares = numbers 
+        | std::views::filter([](int n) { return n % 2 == 0; })
+        | std::views::transform([](int n) { return n * n; });
+    
+    std::cout << "Even numbers squared: ";
+    for (int value : evenSquares) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // Take first N elements
+    auto firstFive = numbers | std::views::take(5);
+    std::cout << "First 5 elements: ";
+    for (int value : firstFive) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+    
+    // Reverse view
+    auto reversed = numbers | std::views::reverse;
+    std::cout << "Reversed: ";
+    for (int value : reversed) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    demonstrateBasicRangeLoops();
+    demonstrateRangesLibrary();
+    
+    return 0;
+}
+```
+
+### Structured Bindings
+
+#### C++17 Structured Bindings
+
+```cpp
+#include <iostream>
+#include <tuple>
+#include <map>
+#include <array>
+#include <utility>
+
+struct Point {
+    double x, y, z;
+};
+
+std::tuple<int, std::string, double> getPersonInfo() {
+    return std::make_tuple(25, "Alice", 175.5);
+}
+
+std::pair<bool, std::string> validateInput(const std::string& input) {
+    if (input.empty()) {
+        return {false, "Input cannot be empty"};
+    }
+    return {true, "Input is valid"};
+}
+
+void demonstrateStructuredBindings() {
+    std::cout << "=== Structured Bindings Demo ===" << std::endl;
+    
+    // With tuples
+    auto [age, name, height] = getPersonInfo();
+    std::cout << "Person: " << name << ", Age: " << age << ", Height: " << height << "cm" << std::endl;
+    
+    // With pairs
+    auto [isValid, message] = validateInput("Hello World");
+    std::cout << "Validation result: " << (isValid ? "Valid" : "Invalid") << " - " << message << std::endl;
+    
+    // With structs
+    Point p{1.5, 2.5, 3.5};
+    auto [x, y, z] = p;
+    std::cout << "Point coordinates: (" << x << ", " << y << ", " << z << ")" << std::endl;
+    
+    // With arrays
+    std::array<int, 3> arr = {10, 20, 30};
+    auto [first, second, third] = arr;
+    std::cout << "Array elements: " << first << ", " << second << ", " << third << std::endl;
+    
+    // With maps (in range-based for loop)
+    std::map<std::string, int> scores = {{"Alice", 95}, {"Bob", 87}, {"Charlie", 92}};
+    std::cout << "Scores:" << std::endl;
+    for (const auto& [student, score] : scores) {
+        std::cout << student << ": " << score << std::endl;
+    }
+}
+
+int main() {
+    demonstrateStructuredBindings();
+    return 0;
+}
+```
+
+### Modules (C++20)
+
+#### Modern Code Organization
+
+```cpp
+// math_utils.cppm (module interface)
+export module math_utils;
+
+import <iostream>;
+
+export namespace MathUtils {
+    // Exported functions
+    int add(int a, int b);
+    int multiply(int a, int b);
+    
+    // Exported class
+    class Calculator {
+    private:
+        double result = 0.0;
+        
+    public:
+        void add(double value) { result += value; }
+        void multiply(double value) { result *= value; }
+        void clear() { result = 0.0; }
+        double getResult() const { return result; }
+        
+        void display() const {
+            std::cout << "Calculator result: " << result << std::endl;
+        }
+    };
+    
+    // Exported template
+    template<typename T>
+    T maximum(T a, T b) {
+        return (a > b) ? a : b;
+    }
+}
+
+// Implementation (can be in same file or separate .cpp file)
+namespace MathUtils {
+    int add(int a, int b) {
+        return a + b;
+    }
+    
+    int multiply(int a, int b) {
+        return a * b;
+    }
+}
+
+// main.cpp (module consumer)
+import math_utils;
+import <iostream>;
+
+int main() {
+    std::cout << "=== C++20 Modules Demo ===" << std::endl;
+    
+    // Use exported functions
+    int sum = MathUtils::add(5, 3);
+    int product = MathUtils::multiply(4, 7);
+    
+    std::cout << "5 + 3 = " << sum << std::endl;
+    std::cout << "4 * 7 = " << product << std::endl;
+    
+    // Use exported class
+    MathUtils::Calculator calc;
+    calc.add(10.5);
+    calc.multiply(2.0);
+    calc.display();
+    
+    // Use exported template
+    auto maxInt = MathUtils::maximum(42, 17);
+    auto maxDouble = MathUtils::maximum(3.14, 2.71);
+    
+    std::cout << "max(42, 17) = " << maxInt << std::endl;
+    std::cout << "max(3.14, 2.71) = " << maxDouble << std::endl;
+    
+    return 0;
+}
+```
+
+### Coroutines (C++20)
+
+#### Asynchronous Programming with Coroutines
+
+```cpp
+#include <iostream>
+#include <coroutine>
+#include <thread>
+#include <chrono>
+
+// Simple generator coroutine
+template<typename T>
+class Generator {
+public:
+    struct promise_type {
+        T current_value;
+        
+        auto get_return_object() {
+            return Generator{std::coroutine_handle<promise_type>::from_promise(*this)};
+        }
+        
+        auto initial_suspend() { return std::suspend_always{}; }
+        auto final_suspend() noexcept { return std::suspend_always{}; }
+        void unhandled_exception() { std::terminate(); }
+        
+        auto yield_value(T value) {
+            current_value = value;
+            return std::suspend_always{};
+        }
+        
+        void return_void() {}
+    };
+    
+    std::coroutine_handle<promise_type> coro;
+    
+    explicit Generator(std::coroutine_handle<promise_type> h) : coro(h) {}
+    ~Generator() { if (coro) coro.destroy(); }
+    
+    // Move-only
+    Generator(const Generator&) = delete;
+    Generator& operator=(const Generator&) = delete;
+    Generator(Generator&& other) noexcept : coro(other.coro) { other.coro = {}; }
+    Generator& operator=(Generator&& other) noexcept {
+        if (this != &other) {
+            if (coro) coro.destroy();
+            coro = other.coro;
+            other.coro = {};
+        }
+        return *this;
+    }
+    
+    bool next() {
+        coro.resume();
+        return !coro.done();
+    }
+    
+    T value() {
+        return coro.promise().current_value;
+    }
+};
+
+// Coroutine that generates Fibonacci numbers
+Generator<int> fibonacci() {
+    int a = 0, b = 1;
+    
+    while (true) {
+        co_yield a;
+        auto next = a + b;
+        a = b;
+        b = next;
+    }
+}
+
+// Coroutine that generates even numbers
+Generator<int> evenNumbers() {
+    for (int i = 0; ; i += 2) {
+        co_yield i;
+    }
+}
+
+// Task coroutine for async operations
+class Task {
+public:
+    struct promise_type {
+        auto get_return_object() {
+            return Task{std::coroutine_handle<promise_type>::from_promise(*this)};
+        }
+        
+        auto initial_suspend() { return std::suspend_never{}; }
+        auto final_suspend() noexcept { return std::suspend_never{}; }
+        void unhandled_exception() { std::terminate(); }
+        void return_void() {}
+        
+        // Awaiter for delays
+        auto await_transform(std::chrono::milliseconds delay) {
+            struct Awaiter {
+                std::chrono::milliseconds delay;
+                
+                bool await_ready() { return false; }
+                void await_suspend(std::coroutine_handle<> handle) {
+                    std::thread([handle, delay = this->delay]() {
+                        std::this_thread::sleep_for(delay);
+                        handle.resume();
+                    }).detach();
+                }
+                void await_resume() {}
+            };
+            
+            return Awaiter{delay};
+        }
+    };
+    
+    std::coroutine_handle<promise_type> coro;
+    
+    explicit Task(std::coroutine_handle<promise_type> h) : coro(h) {}
+    ~Task() { if (coro) coro.destroy(); }
+    
+    // Move-only
+    Task(const Task&) = delete;
+    Task& operator=(const Task&) = delete;
+    Task(Task&& other) noexcept : coro(other.coro) { other.coro = {}; }
+    Task& operator=(Task&& other) noexcept {
+        if (this != &other) {
+            if (coro) coro.destroy();
+            coro = other.coro;
+            other.coro = {};
+        }
+        return *this;
+    }
+};
+
+// Async task example
+Task asyncTask(int id) {
+    std::cout << "Task " << id << " started" << std::endl;
+    
+    co_await std::chrono::milliseconds(1000);
+    std::cout << "Task " << id << " after 1 second" << std::endl;
+    
+    co_await std::chrono::milliseconds(500);
+    std::cout << "Task " << id << " completed" << std::endl;
+}
+
+void demonstrateCoroutines() {
+    std::cout << "=== C++20 Coroutines Demo ===" << std::endl;
+    
+    // Generator example
+    std::cout << "First 10 Fibonacci numbers:" << std::endl;
+    auto fib = fibonacci();
+    for (int i = 0; i < 10; ++i) {
+        fib.next();
+        std::cout << fib.value() << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "First 10 even numbers:" << std::endl;
+    auto evens = evenNumbers();
+    for (int i = 0; i < 10; ++i) {
+        evens.next();
+        std::cout << evens.value() << " ";
+    }
+    std::cout << std::endl;
+    
+    // Async task example
+    std::cout << "Starting async tasks..." << std::endl;
+    auto task1 = asyncTask(1);
+    auto task2 = asyncTask(2);
+    
+    // Wait for tasks to complete
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "All tasks completed" << std::endl;
+}
+
+int main() {
+    demonstrateCoroutines();
     return 0;
 }
 ```
@@ -8163,6 +9741,834 @@ int main() {
     }
 
     std::cout << "Goodbye!" << std::endl;
+    return 0;
+}
+```
+
+### Project 2: HTTP Client
+
+#### Complete HTTP Client Implementation
+
+```cpp
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <sstream>
+#include <memory>
+#include <functional>
+#include <thread>
+#include <chrono>
+
+#ifdef _WIN32
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+#endif
+
+class HTTPResponse {
+public:
+    int statusCode;
+    std::string statusMessage;
+    std::map<std::string, std::string> headers;
+    std::string body;
+    
+    HTTPResponse() : statusCode(0) {}
+    
+    bool isSuccess() const {
+        return statusCode >= 200 && statusCode < 300;
+    }
+    
+    void print() const {
+        std::cout << "Status: " << statusCode << " " << statusMessage << std::endl;
+        std::cout << "Headers:" << std::endl;
+        for (const auto& [key, value] : headers) {
+            std::cout << "  " << key << ": " << value << std::endl;
+        }
+        std::cout << "Body (" << body.length() << " bytes):" << std::endl;
+        std::cout << body << std::endl;
+    }
+};
+
+class HTTPClient {
+private:
+    std::string userAgent = "C++HTTPClient/1.0";
+    int timeout = 30;
+    
+#ifdef _WIN32
+    bool wsaInitialized = false;
+#endif
+
+public:
+    HTTPClient() {
+#ifdef _WIN32
+        WSADATA wsaData;
+        if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {
+            wsaInitialized = true;
+        }
+#endif
+    }
+    
+    ~HTTPClient() {
+#ifdef _WIN32
+        if (wsaInitialized) {
+            WSACleanup();
+        }
+#endif
+    }
+    
+    void setUserAgent(const std::string& ua) {
+        userAgent = ua;
+    }
+    
+    void setTimeout(int seconds) {
+        timeout = seconds;
+    }
+    
+    HTTPResponse get(const std::string& url) {
+        return request("GET", url, {}, "");
+    }
+    
+    HTTPResponse post(const std::string& url, const std::string& data, 
+                     const std::map<std::string, std::string>& customHeaders = {}) {
+        auto headers = customHeaders;
+        headers["Content-Type"] = "application/x-www-form-urlencoded";
+        headers["Content-Length"] = std::to_string(data.length());
+        return request("POST", url, headers, data);
+    }
+    
+    HTTPResponse request(const std::string& method, const std::string& url,
+                        const std::map<std::string, std::string>& customHeaders = {},
+                        const std::string& body = "") {
+        HTTPResponse response;
+        
+        // Parse URL
+        auto urlParts = parseURL(url);
+        if (urlParts.host.empty()) {
+            response.statusCode = -1;
+            response.statusMessage = "Invalid URL";
+            return response;
+        }
+        
+        // Create socket
+        int sock = socket(AF_INET, SOCK_STREAM, 0);
+        if (sock < 0) {
+            response.statusCode = -1;
+            response.statusMessage = "Failed to create socket";
+            return response;
+        }
+        
+        // Set timeout
+        struct timeval tv;
+        tv.tv_sec = timeout;
+        tv.tv_usec = 0;
+        setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+        setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (const char*)&tv, sizeof(tv));
+        
+        // Resolve host
+        struct hostent* host_entry = gethostbyname(urlParts.host.c_str());
+        if (!host_entry) {
+            response.statusCode = -1;
+            response.statusMessage = "Host resolution failed";
+#ifdef _WIN32
+            closesocket(sock);
+#else
+            close(sock);
+#endif
+            return response;
+        }
+        
+        // Connect
+        struct sockaddr_in server_addr;
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_port = htons(urlParts.port);
+        server_addr.sin_addr = *((struct in_addr*)host_entry->h_addr);
+        
+        if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+            response.statusCode = -1;
+            response.statusMessage = "Connection failed";
+#ifdef _WIN32
+            closesocket(sock);
+#else
+            close(sock);
+#endif
+            return response;
+        }
+        
+        // Build HTTP request
+        std::ostringstream request;
+        request << method << " " << urlParts.path << " HTTP/1.1\r\n";
+        request << "Host: " << urlParts.host << "\r\n";
+        request << "User-Agent: " << userAgent << "\r\n";
+        request << "Connection: close\r\n";
+        
+        // Add custom headers
+        for (const auto& [key, value] : customHeaders) {
+            request << key << ": " << value << "\r\n";
+        }
+        
+        request << "\r\n";
+        if (!body.empty()) {
+            request << body;
+        }
+        
+        std::string requestStr = request.str();
+        
+        // Send request
+        if (send(sock, requestStr.c_str(), requestStr.length(), 0) < 0) {
+            response.statusCode = -1;
+            response.statusMessage = "Failed to send request";
+#ifdef _WIN32
+            closesocket(sock);
+#else
+            close(sock);
+#endif
+            return response;
+        }
+        
+        // Receive response
+        std::string responseStr;
+        char buffer[4096];
+        int bytesReceived;
+        
+        while ((bytesReceived = recv(sock, buffer, sizeof(buffer) - 1, 0)) > 0) {
+            buffer[bytesReceived] = '\0';
+            responseStr += buffer;
+        }
+        
+#ifdef _WIN32
+        closesocket(sock);
+#else
+        close(sock);
+#endif
+        
+        // Parse response
+        parseHTTPResponse(responseStr, response);
+        
+        return response;
+    }
+
+private:
+    struct URLParts {
+        std::string protocol;
+        std::string host;
+        int port;
+        std::string path;
+    };
+    
+    URLParts parseURL(const std::string& url) {
+        URLParts parts;
+        
+        // Find protocol
+        size_t protocolEnd = url.find("://");
+        if (protocolEnd == std::string::npos) {
+            return parts; // Invalid URL
+        }
+        
+        parts.protocol = url.substr(0, protocolEnd);
+        
+        // Default ports
+        if (parts.protocol == "http") {
+            parts.port = 80;
+        } else if (parts.protocol == "https") {
+            parts.port = 443;
+        } else {
+            parts.port = 80;
+        }
+        
+        // Find host and path
+        size_t hostStart = protocolEnd + 3;
+        size_t pathStart = url.find('/', hostStart);
+        
+        if (pathStart == std::string::npos) {
+            parts.host = url.substr(hostStart);
+            parts.path = "/";
+        } else {
+            parts.host = url.substr(hostStart, pathStart - hostStart);
+            parts.path = url.substr(pathStart);
+        }
+        
+        // Check for port in host
+        size_t portPos = parts.host.find(':');
+        if (portPos != std::string::npos) {
+            parts.port = std::stoi(parts.host.substr(portPos + 1));
+            parts.host = parts.host.substr(0, portPos);
+        }
+        
+        return parts;
+    }
+    
+    void parseHTTPResponse(const std::string& responseStr, HTTPResponse& response) {
+        std::istringstream stream(responseStr);
+        std::string line;
+        
+        // Parse status line
+        if (std::getline(stream, line)) {
+            std::istringstream statusStream(line);
+            std::string httpVersion;
+            statusStream >> httpVersion >> response.statusCode;
+            std::getline(statusStream, response.statusMessage);
+            // Remove leading space and carriage return
+            if (!response.statusMessage.empty() && response.statusMessage[0] == ' ') {
+                response.statusMessage = response.statusMessage.substr(1);
+            }
+            if (!response.statusMessage.empty() && response.statusMessage.back() == '\r') {
+                response.statusMessage.pop_back();
+            }
+        }
+        
+        // Parse headers
+        while (std::getline(stream, line) && line != "\r") {
+            size_t colonPos = line.find(':');
+            if (colonPos != std::string::npos) {
+                std::string key = line.substr(0, colonPos);
+                std::string value = line.substr(colonPos + 1);
+                
+                // Trim whitespace
+                if (!value.empty() && value[0] == ' ') {
+                    value = value.substr(1);
+                }
+                if (!value.empty() && value.back() == '\r') {
+                    value.pop_back();
+                }
+                
+                response.headers[key] = value;
+            }
+        }
+        
+        // Parse body
+        std::string bodyLine;
+        while (std::getline(stream, bodyLine)) {
+            response.body += bodyLine + "\n";
+        }
+        
+        // Remove trailing newline
+        if (!response.body.empty() && response.body.back() == '\n') {
+            response.body.pop_back();
+        }
+    }
+};
+
+// HTTP Client usage examples
+void demonstrateHTTPClient() {
+    std::cout << "=== HTTP Client Demo ===" << std::endl;
+    
+    HTTPClient client;
+    client.setUserAgent("C++ Demo Client/1.0");
+    client.setTimeout(10);
+    
+    // Simple GET request
+    std::cout << "Making GET request to httpbin.org..." << std::endl;
+    auto response = client.get("http://httpbin.org/get");
+    
+    if (response.isSuccess()) {
+        std::cout << "✓ Request successful!" << std::endl;
+        response.print();
+    } else {
+        std::cout << "✗ Request failed: " << response.statusMessage << std::endl;
+    }
+    
+    std::cout << "\n" << std::string(50, '-') << std::endl;
+    
+    // POST request with data
+    std::cout << "Making POST request..." << std::endl;
+    std::string postData = "name=John&age=30&city=New York";
+    auto postResponse = client.post("http://httpbin.org/post", postData);
+    
+    if (postResponse.isSuccess()) {
+        std::cout << "✓ POST request successful!" << std::endl;
+        postResponse.print();
+    } else {
+        std::cout << "✗ POST request failed: " << postResponse.statusMessage << std::endl;
+    }
+}
+
+int main() {
+    demonstrateHTTPClient();
+    return 0;
+}
+```
+
+### Project 3: Game Engine Basics
+
+#### Simple 2D Game Engine Framework
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <chrono>
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <functional>
+
+// Forward declarations
+class GameObject;
+class Component;
+class Transform;
+class Renderer;
+class Physics;
+
+// Vector2D utility class
+struct Vector2D {
+    float x, y;
+    
+    Vector2D(float x = 0, float y = 0) : x(x), y(y) {}
+    
+    Vector2D operator+(const Vector2D& other) const {
+        return Vector2D(x + other.x, y + other.y);
+    }
+    
+    Vector2D operator-(const Vector2D& other) const {
+        return Vector2D(x - other.x, y - other.y);
+    }
+    
+    Vector2D operator*(float scalar) const {
+        return Vector2D(x * scalar, y * scalar);
+    }
+    
+    float magnitude() const {
+        return std::sqrt(x * x + y * y);
+    }
+    
+    Vector2D normalized() const {
+        float mag = magnitude();
+        return mag > 0 ? Vector2D(x / mag, y / mag) : Vector2D(0, 0);
+    }
+    
+    float dot(const Vector2D& other) const {
+        return x * other.x + y * other.y;
+    }
+};
+
+// Base Component class
+class Component {
+protected:
+    GameObject* gameObject = nullptr;
+    
+public:
+    virtual ~Component() = default;
+    virtual void start() {}
+    virtual void update(float deltaTime) {}
+    virtual void render() {}
+    
+    void setGameObject(GameObject* obj) { gameObject = obj; }
+    GameObject* getGameObject() const { return gameObject; }
+};
+
+// Transform component
+class Transform : public Component {
+public:
+    Vector2D position{0, 0};
+    Vector2D scale{1, 1};
+    float rotation = 0.0f;
+    
+    Transform(Vector2D pos = Vector2D(0, 0)) : position(pos) {}
+    
+    void translate(const Vector2D& delta) {
+        position = position + delta;
+    }
+    
+    void rotate(float angle) {
+        rotation += angle;
+    }
+    
+    void setPosition(const Vector2D& pos) {
+        position = pos;
+    }
+    
+    Vector2D getForward() const {
+        float rad = rotation * M_PI / 180.0f;
+        return Vector2D(std::cos(rad), std::sin(rad));
+    }
+};
+
+// Renderer component
+class Renderer : public Component {
+public:
+    char symbol = '#';
+    int width = 1;
+    int height = 1;
+    
+    Renderer(char sym = '#', int w = 1, int h = 1) 
+        : symbol(sym), width(w), height(h) {}
+    
+    void render() override {
+        auto* transform = gameObject->getComponent<Transform>();
+        if (transform) {
+            int x = static_cast<int>(transform->position.x);
+            int y = static_cast<int>(transform->position.y);
+            
+            // Simple console rendering
+            std::cout << "Rendering " << symbol << " at (" << x << ", " << y << ")" << std::endl;
+        }
+    }
+};
+
+// Physics component
+class Physics : public Component {
+public:
+    Vector2D velocity{0, 0};
+    Vector2D acceleration{0, 0};
+    float mass = 1.0f;
+    float drag = 0.98f;
+    bool useGravity = false;
+    
+    Physics(float m = 1.0f) : mass(m) {}
+    
+    void update(float deltaTime) override {
+        auto* transform = gameObject->getComponent<Transform>();
+        if (!transform) return;
+        
+        // Apply gravity
+        if (useGravity) {
+            acceleration = acceleration + Vector2D(0, 9.81f * mass);
+        }
+        
+        // Update velocity
+        velocity = velocity + acceleration * deltaTime;
+        
+        // Apply drag
+        velocity = velocity * drag;
+        
+        // Update position
+        transform->translate(velocity * deltaTime);
+        
+        // Reset acceleration
+        acceleration = Vector2D(0, 0);
+    }
+    
+    void addForce(const Vector2D& force) {
+        acceleration = acceleration + force * (1.0f / mass);
+    }
+    
+    void setVelocity(const Vector2D& vel) {
+        velocity = vel;
+    }
+};
+
+// GameObject class
+class GameObject {
+private:
+    std::vector<std::unique_ptr<Component>> components;
+    bool active = true;
+    std::string name;
+    
+public:
+    GameObject(const std::string& objName = "GameObject") : name(objName) {
+        // Every GameObject has a Transform by default
+        addComponent<Transform>();
+    }
+    
+    virtual ~GameObject() = default;
+    
+    template<typename T, typename... Args>
+    T* addComponent(Args&&... args) {
+        auto component = std::make_unique<T>(std::forward<Args>(args)...);
+        T* ptr = component.get();
+        component->setGameObject(this);
+        components.push_back(std::move(component));
+        return ptr;
+    }
+    
+    template<typename T>
+    T* getComponent() const {
+        for (const auto& component : components) {
+            if (auto* ptr = dynamic_cast<T*>(component.get())) {
+                return ptr;
+            }
+        }
+        return nullptr;
+    }
+    
+    template<typename T>
+    bool removeComponent() {
+        auto it = std::find_if(components.begin(), components.end(),
+            [](const std::unique_ptr<Component>& comp) {
+                return dynamic_cast<T*>(comp.get()) != nullptr;
+            });
+        
+        if (it != components.end()) {
+            components.erase(it);
+            return true;
+        }
+        return false;
+    }
+    
+    virtual void start() {
+        for (auto& component : components) {
+            component->start();
+        }
+    }
+    
+    virtual void update(float deltaTime) {
+        if (!active) return;
+        
+        for (auto& component : components) {
+            component->update(deltaTime);
+        }
+    }
+    
+    virtual void render() {
+        if (!active) return;
+        
+        for (auto& component : components) {
+            component->render();
+        }
+    }
+    
+    bool isActive() const { return active; }
+    void setActive(bool state) { active = state; }
+    const std::string& getName() const { return name; }
+    void setName(const std::string& newName) { name = newName; }
+};
+
+// Input manager
+class InputManager {
+private:
+    std::map<char, bool> keyStates;
+    std::map<char, bool> prevKeyStates;
+    
+public:
+    void updateInput() {
+        prevKeyStates = keyStates;
+        
+        // Simulate input (in real implementation, you'd read from keyboard/mouse)
+        // For demo purposes, we'll just simulate some key presses
+        static int counter = 0;
+        counter++;
+        
+        keyStates['w'] = (counter % 100 < 50);
+        keyStates['a'] = (counter % 80 < 20);
+        keyStates['d'] = (counter % 90 < 30);
+    }
+    
+    bool isKeyPressed(char key) const {
+        auto it = keyStates.find(key);
+        return it != keyStates.end() ? it->second : false;
+    }
+    
+    bool isKeyJustPressed(char key) const {
+        bool current = isKeyPressed(key);
+        auto it = prevKeyStates.find(key);
+        bool previous = it != prevKeyStates.end() ? it->second : false;
+        return current && !previous;
+    }
+};
+
+// Game Engine class
+class GameEngine {
+private:
+    std::vector<std::unique_ptr<GameObject>> gameObjects;
+    InputManager inputManager;
+    bool running = true;
+    float targetFPS = 60.0f;
+    
+    std::chrono::high_resolution_clock::time_point lastFrameTime;
+    
+public:
+    GameEngine() {
+        lastFrameTime = std::chrono::high_resolution_clock::now();
+    }
+    
+    void addGameObject(std::unique_ptr<GameObject> obj) {
+        obj->start();
+        gameObjects.push_back(std::move(obj));
+    }
+    
+    template<typename T, typename... Args>
+    T* createGameObject(Args&&... args) {
+        auto obj = std::make_unique<T>(std::forward<Args>(args)...);
+        T* ptr = obj.get();
+        addGameObject(std::move(obj));
+        return ptr;
+    }
+    
+    void removeGameObject(GameObject* obj) {
+        auto it = std::find_if(gameObjects.begin(), gameObjects.end(),
+            [obj](const std::unique_ptr<GameObject>& ptr) {
+                return ptr.get() == obj;
+            });
+        
+        if (it != gameObjects.end()) {
+            gameObjects.erase(it);
+        }
+    }
+    
+    float calculateDeltaTime() {
+        auto currentTime = std::chrono::high_resolution_clock::now();
+        float deltaTime = std::chrono::duration<float>(currentTime - lastFrameTime).count();
+        lastFrameTime = currentTime;
+        
+        // Cap delta time to prevent large jumps
+        return std::min(deltaTime, 1.0f / 30.0f);
+    }
+    
+    void update() {
+        float deltaTime = calculateDeltaTime();
+        
+        inputManager.updateInput();
+        
+        // Update all game objects
+        for (auto& obj : gameObjects) {
+            obj->update(deltaTime);
+        }
+        
+        // Remove inactive objects
+        gameObjects.erase(
+            std::remove_if(gameObjects.begin(), gameObjects.end(),
+                [](const std::unique_ptr<GameObject>& obj) {
+                    return !obj->isActive();
+                }),
+            gameObjects.end());
+    }
+    
+    void render() {
+        // Clear screen (simplified)
+        system("clear");  // On Windows, use system("cls")
+        
+        std::cout << "=== Game Frame ===" << std::endl;
+        
+        // Render all game objects
+        for (auto& obj : gameObjects) {
+            obj->render();
+        }
+        
+        std::cout << "Active Objects: " << gameObjects.size() << std::endl;
+    }
+    
+    void run() {
+        std::cout << "Starting Game Engine..." << std::endl;
+        
+        int frameCount = 0;
+        const int maxFrames = 100;  // Limit for demo
+        
+        while (running && frameCount < maxFrames) {
+            update();
+            render();
+            
+            frameCount++;
+            
+            // Simple frame rate limiting
+            std::this_thread::sleep_for(std::chrono::milliseconds(16)); // ~60 FPS
+        }
+        
+        std::cout << "Game Engine stopped." << std::endl;
+    }
+    
+    void stop() {
+        running = false;
+    }
+    
+    InputManager& getInputManager() { return inputManager; }
+};
+
+// Example game objects
+class Player : public GameObject {
+public:
+    Player() : GameObject("Player") {
+        auto* renderer = addComponent<Renderer>('P', 1, 1);
+        auto* physics = addComponent<Physics>(1.0f);
+        physics->drag = 0.9f;
+    }
+    
+    void update(float deltaTime) override {
+        GameObject::update(deltaTime);
+        
+        // Simple player movement (this would typically be in a separate component)
+        auto* transform = getComponent<Transform>();
+        auto* physics = getComponent<Physics>();
+        
+        if (transform && physics) {
+            // Simulate input-based movement
+            static float time = 0;
+            time += deltaTime;
+            
+            Vector2D moveDirection(0, 0);
+            if (std::sin(time) > 0.5f) {
+                moveDirection.x = 1;
+            }
+            if (std::cos(time) > 0.5f) {
+                moveDirection.y = 1;
+            }
+            
+            if (moveDirection.magnitude() > 0) {
+                physics->addForce(moveDirection.normalized() * 50.0f);
+            }
+        }
+    }
+};
+
+class Enemy : public GameObject {
+private:
+    Vector2D targetPosition;
+    float speed = 20.0f;
+    
+public:
+    Enemy(Vector2D startPos) : GameObject("Enemy"), targetPosition(startPos) {
+        getComponent<Transform>()->setPosition(startPos);
+        addComponent<Renderer>('E', 1, 1);
+        addComponent<Physics>(0.8f);
+    }
+    
+    void update(float deltaTime) override {
+        GameObject::update(deltaTime);
+        
+        auto* transform = getComponent<Transform>();
+        auto* physics = getComponent<Physics>();
+        
+        if (transform && physics) {
+            // Simple AI: move in a circle
+            static float angle = 0;
+            angle += deltaTime;
+            
+            Vector2D center(10, 10);
+            float radius = 5.0f;
+            targetPosition = center + Vector2D(
+                std::cos(angle) * radius,
+                std::sin(angle) * radius
+            );
+            
+            Vector2D direction = targetPosition - transform->position;
+            if (direction.magnitude() > 0.1f) {
+                physics->addForce(direction.normalized() * speed);
+            }
+        }
+    }
+};
+
+// Demo function
+void demonstrateGameEngine() {
+    std::cout << "=== 2D Game Engine Demo ===" << std::endl;
+    
+    GameEngine engine;
+    
+    // Create game objects
+    auto* player = engine.createGameObject<Player>();
+    auto* enemy1 = engine.createGameObject<Enemy>(Vector2D(5, 5));
+    auto* enemy2 = engine.createGameObject<Enemy>(Vector2D(15, 8));
+    
+    // Create a static object
+    auto* staticObj = engine.createGameObject<GameObject>("StaticBlock");
+    staticObj->getComponent<Transform>()->setPosition(Vector2D(20, 20));
+    staticObj->addComponent<Renderer>('B', 2, 2);
+    
+    std::cout << "Created " << 4 << " game objects" << std::endl;
+    std::cout << "Running game simulation..." << std::endl;
+    
+    // Run the game
+    engine.run();
+}
+
+int main() {
+    demonstrateGameEngine();
     return 0;
 }
 ```
