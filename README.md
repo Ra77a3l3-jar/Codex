@@ -280,14 +280,14 @@ Special thanks to:
 
 ### ⭐ **If you find this helpful, please give it a star!**
 
-[![Stars](https://img.shields.io/github/stars/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
-[![Forks](https://img.shields.io/github/forks/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
-[![Watchers](https://img.shields.io/github/watchers/Ra77a3l3-jar/programming-docs?style=social)](https://github.com/Ra77a3l3-jar/Codex)
+[![Stars](https://img.shields.io/github/stars/Ra77a3l3-jar/Codex?style=social)](https://github.com/Ra77a3l3-jar/Codex)
+[![Forks](https://img.shields.io/github/forks/Ra77a3l3-jar/Codex?style=social)](https://github.com/Ra77a3l3-jar/Codex)
+[![Watchers](https://img.shields.io/github/watchers/Ra77a3l3-jar/Codex?style=social)](https://github.com/Ra77a3l3-jar/Codex)
 
 ---
 
 **Happy Coding! 🚀**
 
-*Last Updated: January 2025*
+*Last Updated: August 2025*
 
 </div>
