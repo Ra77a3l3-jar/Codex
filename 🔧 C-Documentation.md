@@ -5192,7 +5192,7 @@ You now have a solid foundation in C programming and are ready to tackle complex
 
 ---
 
-*Last Updated: December 2024 | Version: C20 | Word Count: ~18,500*
+*Last Updated: December 2024 | Version: C20 *
 
 ---
 

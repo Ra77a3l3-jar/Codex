@@ -9611,7 +9611,6 @@ pub fn main() !void {
 Congratulations! You've completed this comprehensive Zig documentation covering:
 
 ✅ **13 Comprehensive Chapters**: From basic syntax to advanced real-world projects
-✅ **~20,000+ words** of detailed, educational content  
 ✅ **50+ Code Examples**: Practical, tested examples for every concept
 ✅ **25+ Exercises**: Hands-on practice with complete solutions
 ✅ **Production-Ready Patterns**: Memory management, error handling, and optimization

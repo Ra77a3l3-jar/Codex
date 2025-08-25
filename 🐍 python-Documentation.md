@@ -7191,7 +7191,6 @@ Happy coding! 🐍✨
 - **Projects:** 3 hands-on projects  
 - **Code Examples:** 100+ working examples
 - **Exercises:** 25+ practical exercises
-- **Word Count:** ~18,500 words
 - **Target Audience:** Beginners to intermediate Python developers
 - **Python Version:** 3.12+
 
