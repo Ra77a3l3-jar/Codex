@@ -1,4 +1,4 @@
-# ⚡ C++ Documentation
+# ⚡️ C++ Documentation
 *Version: C++20/23 | Last Updated: December 2024*
 
 C++ is a powerful, high-performance programming language that combines the efficiency of low-level programming with the convenience of high-level features. Originally developed by Bjarne Stroustrup as an extension of C, modern C++ has evolved into a sophisticated language supporting multiple programming paradigms including procedural, object-oriented, and generic programming.

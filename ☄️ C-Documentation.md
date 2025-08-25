@@ -1,4 +1,4 @@
-# 🔧 C Programming Language Documentation
+# ☄️ C Programming Language Documentation
 *Version: C20 | Last Updated: December 2024*
 
 C is a general-purpose, procedural programming language supporting structured programming, lexical variable scope, and recursion. Developed in the early 1970s by Dennis Ritchie at Bell Labs, C has become one of the most widely used programming languages of all time, forming the foundation for many modern languages and operating systems.
