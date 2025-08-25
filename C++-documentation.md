@@ -233,15 +233,15 @@ Hello, World!
 int main() {
     std::string name;
     int age;
-    
+
     std::cout << "Enter your name: ";
     std::getline(std::cin, name);
-    
+
     std::cout << "Enter your age: ";
     std::cin >> age;
-    
+
     std::cout << "Hello, " << name << "! You are " << age << " years old." << std::endl;
-    
+
     return 0;
 }
 ```
@@ -302,7 +302,7 @@ g++ -std=c++20 main.cpp greeting.cpp -o program
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Personal Information Program
-**Difficulty:** 🟢 Beginner  
+**Difficulty:** 🟢 Beginner
 **Estimated Time:** 10 minutes
 
 Create a program that asks for the user's name, age, and favorite programming language, then displays a personalized message.
@@ -326,21 +326,21 @@ Create a program that asks for the user's name, age, and favorite programming la
 int main() {
     std::string name, language;
     int age;
-    
+
     std::cout << "What's your name? ";
     std::getline(std::cin, name);
-    
+
     std::cout << "How old are you? ";
     std::cin >> age;
     std::cin.ignore(); // Clear the newline from buffer
-    
+
     std::cout << "What's your favorite programming language? ";
     std::getline(std::cin, language);
-    
+
     std::cout << "\nHi " << name << "!" << std::endl;
-    std::cout << "At " << age << " years old, it's great that you're learning " 
+    std::cout << "At " << age << " years old, it's great that you're learning "
               << language << "!" << std::endl;
-    
+
     return 0;
 }
 ```
@@ -488,7 +488,7 @@ int main() {
 ```cpp
 namespace MathUtils {
     const double PI = 3.14159;
-    
+
     double circleArea(double radius) {
         return PI * radius * radius;
     }
@@ -554,12 +554,12 @@ namespace MathUtils {
     // Function declarations
     double power(double base, double exponent);
     double squareRoot(double number);
-    
+
     // Inline functions (defined in header)
     inline double square(double x) {
         return x * x;
     }
-    
+
     // Template functions (must be in header)
     template<typename T>
     T maximum(T a, T b) {
@@ -578,7 +578,7 @@ namespace MathUtils {
     double power(double base, double exponent) {
         return std::pow(base, exponent);
     }
-    
+
     double squareRoot(double number) {
         if (number < 0) {
             throw std::invalid_argument("Cannot calculate square root of negative number");
@@ -664,9 +664,9 @@ namespace Graphics {
     struct Point {
         double x, y;
     };
-    
+
     void drawLine(const Point& start, const Point& end) {
-        std::cout << "Drawing line from (" << start.x << "," << start.y 
+        std::cout << "Drawing line from (" << start.x << "," << start.y
                   << ") to (" << end.x << "," << end.y << ")" << std::endl;
     }
 }
@@ -675,7 +675,7 @@ namespace Audio {
     void playSound(const std::string& filename) {
         std::cout << "Playing sound: " << filename << std::endl;
     }
-    
+
     void stopSound() {
         std::cout << "Stopping sound" << std::endl;
     }
@@ -685,10 +685,10 @@ int main() {
     Graphics::Point start{0, 0};
     Graphics::Point end{10, 10};
     Graphics::drawLine(start, end);
-    
+
     Audio::playSound("background.mp3");
     Audio::stopSound();
-    
+
     return 0;
 }
 ```
@@ -712,7 +712,7 @@ int main() {
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Calculator with Namespaces
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 20 minutes
 
 Create a calculator program using separate namespaces for basic operations (add, subtract, multiply, divide) and advanced operations (power, square root). Organize the code into multiple files.
@@ -751,15 +751,15 @@ namespace BasicOps {
     double add(double a, double b) {
         return a + b;
     }
-    
+
     double subtract(double a, double b) {
         return a - b;
     }
-    
+
     double multiply(double a, double b) {
         return a * b;
     }
-    
+
     double divide(double a, double b) {
         if (b == 0) {
             throw std::runtime_error("Division by zero!");
@@ -790,14 +790,14 @@ namespace AdvancedOps {
     double power(double base, double exponent) {
         return std::pow(base, exponent);
     }
-    
+
     double squareRoot(double number) {
         if (number < 0) {
             throw std::runtime_error("Cannot calculate square root of negative number!");
         }
         return std::sqrt(number);
     }
-    
+
     double factorial(int n) {
         if (n < 0) {
             throw std::runtime_error("Factorial of negative number is undefined!");
@@ -822,17 +822,17 @@ int main() {
         std::cout << "10 - 5 = " << BasicOps::subtract(10, 5) << std::endl;
         std::cout << "10 * 5 = " << BasicOps::multiply(10, 5) << std::endl;
         std::cout << "10 / 5 = " << BasicOps::divide(10, 5) << std::endl;
-        
+
         // Advanced operations
         std::cout << "\nAdvanced Operations:" << std::endl;
         std::cout << "2^8 = " << AdvancedOps::power(2, 8) << std::endl;
         std::cout << "√25 = " << AdvancedOps::squareRoot(25) << std::endl;
         std::cout << "5! = " << AdvancedOps::factorial(5) << std::endl;
-        
+
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -880,17 +880,17 @@ int main() {
     int i = 2147483647;        // At least 16 bits (usually 32)
     long l = 2147483647L;      // At least 32 bits
     long long ll = 9223372036854775807LL; // At least 64 bits
-    
+
     // Unsigned variants
     unsigned short us = 65535;
     unsigned int ui = 4294967295U;
     unsigned long ul = 4294967295UL;
     unsigned long long ull = 18446744073709551615ULL;
-    
+
     // Display sizes
     std::cout << "Size of int: " << sizeof(int) << " bytes" << std::endl;
     std::cout << "Range of int: " << INT_MIN << " to " << INT_MAX << std::endl;
-    
+
     return 0;
 }
 ```
@@ -907,20 +907,20 @@ int main() {
     std::int16_t i16 = -32768;     // Exactly 16 bits
     std::int32_t i32 = -2147483648; // Exactly 32 bits
     std::int64_t i64 = -9223372036854775808LL; // Exactly 64 bits
-    
+
     // Unsigned variants
     std::uint8_t  u8 = 255;
     std::uint16_t u16 = 65535;
     std::uint32_t u32 = 4294967295U;
     std::uint64_t u64 = 18446744073709551615ULL;
-    
+
     // Fast types (at least N bits, optimized for speed)
     std::int_fast32_t fast32 = 100;
     std::uint_fast16_t ufast16 = 200;
-    
+
     std::cout << "int8_t: " << static_cast<int>(i8) << std::endl;
     std::cout << "uint64_t: " << u64 << std::endl;
-    
+
     return 0;
 }
 ```
@@ -936,24 +936,24 @@ int main() {
     float f = 3.14159f;        // Single precision (usually 32 bits)
     double d = 3.14159265359;  // Double precision (usually 64 bits)
     long double ld = 3.14159265358979323846L; // Extended precision
-    
+
     // Scientific notation
     double scientific = 1.23e-4; // 0.000123
     double large = 6.022e23;     // Avogadro's number
-    
+
     // Special values
     double positive_inf = 1.0 / 0.0;
     double negative_inf = -1.0 / 0.0;
     double nan_value = 0.0 / 0.0;
-    
+
     std::cout << std::fixed << std::setprecision(10);
     std::cout << "Float: " << f << std::endl;
     std::cout << "Double: " << d << std::endl;
     std::cout << "Long double: " << ld << std::endl;
-    
+
     std::cout << "Float precision: " << FLT_DIG << " digits" << std::endl;
     std::cout << "Double precision: " << DBL_DIG << " digits" << std::endl;
-    
+
     return 0;
 }
 ```
@@ -968,22 +968,22 @@ int main() {
     char16_t c16 = u'π';       // UTF-16 character
     char32_t c32 = U'🌟';      // UTF-32 character
     wchar_t wc = L'Ω';         // Wide character
-    
+
     // Character codes
     std::cout << "Character 'A': " << c << std::endl;
     std::cout << "ASCII value: " << static_cast<int>(c) << std::endl;
-    
+
     // Escape sequences
     char newline = '\n';
     char tab = '\t';
     char backslash = '\\';
     char quote = '\"';
-    
+
     std::cout << "Escape sequences:\n";
     std::cout << "Newline: [" << newline << "]" << std::endl;
     std::cout << "Tab: [" << tab << "]" << std::endl;
     std::cout << "Quote: " << quote << std::endl;
-    
+
     return 0;
 }
 ```
@@ -996,18 +996,18 @@ int main() {
 int main() {
     bool isTrue = true;
     bool isFalse = false;
-    
+
     // Boolean from expressions
     bool comparison = (10 > 5);
     bool logical = (true && false);
-    
+
     // Boolean output
     std::cout << std::boolalpha; // Print true/false instead of 1/0
     std::cout << "isTrue: " << isTrue << std::endl;
     std::cout << "isFalse: " << isFalse << std::endl;
     std::cout << "10 > 5: " << comparison << std::endl;
     std::cout << "true && false: " << logical << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1022,28 +1022,28 @@ int main() {
 int main() {
     // Declaration without initialization (dangerous!)
     int uninitialized; // Contains garbage value
-    
+
     // Declaration with initialization
     int initialized = 42;
-    
+
     // Copy initialization
     int copy_init = 10;
-    
+
     // Direct initialization
     int direct_init(20);
-    
+
     // List initialization (C++11) - preferred
     int list_init{30};
     int list_init2{}; // Zero-initialized
-    
+
     // Multiple declarations
     int a = 1, b = 2, c = 3;
-    
+
     std::cout << "Initialized: " << initialized << std::endl;
     std::cout << "Direct init: " << direct_init << std::endl;
     std::cout << "List init: " << list_init << std::endl;
     std::cout << "Zero init: " << list_init2 << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1059,13 +1059,13 @@ int global_var = 100;
 void function() {
     // Function scope
     int local_var = 50;
-    
+
     {
         // Block scope
         int block_var = 25;
         std::cout << "Block scope: " << block_var << std::endl;
     } // block_var destroyed here
-    
+
     // std::cout << block_var; // Error: block_var not accessible
     std::cout << "Function scope: " << local_var << std::endl;
 }
@@ -1073,14 +1073,14 @@ void function() {
 int main() {
     std::cout << "Global scope: " << global_var << std::endl;
     function();
-    
+
     // Static variables
     for (int i = 0; i < 3; ++i) {
         static int counter = 0; // Initialized only once
         counter++;
         std::cout << "Counter: " << counter << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1102,29 +1102,29 @@ int main() {
     auto character = 'A';       // char
     auto text = "Hello";        // const char*
     auto cpp_string = std::string("C++"); // std::string
-    
+
     // Auto with complex types
     auto vec = std::vector<int>{1, 2, 3, 4, 5};
     auto map = std::map<std::string, int>{{"one", 1}, {"two", 2}};
-    
+
     // Auto with iterators
     for (auto it = vec.begin(); it != vec.end(); ++it) {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
-    
+
     // Auto with references
     int value = 10;
     auto& ref = value;          // int&
     const auto& const_ref = value; // const int&
-    
+
     // Auto with pointers
     auto* ptr = &value;         // int*
-    
+
     // decltype for exact type deduction
     int x = 5;
     decltype(x) y = x;          // y is exactly the same type as x
-    
+
     return 0;
 }
 ```
@@ -1145,24 +1145,24 @@ int main() {
     // Good uses of auto
     auto vec = std::vector<int>{1, 2, 3};
     auto ptr = std::make_unique<Widget>();
-    
+
     // Range-based for loops
     for (const auto& element : vec) {
         std::cout << element << " ";
     }
     std::cout << std::endl;
-    
+
     // Lambda expressions
     auto lambda = [](int x, int y) { return x + y; };
     auto result = lambda(5, 3);
-    
+
     // Avoid when type is not obvious
     auto mystery = getSomeValue(); // What type is this?
-    
+
     // Better to be explicit in such cases
     std::string name = getUserName();
     double price = calculatePrice();
-    
+
     return 0;
 }
 ```
@@ -1178,27 +1178,27 @@ int main() {
     // const keyword
     const int MAX_SIZE = 100;
     const double PI = 3.14159;
-    
+
     // const with pointers
     int value = 10;
     const int* ptr_to_const = &value;    // Pointer to const int
     int* const const_ptr = &value;       // Const pointer to int
     const int* const const_ptr_to_const = &value; // Const pointer to const int
-    
+
     // constexpr for compile-time constants (C++11)
     constexpr int COMPILE_TIME_CONST = 50;
     constexpr double EULER = 2.71828;
-    
+
     // constexpr functions
     constexpr int square(int x) {
         return x * x;
     }
-    
+
     constexpr int result = square(5); // Computed at compile time
-    
+
     std::cout << "MAX_SIZE: " << MAX_SIZE << std::endl;
     std::cout << "Square of 5: " << result << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1215,44 +1215,44 @@ int main() {
     int octal = 052;        // Octal (starts with 0)
     int hex = 0x2A;         // Hexadecimal (starts with 0x)
     int binary = 0b101010;  // Binary (C++14, starts with 0b)
-    
+
     // Digit separators (C++14)
     long long big_number = 1'000'000'000;
     int binary_sep = 0b1010'1010;
-    
+
     // Floating-point literals
     double d1 = 3.14;
     double d2 = 3.14e2;     // Scientific notation
     float f = 3.14f;        // Float suffix
     long double ld = 3.14L; // Long double suffix
-    
+
     // Character literals
     char c = 'A';
     wchar_t wc = L'Ω';
     char16_t c16 = u'π';
     char32_t c32 = U'🌟';
-    
+
     // String literals
     const char* cstr = "C-style string";
     std::string str = "C++ string";
     std::wstring wstr = L"Wide string";
     std::u16string u16str = u"UTF-16 string";
     std::u32string u32str = U"UTF-32 string";
-    
+
     // Raw string literals (C++11)
     std::string raw = R"(This is a raw string
     with newlines and "quotes"
     and backslashes \\ preserved)";
-    
+
     // User-defined literals (C++11)
     using namespace std::string_literals;
     auto cpp_string = "Hello"s;  // std::string, not const char*
-    
+
     std::cout << "Decimal: " << decimal << std::endl;
     std::cout << "Hex: " << hex << std::endl;
     std::cout << "Binary: " << binary << std::endl;
     std::cout << "Big number: " << big_number << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1268,8 +1268,8 @@ int main() {
 
 template<typename T>
 void printTypeInfo(const T& value) {
-    std::cout << "Value: " << value 
-              << ", Type: " << typeid(T).name() 
+    std::cout << "Value: " << value
+              << ", Type: " << typeid(T).name()
               << ", Size: " << sizeof(T) << " bytes" << std::endl;
 }
 
@@ -1280,22 +1280,22 @@ int main() {
     auto unsigned_int = 42U;
     auto float_val = 42.0f;
     auto double_val = 42.0;
-    
+
     printTypeInfo(small_int);
     printTypeInfo(large_int);
     printTypeInfo(unsigned_int);
     printTypeInfo(float_val);
     printTypeInfo(double_val);
-    
+
     // Character types
     auto character = 'A';
     auto string_literal = "Hello";
     auto cpp_string = std::string("World");
-    
+
     printTypeInfo(character);
     printTypeInfo(string_literal);
     printTypeInfo(cpp_string);
-    
+
     return 0;
 }
 ```
@@ -1312,11 +1312,11 @@ class Person {
 private:
     std::string name;
     int age;
-    
+
 public:
     // Constructor with initializer list
     Person(const std::string& n, int a) : name(n), age(a) {}
-    
+
     // Constructor for brace initialization
     Person(std::initializer_list<std::string> names) {
         if (names.size() > 0) {
@@ -1324,7 +1324,7 @@ public:
         }
         age = 0;
     }
-    
+
     void display() const {
         std::cout << "Name: " << name << ", Age: " << age << std::endl;
     }
@@ -1332,39 +1332,39 @@ public:
 
 int main() {
     // Various initialization methods
-    
+
     // Fundamental types
     int a{42};              // Uniform initialization
     int b = {42};           // Copy-list initialization
     int c(42);              // Direct initialization
     int d = 42;             // Copy initialization
-    
+
     // Container initialization
     std::vector<int> vec1{1, 2, 3, 4, 5};
     std::vector<int> vec2(5, 10); // 5 elements, all value 10
-    
+
     // Object initialization
     Person person1{"Alice", 30};
     Person person2{"Bob", 25};
     Person person3{"Charlie"}; // Uses initializer_list constructor
-    
+
     // Auto with initialization
     auto list = {1, 2, 3, 4, 5}; // std::initializer_list<int>
     auto vector = std::vector{1, 2, 3, 4, 5}; // std::vector<int>
-    
+
     std::cout << "Variables initialized successfully:" << std::endl;
     std::cout << "a = " << a << ", b = " << b << ", c = " << c << ", d = " << d << std::endl;
-    
+
     std::cout << "Vector contents: ";
     for (const auto& element : vec1) {
         std::cout << element << " ";
     }
     std::cout << std::endl;
-    
+
     person1.display();
     person2.display();
     person3.display();
-    
+
     return 0;
 }
 ```
@@ -1388,7 +1388,7 @@ int main() {
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Data Type Explorer
-**Difficulty:** 🟢 Beginner  
+**Difficulty:** 🟢 Beginner
 **Estimated Time:** 15 minutes
 
 Create a program that demonstrates the size and range of different data types, including integer types, floating-point types, and character types.
@@ -1418,7 +1418,7 @@ template<typename T>
 void printTypeInfo(const std::string& typeName) {
     std::cout << std::left << std::setw(20) << typeName;
     std::cout << std::right << std::setw(10) << sizeof(T) << " bytes";
-    
+
     if constexpr (std::numeric_limits<T>::is_integer) {
         std::cout << std::setw(25) << std::numeric_limits<T>::min();
         std::cout << std::setw(25) << std::numeric_limits<T>::max();
@@ -1432,14 +1432,14 @@ void printTypeInfo(const std::string& typeName) {
 
 int main() {
     std::cout << "=== C++ Data Types Information ===" << std::endl << std::endl;
-    
+
     // Header
     std::cout << std::left << std::setw(20) << "Type";
     std::cout << std::right << std::setw(10) << "Size";
     std::cout << std::setw(25) << "Min Value";
     std::cout << std::setw(25) << "Max Value" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
-    
+
     // Integer types
     std::cout << "Integer Types:" << std::endl;
     printTypeInfo<char>("char");
@@ -1452,9 +1452,9 @@ int main() {
     printTypeInfo<unsigned int>("unsigned int");
     printTypeInfo<unsigned long>("unsigned long");
     printTypeInfo<unsigned long long>("unsigned long long");
-    
+
     std::cout << std::endl;
-    
+
     // Fixed-width integer types
     std::cout << "Fixed-width Integer Types:" << std::endl;
     printTypeInfo<std::int8_t>("int8_t");
@@ -1465,9 +1465,9 @@ int main() {
     printTypeInfo<std::uint16_t>("uint16_t");
     printTypeInfo<std::uint32_t>("uint32_t");
     printTypeInfo<std::uint64_t>("uint64_t");
-    
+
     std::cout << std::endl;
-    
+
     // Floating-point types
     std::cout << std::left << std::setw(20) << "Type";
     std::cout << std::right << std::setw(10) << "Size";
@@ -1475,21 +1475,21 @@ int main() {
     std::cout << std::setw(15) << "Min Value";
     std::cout << std::setw(15) << "Max Value" << std::endl;
     std::cout << std::string(80, '-') << std::endl;
-    
+
     std::cout << "Floating-point Types:" << std::endl;
     printTypeInfo<float>("float");
     printTypeInfo<double>("double");
     printTypeInfo<long double>("long double");
-    
+
     std::cout << std::endl;
-    
+
     // Boolean and character
     std::cout << "Other Types:" << std::endl;
     printTypeInfo<bool>("bool");
     printTypeInfo<wchar_t>("wchar_t");
     printTypeInfo<char16_t>("char16_t");
     printTypeInfo<char32_t>("char32_t");
-    
+
     return 0;
 }
 ```
@@ -1505,7 +1505,7 @@ int main() {
 </details>
 
 #### 🏋️ Exercise 2: Advanced Variable Initialization
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 25 minutes
 
 Create a comprehensive example that demonstrates different initialization techniques, including list initialization, auto type deduction, and const/constexpr usage.
@@ -1541,139 +1541,139 @@ constexpr int fibonacci(int n) {
 class Rectangle {
 private:
     double width, height;
-    
+
 public:
     // Constructor with member initializer list
     constexpr Rectangle(double w, double h) : width(w), height(h) {}
-    
+
     // Constructor from initializer list
     Rectangle(std::initializer_list<double> dims) {
         auto it = dims.begin();
         width = (it != dims.end()) ? *it++ : 0.0;
         height = (it != dims.end()) ? *it : 0.0;
     }
-    
+
     constexpr double area() const { return width * height; }
     constexpr double perimeter() const { return 2 * (width + height); }
-    
+
     void display() const {
-        std::cout << "Rectangle: " << width << "x" << height 
+        std::cout << "Rectangle: " << width << "x" << height
                   << ", Area: " << area() << ", Perimeter: " << perimeter() << std::endl;
     }
 };
 
 int main() {
     std::cout << "=== Advanced Variable Initialization ===" << std::endl << std::endl;
-    
+
     // 1. Basic initialization methods
     std::cout << "1. Basic Initialization Methods:" << std::endl;
-    
+
     int a = 10;              // Copy initialization
     int b(20);              // Direct initialization
     int c{30};              // List initialization (C++11)
     int d = {40};           // Copy-list initialization
-    
+
     // List initialization prevents narrowing
     // double to int conversion
     // int narrow{3.14}; // Error: narrowing conversion
-    
+
     std::cout << "a = " << a << ", b = " << b << ", c = " << c << ", d = " << d << std::endl;
     std::cout << std::endl;
-    
+
     // 2. Auto type deduction
     std::cout << "2. Auto Type Deduction:" << std::endl;
-    
+
     auto int_val = 42;                    // int
     auto double_val = 3.14;               // double
     auto char_val = 'A';                  // char
     auto string_val = std::string("C++"); // std::string
     auto list_val = {1, 2, 3, 4, 5};     // std::initializer_list<int>
-    
+
     // Auto with references and const
     const int original = 100;
     auto copy = original;           // int (const removed)
     auto& ref = original;           // const int& (reference to const)
     const auto& const_ref = original; // const int&
-    
+
     std::cout << "Auto-deduced values:" << std::endl;
     std::cout << "int_val: " << int_val << std::endl;
     std::cout << "double_val: " << double_val << std::endl;
     std::cout << "char_val: " << char_val << std::endl;
     std::cout << "string_val: " << string_val << std::endl;
     std::cout << std::endl;
-    
+
     // 3. Container initialization
     std::cout << "3. Container Initialization:" << std::endl;
-    
+
     // Vector initialization methods
     std::vector<int> vec1{1, 2, 3, 4, 5};           // List initialization
     std::vector<int> vec2(5, 10);                   // 5 elements, all value 10
     std::vector<int> vec3(vec1.begin(), vec1.end()); // Range initialization
     auto vec4 = std::vector<int>{10, 20, 30};       // Auto with explicit type
-    
+
     // Array initialization
     std::array<int, 5> arr1{1, 2, 3, 4, 5};
     std::array<int, 5> arr2{};                      // Zero-initialized
-    
+
     std::cout << "vec1: ";
     for (const auto& val : vec1) std::cout << val << " ";
     std::cout << std::endl;
-    
+
     std::cout << "vec2: ";
     for (const auto& val : vec2) std::cout << val << " ";
     std::cout << std::endl;
     std::cout << std::endl;
-    
+
     // 4. Const and constexpr
     std::cout << "4. Const and Constexpr:" << std::endl;
-    
+
     const int runtime_const = rand() % 100;     // Runtime constant
     constexpr int compile_const = 42;           // Compile-time constant
     constexpr int fib_10 = fibonacci(10);       // Computed at compile time
-    
+
     // Constexpr with objects
     constexpr Rectangle rect1(5.0, 3.0);
     constexpr auto area1 = rect1.area();        // Computed at compile time
-    
+
     std::cout << "Runtime const: " << runtime_const << std::endl;
     std::cout << "Compile-time const: " << compile_const << std::endl;
     std::cout << "Fibonacci(10): " << fib_10 << std::endl;
     std::cout << "Rectangle area (compile-time): " << area1 << std::endl;
     std::cout << std::endl;
-    
+
     // 5. Complex object initialization
     std::cout << "5. Complex Object Initialization:" << std::endl;
-    
+
     Rectangle rect2{10.0, 7.0};               // List initialization
     Rectangle rect3(15.0, 12.0);              // Direct initialization
     Rectangle rect4{8.5, 6.5};                // Using initializer_list constructor
     auto rect5 = Rectangle(20.0, 15.0);       // Auto with explicit construction
-    
+
     rect2.display();
     rect3.display();
     rect4.display();
     rect5.display();
     std::cout << std::endl;
-    
+
     // 6. Modern initialization patterns
     std::cout << "6. Modern Initialization Patterns:" << std::endl;
-    
+
     // Structured binding (C++17)
     auto [width, height] = std::make_pair(25.0, 18.0);
     std::cout << "Structured binding: width = " << width << ", height = " << height << std::endl;
-    
+
     // Lambda with auto
     auto multiply = [](auto a, auto b) { return a * b; };
     auto result1 = multiply(5, 3);       // int * int
     auto result2 = multiply(2.5, 4.0);   // double * double
-    
+
     std::cout << "Lambda results: " << result1 << ", " << result2 << std::endl;
-    
+
     // Auto with function pointers
     auto func_ptr = &fibonacci;
     auto fib_result = func_ptr(8);
     std::cout << "Function pointer result: " << fib_result << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1717,19 +1717,19 @@ int main() {
 
 int main() {
     int score = 85;
-    
+
     // Simple if statement
     if (score >= 90) {
         std::cout << "Excellent!" << std::endl;
     }
-    
+
     // if-else statement
     if (score >= 70) {
         std::cout << "Good job!" << std::endl;
     } else {
         std::cout << "Need improvement" << std::endl;
     }
-    
+
     // if-else if-else chain
     std::string grade;
     if (score >= 90) {
@@ -1743,9 +1743,9 @@ int main() {
     } else {
         grade = "F";
     }
-    
+
     std::cout << "Grade: " << grade << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1758,25 +1758,25 @@ int main() {
 
 int main() {
     int a = 10, b = 20;
-    
+
     // Simple ternary operator
     int max_val = (a > b) ? a : b;
     std::cout << "Maximum: " << max_val << std::endl;
-    
+
     // Nested ternary (use sparingly)
     int x = 5, y = 3, z = 8;
     int max_three = (x > y) ? ((x > z) ? x : z) : ((y > z) ? y : z);
     std::cout << "Maximum of three: " << max_three << std::endl;
-    
+
     // Better alternative using std::max
     int max_better = std::max({x, y, z});
     std::cout << "Maximum (using std::max): " << max_better << std::endl;
-    
+
     // Ternary with different types
     bool is_positive = true;
     auto result = is_positive ? 42 : -42;
     std::cout << "Result: " << result << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1794,21 +1794,21 @@ int main() {
         {"Bob", 25},
         {"Charlie", 35}
     };
-    
+
     // if with initializer - variable scope limited to if block
     if (auto it = ages.find("Alice"); it != ages.end()) {
         std::cout << "Alice's age: " << it->second << std::endl;
     } else {
         std::cout << "Alice not found" << std::endl;
     }
-    
+
     // Multiple conditions with initializer
     if (auto [inserted, success] = ages.insert({"David", 28}); success) {
         std::cout << "David added successfully" << std::endl;
     } else {
         std::cout << "David already exists" << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1829,39 +1829,39 @@ int main() {
         std::cout << i << " ";
     }
     std::cout << std::endl;
-    
+
     // Multiple variables in for loop
     std::cout << "Multiple variables:" << std::endl;
     for (int i = 0, j = 10; i < 5; ++i, --j) {
         std::cout << "i=" << i << ", j=" << j << std::endl;
     }
-    
+
     // Range-based for loop (C++11)
     std::vector<std::string> names = {"Alice", "Bob", "Charlie"};
-    
+
     std::cout << "Range-based for loop:" << std::endl;
     for (const auto& name : names) {
         std::cout << name << std::endl;
     }
-    
+
     // Range-based for with index (C++20)
     std::cout << "With index:" << std::endl;
     for (auto&& [index, name] : std::views::enumerate(names)) {
         std::cout << index << ": " << name << std::endl;
     }
-    
+
     // Range-based for with modification
     std::vector<int> numbers = {1, 2, 3, 4, 5};
     for (auto& num : numbers) {
         num *= 2; // Modify elements
     }
-    
+
     std::cout << "Modified numbers: ";
     for (const auto& num : numbers) {
         std::cout << num << " ";
     }
     std::cout << std::endl;
-    
+
     return 0;
 }
 ```
@@ -1879,26 +1879,26 @@ int main() {
         std::cout << "Count: " << count << std::endl;
         ++count;
     }
-    
+
     // while with complex condition
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(1, 10);
-    
+
     int target = 7;
     int attempts = 0;
     int guess;
-    
+
     while ((guess = dis(gen)) != target && attempts < 10) {
         std::cout << "Attempt " << ++attempts << ": guessed " << guess << std::endl;
     }
-    
+
     if (guess == target) {
         std::cout << "Found target " << target << " in " << attempts << " attempts!" << std::endl;
     } else {
         std::cout << "Target not found in 10 attempts" << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -1915,14 +1915,14 @@ int main() {
     do {
         std::cout << "Enter a positive number (0 to quit): ";
         std::cin >> number;
-        
+
         if (number > 0) {
             std::cout << "You entered: " << number << std::endl;
         }
     } while (number != 0);
-    
+
     std::cout << "Goodbye!" << std::endl;
-    
+
     // Menu system example
     char choice;
     do {
@@ -1933,7 +1933,7 @@ int main() {
         std::cout << "q. Quit" << std::endl;
         std::cout << "Enter choice: ";
         std::cin >> choice;
-        
+
         switch (choice) {
             case '1':
                 std::cout << "You chose Option A" << std::endl;
@@ -1952,7 +1952,7 @@ int main() {
                 std::cout << "Invalid choice!" << std::endl;
         }
     } while (choice != 'q' && choice != 'Q');
-    
+
     return 0;
 }
 ```
@@ -1970,7 +1970,7 @@ enum class Day {
 
 int main() {
     Day today = Day::WEDNESDAY;
-    
+
     // Traditional switch statement
     switch (today) {
         case Day::MONDAY:
@@ -1991,7 +1991,7 @@ int main() {
         default:
             std::cout << "Invalid day" << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -2012,7 +2012,7 @@ Status processData(const std::string& data) {
 
 int main() {
     std::string input = "Some data to process";
-    
+
     // Switch with initializer
     switch (auto status = processData(input); status) {
         case Status::SUCCESS:
@@ -2025,7 +2025,7 @@ int main() {
             std::cout << "Failed to process data" << std::endl;
             break;
     }
-    
+
     return 0;
 }
 ```
@@ -2053,7 +2053,7 @@ int main() {
     processType(42);
     processType(3.14);
     processType(std::string("Hello"));
-    
+
     return 0;
 }
 ```
@@ -2068,7 +2068,7 @@ int main() {
 
 int main() {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    
+
     std::cout << "Using continue to skip even numbers:" << std::endl;
     for (const auto& num : numbers) {
         if (num % 2 == 0) {
@@ -2077,7 +2077,7 @@ int main() {
         std::cout << num << " ";
     }
     std::cout << std::endl;
-    
+
     std::cout << "Using break to stop at first number > 5:" << std::endl;
     for (const auto& num : numbers) {
         if (num > 5) {
@@ -2086,7 +2086,7 @@ int main() {
         std::cout << num << " ";
     }
     std::cout << std::endl;
-    
+
     // Nested loop control
     std::cout << "Nested loop with labeled break equivalent:" << std::endl;
     bool found = false;
@@ -2100,7 +2100,7 @@ int main() {
         }
         std::cout << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -2113,19 +2113,19 @@ int main() {
 int main() {
     int attempts = 0;
     const int max_attempts = 3;
-    
+
 retry:
     attempts++;
     std::cout << "Attempt " << attempts << std::endl;
-    
+
     // Simulate some operation that might fail
     if (attempts < max_attempts) {
         std::cout << "Operation failed, retrying..." << std::endl;
         goto retry; // Jump back to retry label
     }
-    
+
     std::cout << "Maximum attempts reached" << std::endl;
-    
+
     // Better alternative using loops
     std::cout << "\nBetter approach using loop:" << std::endl;
     for (int i = 1; i <= max_attempts; ++i) {
@@ -2135,7 +2135,7 @@ retry:
         }
     }
     std::cout << "Maximum attempts reached" << std::endl;
-    
+
     return 0;
 }
 ```
@@ -2154,7 +2154,7 @@ retry:
 class GradeCalculator {
 private:
     std::vector<double> grades;
-    
+
 public:
     void addGrade(double grade) {
         if (grade >= 0.0 && grade <= 100.0) {
@@ -2163,12 +2163,12 @@ public:
             std::cout << "Invalid grade: " << grade << " (must be 0-100)" << std::endl;
         }
     }
-    
+
     double calculateAverage() const {
         if (grades.empty()) return 0.0;
         return std::accumulate(grades.begin(), grades.end(), 0.0) / grades.size();
     }
-    
+
     char getLetterGrade(double average) const {
         if (average >= 90) return 'A';
         else if (average >= 80) return 'B';
@@ -2176,27 +2176,27 @@ public:
         else if (average >= 60) return 'D';
         else return 'F';
     }
-    
+
     void displayReport() const {
         if (grades.empty()) {
             std::cout << "No grades recorded." << std::endl;
             return;
         }
-        
+
         std::cout << "\n=== Grade Report ===" << std::endl;
         std::cout << "Individual Grades: ";
         for (const auto& grade : grades) {
             std::cout << grade << " ";
         }
         std::cout << std::endl;
-        
+
         double average = calculateAverage();
         char letter = getLetterGrade(average);
-        
+
         std::cout << std::fixed << std::setprecision(2);
         std::cout << "Average: " << average << std::endl;
         std::cout << "Letter Grade: " << letter << std::endl;
-        
+
         // Switch statement for grade description
         switch (letter) {
             case 'A':
@@ -2220,17 +2220,17 @@ public:
 
 int main() {
     GradeCalculator calculator;
-    
+
     // Input grades with validation loop
     std::cout << "Enter grades (0-100), enter -1 to finish:" << std::endl;
-    
+
     double grade;
     while (std::cin >> grade && grade != -1) {
         calculator.addGrade(grade);
     }
-    
+
     calculator.displayReport();
-    
+
     return 0;
 }
 ```
@@ -2246,38 +2246,38 @@ int main() {
 
 int main() {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    
+
     // 1. Range-based for with filtering (C++20)
     std::cout << "Even numbers using ranges:" << std::endl;
     for (auto even : numbers | std::views::filter([](int n) { return n % 2 == 0; })) {
         std::cout << even << " ";
     }
     std::cout << std::endl;
-    
+
     // 2. Traditional for with custom step
     std::cout << "Every 2nd element:" << std::endl;
     for (size_t i = 0; i < numbers.size(); i += 2) {
         std::cout << numbers[i] << " ";
     }
     std::cout << std::endl;
-    
+
     // 3. Reverse iteration
     std::cout << "Reverse order:" << std::endl;
     for (auto it = numbers.rbegin(); it != numbers.rend(); ++it) {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
-    
+
     // 4. Iterator-based loop with early termination
     std::cout << "Find first number > 5:" << std::endl;
     for (auto it = numbers.begin(); it != numbers.end(); ++it) {
         if (*it > 5) {
-            std::cout << "Found: " << *it << " at position " 
+            std::cout << "Found: " << *it << " at position "
                       << std::distance(numbers.begin(), it) << std::endl;
             break;
         }
     }
-    
+
     // 5. Nested loops with break control
     std::cout << "2D grid search:" << std::endl;
     std::vector<std::vector<int>> grid = {
@@ -2285,21 +2285,21 @@ int main() {
         {4, 5, 6},
         {7, 8, 9}
     };
-    
+
     int target = 5;
     bool found = false;
-    
+
     for (size_t i = 0; i < grid.size() && !found; ++i) {
         for (size_t j = 0; j < grid[i].size(); ++j) {
             if (grid[i][j] == target) {
-                std::cout << "Found " << target << " at position (" 
+                std::cout << "Found " << target << " at position ("
                           << i << ", " << j << ")" << std::endl;
                 found = true;
                 break;
             }
         }
     }
-    
+
     return 0;
 }
 ```
@@ -2323,7 +2323,7 @@ int main() {
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Number Pattern Generator
-**Difficulty:** 🟢 Beginner  
+**Difficulty:** 🟢 Beginner
 **Estimated Time:** 15 minutes
 
 Create a program that generates different number patterns using various loop types. Include patterns like triangles, diamonds, and spirals.
@@ -2357,7 +2357,7 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     static void printPyramid(int height) {
         std::cout << "Pyramid (height " << height << "):" << std::endl;
         for (int i = 1; i <= height; ++i) {
@@ -2373,10 +2373,10 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     static void printDiamond(int size) {
         std::cout << "Diamond (size " << size << "):" << std::endl;
-        
+
         // Upper half (including middle)
         for (int i = 1; i <= size; ++i) {
             for (int j = 1; j <= size - i; ++j) {
@@ -2387,7 +2387,7 @@ public:
             }
             std::cout << std::endl;
         }
-        
+
         // Lower half
         for (int i = size - 1; i >= 1; --i) {
             for (int j = 1; j <= size - i; ++j) {
@@ -2400,29 +2400,29 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     static void printNumberSpiral(int size) {
         std::cout << "Number Spiral (" << size << "x" << size << "):" << std::endl;
-        
+
         // Create 2D array
         std::vector<std::vector<int>> matrix(size, std::vector<int>(size, 0));
-        
+
         int num = 1;
         int top = 0, bottom = size - 1, left = 0, right = size - 1;
-        
+
         while (top <= bottom && left <= right) {
             // Fill top row
             for (int col = left; col <= right; ++col) {
                 matrix[top][col] = num++;
             }
             top++;
-            
+
             // Fill right column
             for (int row = top; row <= bottom; ++row) {
                 matrix[row][right] = num++;
             }
             right--;
-            
+
             // Fill bottom row
             if (top <= bottom) {
                 for (int col = right; col >= left; --col) {
@@ -2430,7 +2430,7 @@ public:
                 }
                 bottom--;
             }
-            
+
             // Fill left column
             if (left <= right) {
                 for (int row = bottom; row >= top; --row) {
@@ -2439,7 +2439,7 @@ public:
                 left++;
             }
         }
-        
+
         // Print the matrix
         for (const auto& row : matrix) {
             for (int val : row) {
@@ -2449,7 +2449,7 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     static void printCheckerboard(int size) {
         std::cout << "Checkerboard (" << size << "x" << size << "):" << std::endl;
         for (int i = 0; i < size; ++i) {
@@ -2468,7 +2468,7 @@ public:
 
 int main() {
     std::cout << "=== Pattern Generator ===" << std::endl << std::endl;
-    
+
     int choice;
     do {
         std::cout << "Choose a pattern:" << std::endl;
@@ -2479,17 +2479,17 @@ int main() {
         std::cout << "5. Checkerboard" << std::endl;
         std::cout << "0. Exit" << std::endl;
         std::cout << "Enter choice (0-5): ";
-        
+
         std::cin >> choice;
-        
+
         if (choice >= 1 && choice <= 5) {
             int size;
             std::cout << "Enter size: ";
             std::cin >> size;
-            
+
             if (size > 0 && size <= 20) {
                 std::cout << std::endl;
-                
+
                 switch (choice) {
                     case 1:
                         PatternGenerator::printTriangle(size);
@@ -2513,13 +2513,13 @@ int main() {
         } else if (choice != 0) {
             std::cout << "Invalid choice!" << std::endl;
         }
-        
+
         std::cout << std::endl;
-        
+
     } while (choice != 0);
-    
+
     std::cout << "Goodbye!" << std::endl;
-    
+
     return 0;
 }
 ```
@@ -2535,7 +2535,7 @@ int main() {
 </details>
 
 #### 🏋️ Exercise 2: Advanced Control Flow
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 30 minutes
 
 Create a text-based game that uses advanced control structures including nested loops, switch statements with fall-through, and complex conditional logic.
@@ -2583,13 +2583,13 @@ private:
     std::vector<std::vector<bool>> revealed;
     GameState currentState;
     bool gameWon;
-    
+
 public:
-    Minesweeper(int w = 10, int h = 10, int m = 15) 
+    Minesweeper(int w = 10, int h = 10, int m = 15)
         : width(w), height(h), mines(m), currentState(GameState::MENU), gameWon(false) {
         initializeBoard();
     }
-    
+
     void run() {
         while (currentState != GameState::EXIT) {
             switch (currentState) {
@@ -2607,35 +2607,35 @@ public:
             }
         }
     }
-    
+
 private:
     void initializeBoard() {
         board.assign(height, std::vector<CellState>(width, CellState::EMPTY));
         mineCount.assign(height, std::vector<int>(width, 0));
         revealed.assign(height, std::vector<bool>(width, false));
-        
+
         placeMines();
         calculateMineNumbers();
     }
-    
+
     void placeMines() {
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> rowDist(0, height - 1);
         std::uniform_int_distribution<> colDist(0, width - 1);
-        
+
         int placedMines = 0;
         while (placedMines < mines) {
             int row = rowDist(gen);
             int col = colDist(gen);
-            
+
             if (board[row][col] != CellState::MINE) {
                 board[row][col] = CellState::MINE;
                 placedMines++;
             }
         }
     }
-    
+
     void calculateMineNumbers() {
         for (int i = 0; i < height; ++i) {
             for (int j = 0; j < width; ++j) {
@@ -2654,11 +2654,11 @@ private:
             }
         }
     }
-    
+
     bool isValid(int row, int col) {
         return row >= 0 && row < height && col >= 0 && col < width;
     }
-    
+
     void showMenu() {
         std::cout << "\n=== MINESWEEPER ===" << std::endl;
         std::cout << "1. New Game (Easy: 10x10, 15 mines)" << std::endl;
@@ -2667,7 +2667,7 @@ private:
         std::cout << "4. Custom Game" << std::endl;
         std::cout << "5. Exit" << std::endl;
         std::cout << "Choose option: ";
-        
+
         int choice;
         if (std::cin >> choice) {
             switch (choice) {
@@ -2700,7 +2700,7 @@ private:
             std::cout << "Invalid input!" << std::endl;
         }
     }
-    
+
     bool setupCustomGame() {
         int w, h, m;
         std::cout << "Enter width (5-25): ";
@@ -2708,24 +2708,24 @@ private:
             std::cout << "Invalid width!" << std::endl;
             return false;
         }
-        
+
         std::cout << "Enter height (5-25): ";
         if (!(std::cin >> h) || h < 5 || h > 25) {
             std::cout << "Invalid height!" << std::endl;
             return false;
         }
-        
+
         int maxMines = (w * h) / 3;
         std::cout << "Enter number of mines (1-" << maxMines << "): ";
         if (!(std::cin >> m) || m < 1 || m > maxMines) {
             std::cout << "Invalid number of mines!" << std::endl;
             return false;
         }
-        
+
         setupGame(w, h, m);
         return true;
     }
-    
+
     void setupGame(int w, int h, int m) {
         width = w;
         height = h;
@@ -2733,23 +2733,23 @@ private:
         gameWon = false;
         initializeBoard();
     }
-    
+
     void playGame() {
         displayBoard();
-        
+
         std::cout << "\nEnter command (r/f row col) or 'q' to quit: ";
         std::string command;
         int row, col;
-        
+
         if (std::cin >> command) {
             if (command == "q" || command == "quit") {
                 currentState = GameState::MENU;
                 return;
-            } else if ((command == "r" || command == "f") && 
-                       std::cin >> row >> col && 
+            } else if ((command == "r" || command == "f") &&
+                       std::cin >> row >> col &&
                        isValid(row - 1, col - 1)) {
                 row--; col--; // Convert to 0-based indexing
-                
+
                 if (command == "r") {
                     if (revealCell(row, col)) {
                         if (checkWin()) {
@@ -2770,14 +2770,14 @@ private:
             }
         }
     }
-    
+
     void displayBoard() {
         std::cout << "\n   ";
         for (int j = 0; j < width; ++j) {
             std::cout << std::setw(3) << (j + 1);
         }
         std::cout << std::endl;
-        
+
         for (int i = 0; i < height; ++i) {
             std::cout << std::setw(2) << (i + 1) << " ";
             for (int j = 0; j < width; ++j) {
@@ -2800,18 +2800,18 @@ private:
             std::cout << std::endl;
         }
     }
-    
+
     bool revealCell(int row, int col) {
         if (!isValid(row, col) || revealed[row][col] || board[row][col] == CellState::FLAGGED) {
             return true;
         }
-        
+
         revealed[row][col] = true;
-        
+
         if (board[row][col] == CellState::MINE) {
             return false; // Game over
         }
-        
+
         // Auto-reveal adjacent cells if mine count is 0
         if (mineCount[row][col] == 0) {
             for (int di = -1; di <= 1; ++di) {
@@ -2820,20 +2820,20 @@ private:
                 }
             }
         }
-        
+
         return true;
     }
-    
+
     void flagCell(int row, int col) {
         if (!isValid(row, col) || revealed[row][col]) {
             return;
         }
-        
-        board[row][col] = (board[row][col] == CellState::FLAGGED) 
-                         ? CellState::EMPTY 
+
+        board[row][col] = (board[row][col] == CellState::FLAGGED)
+                         ? CellState::EMPTY
                          : CellState::FLAGGED;
     }
-    
+
     bool checkWin() {
         int revealedCount = 0;
         for (int i = 0; i < height; ++i) {
@@ -2845,7 +2845,7 @@ private:
         }
         return revealedCount == (width * height - mines);
     }
-    
+
     void showGameOver() {
         // Reveal all mines
         for (int i = 0; i < height; ++i) {
@@ -2855,15 +2855,15 @@ private:
                 }
             }
         }
-        
+
         displayBoard();
-        
+
         if (gameWon) {
             std::cout << "\n🎉 Congratulations! You won! 🎉" << std::endl;
         } else {
             std::cout << "\n💥 Game Over! You hit a mine! 💥" << std::endl;
         }
-        
+
         std::cout << "\nPress Enter to continue...";
         std::cin.ignore();
         std::cin.get();
@@ -2923,12 +2923,12 @@ int main() {
     // Function calls
     int result = add(5, 3);
     std::cout << "5 + 3 = " << result << std::endl;
-    
+
     greet("Alice");
-    
+
     double area = calculateArea(2.5);
     std::cout << "Area of circle: " << area << std::endl;
-    
+
     return 0;
 }
 
@@ -2954,9 +2954,9 @@ double calculateArea(double radius) {
 #include <string>
 
 // Functions with default parameters
-void createWindow(int width = 800, int height = 600, 
+void createWindow(int width = 800, int height = 600,
                  const std::string& title = "Default Window") {
-    std::cout << "Creating window: " << width << "x" << height 
+    std::cout << "Creating window: " << width << "x" << height
               << " - " << title << std::endl;
 }
 
@@ -2975,10 +2975,10 @@ int main() {
     createWindow(1024);                       // Width specified
     createWindow(1024, 768);                  // Width and height
     createWindow(1920, 1080, "Main Window");  // All parameters
-    
+
     std::cout << "2^2 = " << power(2) << std::endl;        // Uses default exponent
     std::cout << "2^8 = " << power(2, 8) << std::endl;     // Explicit exponent
-    
+
     return 0;
 }
 ```
@@ -3023,19 +3023,19 @@ void modifyPointer(int* x) {
 int main() {
     int value = 10;
     std::cout << "Original value: " << value << std::endl;
-    
+
     modifyValue(value);
     std::cout << "After modifyValue: " << value << std::endl;
-    
+
     modifyReference(value);
     std::cout << "After modifyReference: " << value << std::endl;
-    
+
     modifyPointer(&value);
     std::cout << "After modifyPointer: " << value << std::endl;
-    
+
     std::vector<int> numbers = {1, 2, 3, 4, 5};
     printVector(numbers); // Efficient - no copy made
-    
+
     return 0;
 }
 ```
@@ -3068,14 +3068,14 @@ std::tuple<int, int, int> findMinMaxSum(const std::vector<int>& vec) {
     if (vec.empty()) {
         return {0, 0, 0};
     }
-    
+
     int min_val = vec[0], max_val = vec[0], sum = 0;
     for (int val : vec) {
         if (val < min_val) min_val = val;
         if (val > max_val) max_val = val;
         sum += val;
     }
-    
+
     return {min_val, max_val, sum};
 }
 
@@ -3091,21 +3091,21 @@ int main() {
     std::cout << "multiply(6, 7) = " << multiply(6, 7) << std::endl;
     std::cout << "divide(10.0, 3.0) = " << divide(10.0, 3.0) << std::endl;
     std::cout << "concatenate result: " << concatenate("Hello, ", "World!") << std::endl;
-    
+
     // Structured binding with tuple (C++17)
     std::vector<int> numbers = {3, 1, 4, 1, 5, 9, 2};
     auto [min_val, max_val, sum] = findMinMaxSum(numbers);
     std::cout << "Min: " << min_val << ", Max: " << max_val << ", Sum: " << sum << std::endl;
-    
+
     // Using optional
     if (auto result = safeDivide(10, 2); result.has_value()) {
         std::cout << "Safe division result: " << result.value() << std::endl;
     }
-    
+
     if (auto result = safeDivide(10, 0); !result.has_value()) {
         std::cout << "Division by zero detected!" << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -3120,38 +3120,38 @@ int main() {
 class Calculator {
 public:
     // Overloaded functions - same name, different parameters
-    
+
     // Different number of parameters
     int add(int a, int b) {
         std::cout << "Adding two integers: ";
         return a + b;
     }
-    
+
     int add(int a, int b, int c) {
         std::cout << "Adding three integers: ";
         return a + b + c;
     }
-    
+
     // Different parameter types
     double add(double a, double b) {
         std::cout << "Adding two doubles: ";
         return a + b;
     }
-    
+
     std::string add(const std::string& a, const std::string& b) {
         std::cout << "Concatenating strings: ";
         return a + b;
     }
-    
+
     // Different const-ness
     void print() {
         std::cout << "Non-const print" << std::endl;
     }
-    
+
     void print() const {
         std::cout << "Const print" << std::endl;
     }
-    
+
     // Template function overload
     template<typename T>
     T add(const std::vector<T>& values) {
@@ -3166,22 +3166,22 @@ public:
 
 int main() {
     Calculator calc;
-    
+
     std::cout << calc.add(5, 3) << std::endl;
     std::cout << calc.add(1, 2, 3) << std::endl;
     std::cout << calc.add(2.5, 3.7) << std::endl;
     std::cout << calc.add(std::string("Hello, "), std::string("World!")) << std::endl;
-    
+
     std::vector<int> int_vec = {1, 2, 3, 4, 5};
     std::vector<double> double_vec = {1.1, 2.2, 3.3};
-    
+
     std::cout << calc.add(int_vec) << std::endl;
     std::cout << calc.add(double_vec) << std::endl;
-    
+
     calc.print();
     const Calculator const_calc;
     const_calc.print();
-    
+
     return 0;
 }
 ```
@@ -3198,43 +3198,43 @@ int main() {
 
 int main() {
     // Basic lambda syntax: [capture](parameters) -> return_type { body }
-    
+
     // Simple lambda
     auto hello = []() {
         std::cout << "Hello from lambda!" << std::endl;
     };
     hello();
-    
+
     // Lambda with parameters
     auto add = [](int a, int b) {
         return a + b;
     };
     std::cout << "Lambda add: " << add(5, 3) << std::endl;
-    
+
     // Lambda with explicit return type
     auto divide = [](double a, double b) -> double {
         return (b != 0) ? a / b : 0.0;
     };
     std::cout << "Lambda divide: " << divide(10, 3) << std::endl;
-    
+
     // Using lambdas with STL algorithms
     std::vector<int> numbers = {5, 2, 8, 1, 9, 3};
-    
+
     // Sort in ascending order
     std::sort(numbers.begin(), numbers.end(), [](int a, int b) {
         return a < b;
     });
-    
+
     std::cout << "Sorted ascending: ";
     for (int n : numbers) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     // Count elements greater than 5
     int count = std::count_if(numbers.begin(), numbers.end(), [](int n) {
         return n > 5;
     });
     std::cout << "Numbers > 5: " << count << std::endl;
-    
+
     return 0;
 }
 ```
@@ -3250,59 +3250,59 @@ int main() {
 int main() {
     int multiplier = 3;
     int offset = 10;
-    
+
     // Capture by value
     auto lambda1 = [multiplier](int x) {
         return x * multiplier;  // multiplier is copied
     };
-    
+
     // Capture by reference
     auto lambda2 = [&offset](int x) {
         offset += x;  // Can modify original offset
         return offset;
     };
-    
+
     // Capture all by value
     auto lambda3 = [=](int x) {
         return x * multiplier + offset;  // Both copied
     };
-    
+
     // Capture all by reference
     auto lambda4 = [&](int x) {
         multiplier += 1;  // Modifies original
         return x * multiplier;
     };
-    
+
     // Mixed capture
     auto lambda5 = [multiplier, &offset](int x) {
         offset += x;  // Reference capture
         return x * multiplier + offset;  // Value capture
     };
-    
+
     // Mutable lambda (allows modification of captured values)
     auto lambda6 = [multiplier](int x) mutable {
         multiplier += 1;  // Modifies the copy
         return x * multiplier;
     };
-    
+
     std::cout << "Original values - multiplier: " << multiplier << ", offset: " << offset << std::endl;
-    
+
     std::cout << "lambda1(5): " << lambda1(5) << std::endl;
     std::cout << "lambda2(2): " << lambda2(2) << std::endl;
     std::cout << "After lambda2 - offset: " << offset << std::endl;
-    
+
     std::cout << "lambda4(4): " << lambda4(4) << std::endl;
     std::cout << "After lambda4 - multiplier: " << multiplier << std::endl;
-    
+
     // Generic lambda (C++14)
     auto generic_lambda = [](auto a, auto b) {
         return a + b;
     };
-    
+
     std::cout << "Generic lambda (int): " << generic_lambda(5, 3) << std::endl;
     std::cout << "Generic lambda (double): " << generic_lambda(2.5, 3.7) << std::endl;
     std::cout << "Generic lambda (string): " << generic_lambda(std::string("Hello "), std::string("World")) << std::endl;
-    
+
     return 0;
 }
 ```
@@ -3330,13 +3330,13 @@ clamp(T value, T min_val, T max_val) {
 class Accumulator {
 private:
     int sum = 0;
-    
+
 public:
     int operator()(int value) {
         sum += value;
         return sum;
     }
-    
+
     int getSum() const { return sum; }
 };
 
@@ -3345,11 +3345,11 @@ template<typename Container, typename Func>
 auto transform_container(const Container& container, Func func) {
     std::vector<std::invoke_result_t<Func, typename Container::value_type>> result;
     result.reserve(container.size());
-    
+
     for (const auto& item : container) {
         result.push_back(func(item));
     }
-    
+
     return result;
 }
 
@@ -3368,44 +3368,44 @@ void processData(const std::vector<int>& data, std::function<void(int)> processo
 
 int main() {
     std::cout << "=== Advanced Function Features ===" << std::endl;
-    
+
     // 1. Template function usage
     std::cout << "Clamp 15 between 10-20: " << clamp(15, 10, 20) << std::endl;
     std::cout << "Clamp 5 between 10-20: " << clamp(5, 10, 20) << std::endl;
     std::cout << "Clamp 25 between 10-20: " << clamp(25, 10, 20) << std::endl;
-    
+
     // 2. Function object
     Accumulator acc;
     std::cout << "Accumulator: " << acc(10) << " -> " << acc(20) << " -> " << acc(5) << std::endl;
-    
+
     // 3. Higher-order function
     std::vector<int> numbers = {1, 2, 3, 4, 5};
     auto squared = transform_container(numbers, [](int x) { return x * x; });
-    
+
     std::cout << "Original: ";
     for (int n : numbers) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     std::cout << "Squared: ";
     for (int n : squared) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     // 4. Variadic template
     std::cout << "Sum of 1,2,3,4,5: " << sum_all(1, 2, 3, 4, 5) << std::endl;
     std::cout << "Sum of 1.5,2.5,3.5: " << sum_all(1.5, 2.5, 3.5) << std::endl;
-    
+
     // 5. std::function usage
     std::vector<int> data = {10, 20, 30, 40, 50};
-    
+
     std::cout << "Processing with lambda: ";
     processData(data, [](int x) { std::cout << x * 2 << " "; });
     std::cout << std::endl;
-    
+
     std::cout << "Processing with function object: ";
     Accumulator processor;
     processData(data, std::ref(processor));
     std::cout << "Final sum: " << processor.getSum() << std::endl;
-    
+
     return 0;
 }
 ```
@@ -3429,7 +3429,7 @@ int main() {
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Function Library
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 30 minutes
 
 Create a mathematical function library that demonstrates function overloading, templates, and lambda usage.
@@ -3458,7 +3458,7 @@ Create a mathematical function library that demonstrates function overloading, t
 #include <numeric>
 
 namespace MathLib {
-    
+
     // Overloaded power functions
     int power(int base, int exponent) {
         int result = 1;
@@ -3467,11 +3467,11 @@ namespace MathLib {
         }
         return result;
     }
-    
+
     double power(double base, double exponent) {
         return std::pow(base, exponent);
     }
-    
+
     // Template function for generic operations
     template<typename T>
     T factorial(T n) {
@@ -3480,80 +3480,80 @@ namespace MathLib {
         if (n <= 1) return T{1};
         return n * factorial(n - 1);
     }
-    
+
     // Template for container statistics
     template<typename Container>
     class Statistics {
     public:
         using ValueType = typename Container::value_type;
-        
+
         static ValueType sum(const Container& data) {
             return std::accumulate(data.begin(), data.end(), ValueType{});
         }
-        
+
         static std::optional<ValueType> mean(const Container& data) {
             if (data.empty()) return std::nullopt;
             return static_cast<ValueType>(sum(data)) / data.size();
         }
-        
+
         static std::optional<ValueType> median(Container data) {
             if (data.empty()) return std::nullopt;
-            
+
             std::sort(data.begin(), data.end());
             size_t size = data.size();
-            
+
             if (size % 2 == 0) {
                 return (data[size/2 - 1] + data[size/2]) / 2;
             } else {
                 return data[size/2];
             }
         }
-        
+
         static std::optional<ValueType> mode(const Container& data) {
             if (data.empty()) return std::nullopt;
-            
+
             std::map<ValueType, int> frequency;
             for (const auto& value : data) {
                 frequency[value]++;
             }
-            
+
             auto max_freq = std::max_element(frequency.begin(), frequency.end(),
                 [](const auto& a, const auto& b) {
                     return a.second < b.second;
                 });
-            
+
             return max_freq->first;
         }
     };
-    
+
     // Higher-order functions
     template<typename Container, typename UnaryOp>
     auto apply_operation(const Container& data, UnaryOp op) {
         std::vector<std::invoke_result_t<UnaryOp, typename Container::value_type>> result;
         result.reserve(data.size());
-        
+
         std::transform(data.begin(), data.end(), std::back_inserter(result), op);
         return result;
     }
-    
+
     template<typename Container, typename BinaryOp>
     auto reduce(const Container& data, BinaryOp op, typename Container::value_type init = {}) {
         return std::accumulate(data.begin(), data.end(), init, op);
     }
-    
+
     // Function composition
     template<typename F1, typename F2>
     auto compose(F1 f1, F2 f2) {
         return [f1, f2](auto x) { return f1(f2(x)); };
     }
-    
+
     // Predefined lambda functions
     namespace Lambdas {
         auto square = [](auto x) { return x * x; };
         auto cube = [](auto x) { return x * x * x; };
         auto double_val = [](auto x) { return x * 2; };
         auto add_one = [](auto x) { return x + 1; };
-        
+
         auto is_even = [](auto x) { return x % 2 == 0; };
         auto is_prime = [](int n) {
             if (n < 2) return false;
@@ -3563,7 +3563,7 @@ namespace MathLib {
             return true;
         };
     }
-    
+
     // Advanced mathematical operations
     class AdvancedMath {
     public:
@@ -3572,36 +3572,36 @@ namespace MathLib {
         static double integrate(Func f, double a, double b, int n = 1000) {
             double h = (b - a) / n;
             double sum = 0.0;
-            
+
             for (int i = 0; i < n; ++i) {
                 double x = a + i * h;
                 sum += f(x) * h;
             }
-            
+
             return sum;
         }
-        
+
         // Newton's method for finding roots
         template<typename Func, typename Derivative>
-        static std::optional<double> findRoot(Func f, Derivative df, double initial_guess, 
+        static std::optional<double> findRoot(Func f, Derivative df, double initial_guess,
                                             double tolerance = 1e-6, int max_iterations = 100) {
             double x = initial_guess;
-            
+
             for (int i = 0; i < max_iterations; ++i) {
                 double fx = f(x);
                 double dfx = df(x);
-                
+
                 if (std::abs(fx) < tolerance) {
                     return x;
                 }
-                
+
                 if (std::abs(dfx) < tolerance) {
                     return std::nullopt; // Derivative too small
                 }
-                
+
                 x = x - fx / dfx;
             }
-            
+
             return std::nullopt; // Did not converge
         }
     };
@@ -3609,79 +3609,79 @@ namespace MathLib {
 
 int main() {
     using namespace MathLib;
-    
+
     std::cout << "=== Mathematical Function Library Demo ===" << std::endl;
-    
+
     // 1. Function overloading
     std::cout << "1. Function Overloading:" << std::endl;
     std::cout << "power(2, 8) = " << power(2, 8) << std::endl;
     std::cout << "power(2.5, 3.0) = " << power(2.5, 3.0) << std::endl;
-    
+
     // 2. Template functions
     std::cout << "\n2. Template Functions:" << std::endl;
     std::cout << "factorial(5) = " << factorial(5) << std::endl;
     std::cout << "factorial(10L) = " << factorial(10L) << std::endl;
-    
+
     // 3. Container statistics
     std::cout << "\n3. Container Statistics:" << std::endl;
     std::vector<double> data = {1.5, 2.3, 3.7, 2.3, 4.1, 1.9, 3.7, 2.8};
-    
+
     if (auto mean_val = Statistics<std::vector<double>>::mean(data)) {
         std::cout << "Mean: " << *mean_val << std::endl;
     }
-    
+
     if (auto median_val = Statistics<std::vector<double>>::median(data)) {
         std::cout << "Median: " << *median_val << std::endl;
     }
-    
+
     // 4. Higher-order functions
     std::cout << "\n4. Higher-order Functions:" << std::endl;
     std::vector<int> numbers = {1, 2, 3, 4, 5};
-    
+
     auto squared = apply_operation(numbers, Lambdas::square);
     auto cubed = apply_operation(numbers, Lambdas::cube);
-    
+
     std::cout << "Original: ";
     for (int n : numbers) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     std::cout << "Squared: ";
     for (auto n : squared) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     std::cout << "Cubed: ";
     for (auto n : cubed) std::cout << n << " ";
     std::cout << std::endl;
-    
+
     // 5. Function composition
     std::cout << "\n5. Function Composition:" << std::endl;
     auto square_then_double = compose(Lambdas::double_val, Lambdas::square);
     std::cout << "square_then_double(5) = " << square_then_double(5) << std::endl;
-    
+
     // 6. Reduction operations
     std::cout << "\n6. Reduction Operations:" << std::endl;
     auto sum = reduce(numbers, std::plus<int>());
     auto product = reduce(numbers, std::multiplies<int>(), 1);
-    
+
     std::cout << "Sum: " << sum << std::endl;
     std::cout << "Product: " << product << std::endl;
-    
+
     // 7. Advanced mathematical operations
     std::cout << "\n7. Advanced Operations:" << std::endl;
-    
+
     // Integration of x^2 from 0 to 2
     auto f = [](double x) { return x * x; };
     double integral = AdvancedMath::integrate(f, 0.0, 2.0);
     std::cout << "∫₀² x² dx ≈ " << integral << " (exact: 8/3 = " << 8.0/3.0 << ")" << std::endl;
-    
+
     // Find root of x^2 - 2 = 0 (should be √2)
     auto g = [](double x) { return x * x - 2.0; };
     auto dg = [](double x) { return 2.0 * x; };
-    
+
     if (auto root = AdvancedMath::findRoot(g, dg, 1.0)) {
         std::cout << "Root of x² - 2 = 0: " << *root << " (√2 = " << std::sqrt(2) << ")" << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -3729,42 +3729,42 @@ class Person {
 private:
     std::string name;
     int age;
-    
+
 public:
     // Constructor
     Person(const std::string& n, int a) : name(n), age(a) {
         std::cout << "Person constructor called for " << name << std::endl;
     }
-    
+
     // Destructor
     ~Person() {
         std::cout << "Person destructor called for " << name << std::endl;
     }
-    
+
     // Member functions (methods)
     void introduce() const {
         std::cout << "Hi, I'm " << name << " and I'm " << age << " years old." << std::endl;
     }
-    
+
     // Getters (accessors)
     std::string getName() const { return name; }
     int getAge() const { return age; }
-    
+
     // Setters (mutators)
     void setName(const std::string& n) { name = n; }
-    void setAge(int a) { 
+    void setAge(int a) {
         if (a >= 0) {
-            age = a; 
+            age = a;
         }
     }
-    
+
     // Static members
     static int population;
-    
-    static int getPopulation() { 
-        return population; 
+
+    static int getPopulation() {
+        return population;
     }
-    
+
     static void displayInfo() {
         std::cout << "This is the Person class with " << population << " instances." << std::endl;
     }
@@ -3775,23 +3775,23 @@ int Person::population = 0;
 
 int main() {
     std::cout << "=== Basic Class and Object Demo ===" << std::endl;
-    
+
     // Creating objects
     Person alice("Alice", 25);
     Person bob("Bob", 30);
-    
+
     // Using member functions
     alice.introduce();
     bob.introduce();
-    
+
     // Using getters and setters
     std::cout << alice.getName() << " is " << alice.getAge() << " years old." << std::endl;
     alice.setAge(26);
     std::cout << "After birthday: " << alice.getName() << " is " << alice.getAge() << " years old." << std::endl;
-    
+
     // Static members
     Person::displayInfo();
-    
+
     return 0;
 }
 ```
@@ -3810,36 +3810,36 @@ private:
     std::string accountNumber;
     std::string ownerName;
     double balance;
-    
+
 public:
     // Default constructor
     BankAccount() : accountNumber("000000"), ownerName("Unknown"), balance(0.0) {
         std::cout << "Default constructor called" << std::endl;
     }
-    
+
     // Parameterized constructor
-    BankAccount(const std::string& accNum, const std::string& name, double initialBalance = 0.0) 
+    BankAccount(const std::string& accNum, const std::string& name, double initialBalance = 0.0)
         : accountNumber(accNum), ownerName(name), balance(initialBalance) {
         std::cout << "Parameterized constructor called for " << ownerName << std::endl;
     }
-    
+
     // Copy constructor
-    BankAccount(const BankAccount& other) 
-        : accountNumber(other.accountNumber + "_COPY"), 
-          ownerName(other.ownerName), 
+    BankAccount(const BankAccount& other)
+        : accountNumber(other.accountNumber + "_COPY"),
+          ownerName(other.ownerName),
           balance(other.balance) {
         std::cout << "Copy constructor called for " << ownerName << std::endl;
     }
-    
+
     // Move constructor (C++11)
-    BankAccount(BankAccount&& other) noexcept 
-        : accountNumber(std::move(other.accountNumber)), 
-          ownerName(std::move(other.ownerName)), 
+    BankAccount(BankAccount&& other) noexcept
+        : accountNumber(std::move(other.accountNumber)),
+          ownerName(std::move(other.ownerName)),
           balance(other.balance) {
         other.balance = 0.0;
         std::cout << "Move constructor called for " << ownerName << std::endl;
     }
-    
+
     // Copy assignment operator
     BankAccount& operator=(const BankAccount& other) {
         if (this != &other) {
@@ -3850,7 +3850,7 @@ public:
         }
         return *this;
     }
-    
+
     // Move assignment operator (C++11)
     BankAccount& operator=(BankAccount&& other) noexcept {
         if (this != &other) {
@@ -3862,12 +3862,12 @@ public:
         }
         return *this;
     }
-    
+
     // Destructor
     ~BankAccount() {
         std::cout << "Destructor called for " << ownerName << " (Account: " << accountNumber << ")" << std::endl;
     }
-    
+
     // Member functions
     void deposit(double amount) {
         if (amount > 0) {
@@ -3875,7 +3875,7 @@ public:
             std::cout << ownerName << " deposited $" << amount << ". New balance: $" << balance << std::endl;
         }
     }
-    
+
     bool withdraw(double amount) {
         if (amount > 0 && amount <= balance) {
             balance -= amount;
@@ -3885,12 +3885,12 @@ public:
         std::cout << "Insufficient funds for withdrawal of $" << amount << std::endl;
         return false;
     }
-    
+
     void displayInfo() const {
-        std::cout << "Account: " << accountNumber << ", Owner: " << ownerName 
+        std::cout << "Account: " << accountNumber << ", Owner: " << ownerName
                   << ", Balance: $" << balance << std::endl;
     }
-    
+
     // Getters
     double getBalance() const { return balance; }
     std::string getOwnerName() const { return ownerName; }
@@ -3899,33 +3899,33 @@ public:
 
 int main() {
     std::cout << "=== Constructor and Destructor Demo ===" << std::endl;
-    
+
     // Default constructor
     BankAccount account1;
     account1.displayInfo();
-    
+
     // Parameterized constructor
     BankAccount account2("12345", "Alice Johnson", 1000.0);
     account2.displayInfo();
-    
+
     // Copy constructor
     BankAccount account3 = account2;  // Copy constructor
     account3.displayInfo();
-    
+
     // Copy assignment
     BankAccount account4;
     account4 = account2;  // Copy assignment operator
     account4.displayInfo();
-    
+
     // Demonstrate operations
     account2.deposit(500.0);
     account2.withdraw(200.0);
     account2.displayInfo();
-    
+
     // Move constructor example
     std::vector<BankAccount> accounts;
     accounts.push_back(BankAccount("67890", "Bob Smith", 2000.0));  // Move constructor called
-    
+
     return 0;
 }
 ```
@@ -3944,33 +3944,33 @@ class Animal {
 protected:
     std::string name;
     int age;
-    
+
 public:
     Animal(const std::string& n, int a) : name(n), age(a) {
         std::cout << "Animal constructor: " << name << std::endl;
     }
-    
+
     virtual ~Animal() {  // Virtual destructor for proper cleanup
         std::cout << "Animal destructor: " << name << std::endl;
     }
-    
+
     // Virtual functions for polymorphism
     virtual void makeSound() const {
         std::cout << name << " makes a generic animal sound" << std::endl;
     }
-    
+
     virtual void move() const {
         std::cout << name << " moves around" << std::endl;
     }
-    
+
     // Non-virtual function
     void sleep() const {
         std::cout << name << " is sleeping" << std::endl;
     }
-    
+
     // Pure virtual function makes this an abstract class
     virtual void displayInfo() const = 0;
-    
+
     // Getters
     std::string getName() const { return name; }
     int getAge() const { return age; }
@@ -3980,36 +3980,36 @@ public:
 class Dog : public Animal {
 private:
     std::string breed;
-    
+
 public:
-    Dog(const std::string& n, int a, const std::string& b) 
+    Dog(const std::string& n, int a, const std::string& b)
         : Animal(n, a), breed(b) {
         std::cout << "Dog constructor: " << name << " (" << breed << ")" << std::endl;
     }
-    
+
     ~Dog() override {
         std::cout << "Dog destructor: " << name << std::endl;
     }
-    
+
     // Override virtual functions
     void makeSound() const override {
         std::cout << name << " barks: Woof! Woof!" << std::endl;
     }
-    
+
     void move() const override {
         std::cout << name << " runs on four legs" << std::endl;
     }
-    
+
     void displayInfo() const override {
-        std::cout << "Dog - Name: " << name << ", Age: " << age 
+        std::cout << "Dog - Name: " << name << ", Age: " << age
                   << ", Breed: " << breed << std::endl;
     }
-    
+
     // Dog-specific function
     void fetch() const {
         std::cout << name << " fetches the ball!" << std::endl;
     }
-    
+
     std::string getBreed() const { return breed; }
 };
 
@@ -4018,21 +4018,21 @@ class Bird : public Animal {
 private:
     double wingspan;
     bool canFly;
-    
+
 public:
-    Bird(const std::string& n, int a, double ws, bool fly) 
+    Bird(const std::string& n, int a, double ws, bool fly)
         : Animal(n, a), wingspan(ws), canFly(fly) {
         std::cout << "Bird constructor: " << name << std::endl;
     }
-    
+
     ~Bird() override {
         std::cout << "Bird destructor: " << name << std::endl;
     }
-    
+
     void makeSound() const override {
         std::cout << name << " chirps: Tweet! Tweet!" << std::endl;
     }
-    
+
     void move() const override {
         if (canFly) {
             std::cout << name << " flies through the air" << std::endl;
@@ -4040,13 +4040,13 @@ public:
             std::cout << name << " hops on the ground" << std::endl;
         }
     }
-    
+
     void displayInfo() const override {
-        std::cout << "Bird - Name: " << name << ", Age: " << age 
-                  << ", Wingspan: " << wingspan << "cm, Can fly: " 
+        std::cout << "Bird - Name: " << name << ", Age: " << age
+                  << ", Wingspan: " << wingspan << "cm, Can fly: "
                   << (canFly ? "Yes" : "No") << std::endl;
     }
-    
+
     // Bird-specific function
     void fly() const {
         if (canFly) {
@@ -4055,7 +4055,7 @@ public:
             std::cout << name << " cannot fly" << std::endl;
         }
     }
-    
+
     double getWingspan() const { return wingspan; }
     bool getCanFly() const { return canFly; }
 };
@@ -4064,39 +4064,39 @@ public:
 class Pet {
 protected:
     std::string ownerName;
-    
+
 public:
     Pet(const std::string& owner) : ownerName(owner) {
         std::cout << "Pet constructor: Owner is " << owner << std::endl;
     }
-    
+
     virtual ~Pet() {
         std::cout << "Pet destructor" << std::endl;
     }
-    
+
     virtual void playWithOwner() const {
         std::cout << "Playing with owner " << ownerName << std::endl;
     }
-    
+
     std::string getOwner() const { return ownerName; }
 };
 
 // Multiple inheritance
 class PetDog : public Dog, public Pet {
 public:
-    PetDog(const std::string& n, int a, const std::string& b, const std::string& owner) 
+    PetDog(const std::string& n, int a, const std::string& b, const std::string& owner)
         : Dog(n, a, b), Pet(owner) {
         std::cout << "PetDog constructor: " << name << std::endl;
     }
-    
+
     ~PetDog() override {
         std::cout << "PetDog destructor: " << name << std::endl;
     }
-    
+
     void playWithOwner() const override {
         std::cout << name << " plays fetch with " << ownerName << std::endl;
     }
-    
+
     // Override to show pet information too
     void displayInfo() const override {
         Dog::displayInfo();
@@ -4106,34 +4106,34 @@ public:
 
 int main() {
     std::cout << "=== Inheritance Demo ===" << std::endl;
-    
+
     // Cannot instantiate abstract Animal class
     // Animal animal("Generic", 5);  // Error!
-    
+
     Dog dog("Buddy", 3, "Golden Retriever");
     dog.displayInfo();
     dog.makeSound();
     dog.move();
     dog.fetch();
     dog.sleep();  // Inherited from Animal
-    
+
     std::cout << std::endl;
-    
+
     Bird bird("Tweety", 2, 15.5, true);
     bird.displayInfo();
     bird.makeSound();
     bird.move();
     bird.fly();
     bird.sleep();  // Inherited from Animal
-    
+
     std::cout << std::endl;
-    
+
     // Multiple inheritance
     PetDog petDog("Max", 4, "Labrador", "John Smith");
     petDog.displayInfo();
     petDog.makeSound();
     petDog.playWithOwner();
-    
+
     return 0;
 }
 ```
@@ -4151,12 +4151,12 @@ int main() {
 class Shape {
 public:
     virtual ~Shape() = default;
-    
+
     // Pure virtual functions
     virtual double area() const = 0;
     virtual double perimeter() const = 0;
     virtual void draw() const = 0;
-    
+
     // Virtual function with implementation
     virtual void displayInfo() const {
         std::cout << "Area: " << area() << ", Perimeter: " << perimeter() << std::endl;
@@ -4167,22 +4167,22 @@ class Circle : public Shape {
 private:
     double radius;
     static inline const double PI = 3.14159265359;
-    
+
 public:
     Circle(double r) : radius(r) {}
-    
+
     double area() const override {
         return PI * radius * radius;
     }
-    
+
     double perimeter() const override {
         return 2 * PI * radius;
     }
-    
+
     void draw() const override {
         std::cout << "Drawing a circle with radius " << radius << std::endl;
     }
-    
+
     void displayInfo() const override {
         std::cout << "Circle - Radius: " << radius << ", ";
         Shape::displayInfo();
@@ -4192,22 +4192,22 @@ public:
 class Rectangle : public Shape {
 private:
     double width, height;
-    
+
 public:
     Rectangle(double w, double h) : width(w), height(h) {}
-    
+
     double area() const override {
         return width * height;
     }
-    
+
     double perimeter() const override {
         return 2 * (width + height);
     }
-    
+
     void draw() const override {
         std::cout << "Drawing a rectangle " << width << "x" << height << std::endl;
     }
-    
+
     void displayInfo() const override {
         std::cout << "Rectangle - Width: " << width << ", Height: " << height << ", ";
         Shape::displayInfo();
@@ -4217,24 +4217,24 @@ public:
 class Triangle : public Shape {
 private:
     double side1, side2, side3;
-    
+
 public:
     Triangle(double s1, double s2, double s3) : side1(s1), side2(s2), side3(s3) {}
-    
+
     double area() const override {
         // Using Heron's formula
         double s = (side1 + side2 + side3) / 2;
         return std::sqrt(s * (s - side1) * (s - side2) * (s - side3));
     }
-    
+
     double perimeter() const override {
         return side1 + side2 + side3;
     }
-    
+
     void draw() const override {
         std::cout << "Drawing a triangle with sides " << side1 << ", " << side2 << ", " << side3 << std::endl;
     }
-    
+
     void displayInfo() const override {
         std::cout << "Triangle - Sides: " << side1 << ", " << side2 << ", " << side3 << ", ";
         Shape::displayInfo();
@@ -4252,7 +4252,7 @@ void processShape(const Shape& shape) {
 class ShapeFactory {
 public:
     enum class ShapeType { CIRCLE, RECTANGLE, TRIANGLE };
-    
+
     static std::unique_ptr<Shape> createShape(ShapeType type) {
         switch (type) {
             case ShapeType::CIRCLE:
@@ -4268,34 +4268,34 @@ public:
 
 int main() {
     std::cout << "=== Polymorphism Demo ===" << std::endl;
-    
+
     // Create shapes
     std::vector<std::unique_ptr<Shape>> shapes;
     shapes.push_back(std::make_unique<Circle>(3.0));
     shapes.push_back(std::make_unique<Rectangle>(4.0, 5.0));
     shapes.push_back(std::make_unique<Triangle>(3.0, 4.0, 5.0));
-    
+
     // Polymorphic behavior - same interface, different implementations
     std::cout << "Processing shapes polymorphically:" << std::endl;
     for (const auto& shape : shapes) {
         processShape(*shape);
     }
-    
+
     // Calculate total area
     double totalArea = 0.0;
     for (const auto& shape : shapes) {
         totalArea += shape->area();
     }
     std::cout << "Total area of all shapes: " << totalArea << std::endl;
-    
+
     // Using factory pattern
     std::cout << "\nUsing Shape Factory:" << std::endl;
     auto factoryCircle = ShapeFactory::createShape(ShapeFactory::ShapeType::CIRCLE);
     auto factoryRect = ShapeFactory::createShape(ShapeFactory::ShapeType::RECTANGLE);
-    
+
     processShape(*factoryCircle);
     processShape(*factoryRect);
-    
+
     return 0;
 }
 ```
@@ -4313,12 +4313,12 @@ int main() {
 class Temperature {
 private:
     double celsius;
-    
+
     // Private helper function
     bool isValidTemperature(double temp) const {
         return temp >= -273.15; // Absolute zero in Celsius
     }
-    
+
 public:
     // Constructor with validation
     explicit Temperature(double temp = 0.0) {
@@ -4327,50 +4327,50 @@ public:
         }
         celsius = temp;
     }
-    
+
     // Property-like accessors with validation
     double getCelsius() const { return celsius; }
-    
+
     void setCelsius(double temp) {
         if (!isValidTemperature(temp)) {
             throw std::invalid_argument("Temperature cannot be below absolute zero");
         }
         celsius = temp;
     }
-    
+
     double getFahrenheit() const {
         return (celsius * 9.0 / 5.0) + 32.0;
     }
-    
+
     void setFahrenheit(double temp) {
         double celsiusEquivalent = (temp - 32.0) * 5.0 / 9.0;
         setCelsius(celsiusEquivalent);
     }
-    
+
     double getKelvin() const {
         return celsius + 273.15;
     }
-    
+
     void setKelvin(double temp) {
         if (temp < 0) {
             throw std::invalid_argument("Kelvin temperature cannot be negative");
         }
         setCelsius(temp - 273.15);
     }
-    
+
     // Comparison operators
     bool operator==(const Temperature& other) const {
         return std::abs(celsius - other.celsius) < 0.01; // Account for floating-point precision
     }
-    
+
     bool operator<(const Temperature& other) const {
         return celsius < other.celsius;
     }
-    
+
     bool operator>(const Temperature& other) const {
         return celsius > other.celsius;
     }
-    
+
     // Output operator
     friend std::ostream& operator<<(std::ostream& os, const Temperature& temp) {
         os << temp.celsius << "°C (" << temp.getFahrenheit() << "°F, " << temp.getKelvin() << "K)";
@@ -4384,7 +4384,7 @@ private:
     std::string accountNumber;
     double balance;
     std::vector<std::string> transactionHistory;
-    
+
     // Private methods for internal operations
     void addTransaction(const std::string& transaction) {
         transactionHistory.push_back(transaction);
@@ -4392,19 +4392,19 @@ private:
             transactionHistory.erase(transactionHistory.begin());
         }
     }
-    
+
     bool validateAmount(double amount) const {
         return amount > 0;
     }
-    
+
 protected:
     // Protected members accessible by derived classes
     std::string ownerName;
-    
+
     void logOperation(const std::string& operation) {
         std::cout << "[LOG] " << operation << " for account " << accountNumber << std::endl;
     }
-    
+
 public:
     BankAccountSecure(const std::string& accNum, const std::string& name, double initialBalance = 0.0)
         : accountNumber(accNum), balance(initialBalance), ownerName(name) {
@@ -4414,35 +4414,35 @@ public:
         addTransaction("Account opened with balance: $" + std::to_string(initialBalance));
         logOperation("Account created");
     }
-    
+
     // Public interface
     bool deposit(double amount) {
         if (!validateAmount(amount)) {
             return false;
         }
-        
+
         balance += amount;
         addTransaction("Deposit: +$" + std::to_string(amount) + " | Balance: $" + std::to_string(balance));
         logOperation("Deposit of $" + std::to_string(amount));
         return true;
     }
-    
+
     bool withdraw(double amount) {
         if (!validateAmount(amount) || amount > balance) {
             return false;
         }
-        
+
         balance -= amount;
         addTransaction("Withdrawal: -$" + std::to_string(amount) + " | Balance: $" + std::to_string(balance));
         logOperation("Withdrawal of $" + std::to_string(amount));
         return true;
     }
-    
+
     // Read-only access to private data
     double getBalance() const { return balance; }
     std::string getAccountNumber() const { return accountNumber; }
     std::string getOwnerName() const { return ownerName; }
-    
+
     // Controlled access to transaction history
     std::vector<std::string> getRecentTransactions(int count = 5) const {
         std::vector<std::string> recent;
@@ -4452,12 +4452,12 @@ public:
         }
         return recent;
     }
-    
+
     void displayAccountInfo() const {
         std::cout << "Account: " << accountNumber << std::endl;
         std::cout << "Owner: " << ownerName << std::endl;
         std::cout << "Balance: $" << balance << std::endl;
-        
+
         auto recent = getRecentTransactions(3);
         std::cout << "Recent transactions:" << std::endl;
         for (const auto& transaction : recent) {
@@ -4470,23 +4470,23 @@ public:
 class SavingsAccount : public BankAccountSecure {
 private:
     double interestRate;
-    
+
 public:
-    SavingsAccount(const std::string& accNum, const std::string& name, 
+    SavingsAccount(const std::string& accNum, const std::string& name,
                   double initialBalance = 0.0, double rate = 0.02)
         : BankAccountSecure(accNum, name, initialBalance), interestRate(rate) {
         logOperation("Savings account created with " + std::to_string(rate * 100) + "% interest rate");
     }
-    
+
     void addInterest() {
         double interest = getBalance() * interestRate;
         if (deposit(interest)) {
             logOperation("Interest added: $" + std::to_string(interest));
         }
     }
-    
+
     double getInterestRate() const { return interestRate; }
-    
+
     void setInterestRate(double rate) {
         if (rate >= 0 && rate <= 0.1) { // 0-10% interest rate
             interestRate = rate;
@@ -4497,52 +4497,52 @@ public:
 
 int main() {
     std::cout << "=== Encapsulation Demo ===" << std::endl;
-    
+
     // Temperature class demonstrating encapsulation
     try {
         Temperature room(22.0);
         std::cout << "Room temperature: " << room << std::endl;
-        
+
         room.setFahrenheit(86.0); // 30°C
         std::cout << "After setting to 86°F: " << room << std::endl;
-        
+
         room.setKelvin(300.0); // ~26.85°C
         std::cout << "After setting to 300K: " << room << std::endl;
-        
+
         // This will throw an exception
         // Temperature invalid(-300.0);
-        
+
     } catch (const std::exception& e) {
         std::cout << "Temperature error: " << e.what() << std::endl;
     }
-    
+
     std::cout << std::endl;
-    
+
     // Bank account demonstrating access control
     try {
         BankAccountSecure account("123456", "Alice Johnson", 1000.0);
         account.displayAccountInfo();
-        
+
         std::cout << std::endl;
-        
+
         account.deposit(250.0);
         account.withdraw(100.0);
         account.displayAccountInfo();
-        
+
         std::cout << std::endl;
-        
+
         // Savings account demonstrating inheritance with encapsulation
         SavingsAccount savings("789012", "Bob Smith", 5000.0, 0.03);
         savings.displayAccountInfo();
-        
+
         std::cout << "\nAdding interest..." << std::endl;
         savings.addInterest();
         savings.displayAccountInfo();
-        
+
     } catch (const std::exception& e) {
         std::cout << "Bank account error: " << e.what() << std::endl;
     }
-    
+
     return 0;
 }
 ```
@@ -4568,18 +4568,18 @@ protected:
     std::string author;
     bool isCheckedOut;
     std::chrono::system_clock::time_point checkedOutDate;
-    
+
 public:
     LibraryItem(const std::string& itemId, const std::string& itemTitle, const std::string& itemAuthor)
         : id(itemId), title(itemTitle), author(itemAuthor), isCheckedOut(false) {}
-    
+
     virtual ~LibraryItem() = default;
-    
+
     // Pure virtual functions
     virtual void displayInfo() const = 0;
     virtual int getMaxCheckoutDays() const = 0;
     virtual double getLateFee() const = 0;
-    
+
     // Common interface
     bool checkOut() {
         if (!isCheckedOut) {
@@ -4589,7 +4589,7 @@ public:
         }
         return false;
     }
-    
+
     bool checkIn() {
         if (isCheckedOut) {
             isCheckedOut = false;
@@ -4597,24 +4597,24 @@ public:
         }
         return false;
     }
-    
+
     bool isOverdue() const {
         if (!isCheckedOut) return false;
-        
+
         auto now = std::chrono::system_clock::now();
         auto daysDiff = std::chrono::duration_cast<std::chrono::hours>(now - checkedOutDate).count() / 24;
         return daysDiff > getMaxCheckoutDays();
     }
-    
+
     double calculateLateFee() const {
         if (!isOverdue()) return 0.0;
-        
+
         auto now = std::chrono::system_clock::now();
         auto daysDiff = std::chrono::duration_cast<std::chrono::hours>(now - checkedOutDate).count() / 24;
         int overdueDays = daysDiff - getMaxCheckoutDays();
         return overdueDays * getLateFee();
     }
-    
+
     // Getters
     std::string getId() const { return id; }
     std::string getTitle() const { return title; }
@@ -4627,26 +4627,26 @@ private:
     std::string isbn;
     int pages;
     std::string genre;
-    
+
 public:
     Book(const std::string& id, const std::string& title, const std::string& author,
          const std::string& bookIsbn, int pageCount, const std::string& bookGenre)
         : LibraryItem(id, title, author), isbn(bookIsbn), pages(pageCount), genre(bookGenre) {}
-    
+
     void displayInfo() const override {
         std::cout << "Book: " << title << " by " << author << std::endl;
-        std::cout << "  ID: " << id << " | ISBN: " << isbn << " | Pages: " << pages 
+        std::cout << "  ID: " << id << " | ISBN: " << isbn << " | Pages: " << pages
                   << " | Genre: " << genre << std::endl;
         std::cout << "  Status: " << (isCheckedOut ? "Checked Out" : "Available") << std::endl;
         if (isCheckedOut && isOverdue()) {
-            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2) 
+            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2)
                       << calculateLateFee() << std::endl;
         }
     }
-    
+
     int getMaxCheckoutDays() const override { return 21; } // 3 weeks
     double getLateFee() const override { return 0.50; } // $0.50 per day
-    
+
     std::string getIsbn() const { return isbn; }
     std::string getGenre() const { return genre; }
     int getPages() const { return pages; }
@@ -4657,25 +4657,25 @@ private:
     int duration; // in minutes
     std::string rating;
     std::string director;
-    
+
 public:
     DVD(const std::string& id, const std::string& title, const std::string& author,
         int movieDuration, const std::string& movieRating, const std::string& movieDirector)
         : LibraryItem(id, title, author), duration(movieDuration), rating(movieRating), director(movieDirector) {}
-    
+
     void displayInfo() const override {
         std::cout << "DVD: " << title << " directed by " << director << std::endl;
         std::cout << "  ID: " << id << " | Duration: " << duration << " min | Rating: " << rating << std::endl;
         std::cout << "  Status: " << (isCheckedOut ? "Checked Out" : "Available") << std::endl;
         if (isCheckedOut && isOverdue()) {
-            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2) 
+            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2)
                       << calculateLateFee() << std::endl;
         }
     }
-    
+
     int getMaxCheckoutDays() const override { return 7; } // 1 week
     double getLateFee() const override { return 1.00; } // $1.00 per day
-    
+
     int getDuration() const { return duration; }
     std::string getRating() const { return rating; }
     std::string getDirector() const { return director; }
@@ -4685,25 +4685,25 @@ class Magazine : public LibraryItem {
 private:
     std::string issueNumber;
     std::string publicationDate;
-    
+
 public:
     Magazine(const std::string& id, const std::string& title, const std::string& publisher,
              const std::string& issue, const std::string& pubDate)
         : LibraryItem(id, title, publisher), issueNumber(issue), publicationDate(pubDate) {}
-    
+
     void displayInfo() const override {
         std::cout << "Magazine: " << title << " (Issue " << issueNumber << ")" << std::endl;
         std::cout << "  ID: " << id << " | Publisher: " << author << " | Date: " << publicationDate << std::endl;
         std::cout << "  Status: " << (isCheckedOut ? "Checked Out" : "Available") << std::endl;
         if (isCheckedOut && isOverdue()) {
-            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2) 
+            std::cout << "  OVERDUE - Late fee: $" << std::fixed << std::setprecision(2)
                       << calculateLateFee() << std::endl;
         }
     }
-    
+
     int getMaxCheckoutDays() const override { return 3; } // 3 days
     double getLateFee() const override { return 0.25; } // $0.25 per day
-    
+
     std::string getIssueNumber() const { return issueNumber; }
     std::string getPublicationDate() const { return publicationDate; }
 };
@@ -4711,12 +4711,12 @@ public:
 class Library {
 private:
     std::vector<std::unique_ptr<LibraryItem>> items;
-    
+
 public:
     void addItem(std::unique_ptr<LibraryItem> item) {
         items.push_back(std::move(item));
     }
-    
+
     LibraryItem* findItem(const std::string& id) {
         auto it = std::find_if(items.begin(), items.end(),
             [&id](const std::unique_ptr<LibraryItem>& item) {
@@ -4724,17 +4724,17 @@ public:
             });
         return (it != items.end()) ? it->get() : nullptr;
     }
-    
+
     bool checkOutItem(const std::string& id) {
         LibraryItem* item = findItem(id);
         return item ? item->checkOut() : false;
     }
-    
+
     bool checkInItem(const std::string& id) {
         LibraryItem* item = findItem(id);
         return item ? item->checkIn() : false;
     }
-    
+
     void displayAllItems() const {
         std::cout << "=== Library Inventory ===" << std::endl;
         for (const auto& item : items) {
@@ -4742,11 +4742,11 @@ public:
             std::cout << std::endl;
         }
     }
-    
+
     void displayOverdueItems() const {
         std::cout << "=== Overdue Items ===" << std::endl;
         bool hasOverdue = false;
-        
+
         for (const auto& item : items) {
             if (item->isOverdue()) {
                 item->displayInfo();
@@ -4754,12 +4754,12 @@ public:
                 hasOverdue = true;
             }
         }
-        
+
         if (!hasOverdue) {
             std::cout << "No overdue items." << std::endl;
         }
     }
-    
+
     double getTotalLateFees() const {
         double total = 0.0;
         for (const auto& item : items) {
@@ -4771,36 +4771,36 @@ public:
 
 int main() {
     std::cout << "=== Library Management System ===" << std::endl;
-    
+
     Library library;
-    
+
     // Add items to library
-    library.addItem(std::make_unique<Book>("B001", "The Great Gatsby", "F. Scott Fitzgerald", 
+    library.addItem(std::make_unique<Book>("B001", "The Great Gatsby", "F. Scott Fitzgerald",
                                            "978-0-7432-7356-5", 180, "Classic Fiction"));
-    library.addItem(std::make_unique<Book>("B002", "1984", "George Orwell", 
+    library.addItem(std::make_unique<Book>("B002", "1984", "George Orwell",
                                            "978-0-452-28423-4", 328, "Dystopian Fiction"));
-    library.addItem(std::make_unique<DVD>("D001", "Inception", "Warner Bros", 
+    library.addItem(std::make_unique<DVD>("D001", "Inception", "Warner Bros",
                                           148, "PG-13", "Christopher Nolan"));
-    library.addItem(std::make_unique<Magazine>("M001", "National Geographic", "National Geographic Society", 
+    library.addItem(std::make_unique<Magazine>("M001", "National Geographic", "National Geographic Society",
                                                "Vol. 240 No. 6", "December 2024"));
-    
+
     // Display all items
     library.displayAllItems();
-    
+
     // Check out some items
     std::cout << "Checking out items..." << std::endl;
     library.checkOutItem("B001");
     library.checkOutItem("D001");
-    
+
     // Display updated inventory
     library.displayAllItems();
-    
+
     // Check for overdue items
     library.displayOverdueItems();
-    
-    std::cout << "Total late fees: $" << std::fixed << std::setprecision(2) 
+
+    std::cout << "Total late fees: $" << std::fixed << std::setprecision(2)
               << library.getTotalLateFees() << std::endl;
-    
+
     return 0;
 }
 ```
@@ -4835,7 +4835,7 @@ int main() {
 ### 🏋️ Exercises
 
 #### 🏋️ Exercise 1: Vehicle Hierarchy
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 35 minutes
 
 Create a comprehensive vehicle hierarchy with proper inheritance, polymorphism, and encapsulation.
@@ -4867,25 +4867,25 @@ protected:
     std::string model;
     int year;
     double mileage;
-    
+
 public:
     Vehicle(const std::string& vehicleMake, const std::string& vehicleModel, int vehicleYear)
         : make(vehicleMake), model(vehicleModel), year(vehicleYear), mileage(0.0) {}
-    
+
     virtual ~Vehicle() = default;
-    
+
     // Pure virtual functions
     virtual void start() const = 0;
     virtual void stop() const = 0;
     virtual double getFuelEfficiency() const = 0;
     virtual std::string getType() const = 0;
-    
+
     // Virtual functions with default implementation
     virtual void displayInfo() const {
-        std::cout << year << " " << make << " " << model 
+        std::cout << year << " " << make << " " << model
                   << " (Mileage: " << mileage << " miles)" << std::endl;
     }
-    
+
     // Common interface
     void drive(double miles) {
         if (miles > 0) {
@@ -4893,7 +4893,7 @@ public:
             std::cout << "Drove " << miles << " miles. Total mileage: " << mileage << std::endl;
         }
     }
-    
+
     // Getters
     std::string getMake() const { return make; }
     std::string getModel() const { return model; }
@@ -4905,34 +4905,34 @@ class Car : public Vehicle {
 private:
     int doors;
     bool isElectric;
-    
+
 public:
     Car(const std::string& make, const std::string& model, int year, int numDoors, bool electric = false)
         : Vehicle(make, model, year), doors(numDoors), isElectric(electric) {}
-    
+
     void start() const override {
         std::cout << "Car started - " << (isElectric ? "Electric motor humming" : "Engine running") << std::endl;
     }
-    
+
     void stop() const override {
         std::cout << "Car stopped - " << (isElectric ? "Motor off" : "Engine off") << std::endl;
     }
-    
+
     double getFuelEfficiency() const override {
         return isElectric ? 120.0 : 28.5; // MPGe for electric, MPG for gas
     }
-    
+
     std::string getType() const override {
         return isElectric ? "Electric Car" : "Gas Car";
     }
-    
+
     void displayInfo() const override {
         std::cout << getType() << " - ";
         Vehicle::displayInfo();
-        std::cout << "  Doors: " << doors << ", Fuel Efficiency: " 
+        std::cout << "  Doors: " << doors << ", Fuel Efficiency: "
                   << getFuelEfficiency() << (isElectric ? " MPGe" : " MPG") << std::endl;
     }
-    
+
     void openTrunk() const {
         std::cout << "Trunk opened" << std::endl;
     }
@@ -4942,34 +4942,34 @@ class Motorcycle : public Vehicle {
 private:
     bool hasSidecar;
     int engineSize; // in cc
-    
+
 public:
     Motorcycle(const std::string& make, const std::string& model, int year, int cc, bool sidecar = false)
         : Vehicle(make, model, year), hasSidecar(sidecar), engineSize(cc) {}
-    
+
     void start() const override {
         std::cout << "Motorcycle started - Engine roaring (" << engineSize << "cc)" << std::endl;
     }
-    
+
     void stop() const override {
         std::cout << "Motorcycle stopped - Engine off" << std::endl;
     }
-    
+
     double getFuelEfficiency() const override {
         return 45.0 - (engineSize / 100.0); // Larger engines less efficient
     }
-    
+
     std::string getType() const override {
         return hasSidecar ? "Motorcycle with Sidecar" : "Motorcycle";
     }
-    
+
     void displayInfo() const override {
         std::cout << getType() << " - ";
         Vehicle::displayInfo();
-        std::cout << "  Engine: " << engineSize << "cc, Fuel Efficiency: " 
+        std::cout << "  Engine: " << engineSize << "cc, Fuel Efficiency: "
                   << getFuelEfficiency() << " MPG" << std::endl;
     }
-    
+
     void wheelie() const {
         if (!hasSidecar) {
             std::cout << "Performing wheelie!" << std::endl;
@@ -4983,40 +4983,40 @@ class Truck : public Vehicle {
 private:
     double cargoCapacity; // in tons
     bool isDiesel;
-    
+
 public:
     Truck(const std::string& make, const std::string& model, int year, double capacity, bool diesel = true)
         : Vehicle(make, model, year), cargoCapacity(capacity), isDiesel(diesel) {}
-    
+
     void start() const override {
         std::cout << "Truck started - " << (isDiesel ? "Diesel engine rumbling" : "Gas engine running") << std::endl;
     }
-    
+
     void stop() const override {
         std::cout << "Truck stopped - Engine off" << std::endl;
     }
-    
+
     double getFuelEfficiency() const override {
         double baseMPG = isDiesel ? 12.0 : 10.0;
         return baseMPG - (cargoCapacity * 0.5); // Heavier trucks less efficient
     }
-    
+
     std::string getType() const override {
         return isDiesel ? "Diesel Truck" : "Gas Truck";
     }
-    
+
     void displayInfo() const override {
         std::cout << getType() << " - ";
         Vehicle::displayInfo();
-        std::cout << "  Cargo Capacity: " << cargoCapacity << " tons, Fuel Efficiency: " 
+        std::cout << "  Cargo Capacity: " << cargoCapacity << " tons, Fuel Efficiency: "
                   << getFuelEfficiency() << " MPG" << std::endl;
     }
-    
+
     void loadCargo(double tons) const {
         if (tons <= cargoCapacity) {
             std::cout << "Loaded " << tons << " tons of cargo" << std::endl;
         } else {
-            std::cout << "Cannot load " << tons << " tons - exceeds capacity of " 
+            std::cout << "Cannot load " << tons << " tons - exceeds capacity of "
                       << cargoCapacity << " tons" << std::endl;
         }
     }
@@ -5025,12 +5025,12 @@ public:
 class VehicleFleet {
 private:
     std::vector<std::unique_ptr<Vehicle>> vehicles;
-    
+
 public:
     void addVehicle(std::unique_ptr<Vehicle> vehicle) {
         vehicles.push_back(std::move(vehicle));
     }
-    
+
     void displayFleet() const {
         std::cout << "=== Vehicle Fleet ===" << std::endl;
         for (const auto& vehicle : vehicles) {
@@ -5038,7 +5038,7 @@ public:
             std::cout << std::endl;
         }
     }
-    
+
     void startAllVehicles() const {
         std::cout << "Starting all vehicles:" << std::endl;
         for (const auto& vehicle : vehicles) {
@@ -5046,7 +5046,7 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     void stopAllVehicles() const {
         std::cout << "Stopping all vehicles:" << std::endl;
         for (const auto& vehicle : vehicles) {
@@ -5054,17 +5054,17 @@ public:
         }
         std::cout << std::endl;
     }
-    
+
     double getAverageFuelEfficiency() const {
         if (vehicles.empty()) return 0.0;
-        
+
         double total = 0.0;
         for (const auto& vehicle : vehicles) {
             total += vehicle->getFuelEfficiency();
         }
         return total / vehicles.size();
     }
-    
+
     void driveAllVehicles(double miles) {
         std::cout << "Driving all vehicles " << miles << " miles:" << std::endl;
         for (const auto& vehicle : vehicles) {
@@ -5077,24 +5077,24 @@ public:
 
 int main() {
     VehicleFleet fleet;
-    
+
     // Add different types of vehicles
     fleet.addVehicle(std::make_unique<Car>("Toyota", "Prius", 2023, 4, true));
     fleet.addVehicle(std::make_unique<Car>("Honda", "Civic", 2022, 4, false));
     fleet.addVehicle(std::make_unique<Motorcycle>("Harley-Davidson", "Street Glide", 2023, 1868, false));
     fleet.addVehicle(std::make_unique<Truck>("Ford", "F-150", 2023, 2.5, false));
-    
+
     // Display fleet information
     fleet.displayFleet();
-    
+
     // Polymorphic operations
     fleet.startAllVehicles();
     fleet.driveAllVehicles(100);
     fleet.stopAllVehicles();
-    
-    std::cout << "Fleet average fuel efficiency: " 
+
+    std::cout << "Fleet average fuel efficiency: "
               << fleet.getAverageFuelEfficiency() << " MPG" << std::endl;
-    
+
     return 0;
 }
 ```
@@ -5137,47 +5137,47 @@ int main() {
 
 void demonstrateStackAllocation() {
     std::cout << "=== Stack Allocation ===" << std::endl;
-    
+
     // Stack variables - automatically managed
     int localInt = 42;
     double localDouble = 3.14159;
     std::string localString = "Hello, Stack!";
-    
+
     // Arrays on stack
     int localArray[100];
-    
+
     std::cout << "Stack variables addresses:" << std::endl;
     std::cout << "localInt address: " << &localInt << std::endl;
     std::cout << "localDouble address: " << &localDouble << std::endl;
     std::cout << "localString address: " << &localString << std::endl;
     std::cout << "localArray address: " << &localArray << std::endl;
-    
+
     // Variables automatically destroyed when leaving scope
 }
 
 void demonstrateHeapAllocation() {
     std::cout << "\n=== Heap Allocation ===" << std::endl;
-    
+
     // Dynamic allocation on heap
     int* heapInt = new int(42);
     double* heapDouble = new double(3.14159);
     std::string* heapString = new std::string("Hello, Heap!");
-    
+
     // Dynamic arrays
     int* heapArray = new int[100];
-    
+
     std::cout << "Heap variables addresses:" << std::endl;
     std::cout << "heapInt address: " << heapInt << ", value: " << *heapInt << std::endl;
     std::cout << "heapDouble address: " << heapDouble << ", value: " << *heapDouble << std::endl;
     std::cout << "heapString address: " << heapString << ", value: " << *heapString << std::endl;
     std::cout << "heapArray address: " << heapArray << std::endl;
-    
+
     // Manual cleanup required
     delete heapInt;
     delete heapDouble;
     delete heapString;
     delete[] heapArray;
-    
+
     std::cout << "Heap memory manually freed" << std::endl;
 }
 
@@ -5185,9 +5185,9 @@ class StackVsHeapDemo {
 public:
     static void comparePerformance() {
         std::cout << "\n=== Performance Comparison ===" << std::endl;
-        
+
         const int iterations = 1000000;
-        
+
         // Stack allocation timing
         auto start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < iterations; ++i) {
@@ -5196,7 +5196,7 @@ public:
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto stackTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        
+
         // Heap allocation timing
         start = std::chrono::high_resolution_clock::now();
         for (int i = 0; i < iterations; ++i) {
@@ -5205,10 +5205,10 @@ public:
         }
         end = std::chrono::high_resolution_clock::now();
         auto heapTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        
+
         std::cout << "Stack allocation time: " << stackTime.count() << " μs" << std::endl;
         std::cout << "Heap allocation time: " << heapTime.count() << " μs" << std::endl;
-        std::cout << "Heap is " << (heapTime.count() / (double)stackTime.count()) 
+        std::cout << "Heap is " << (heapTime.count() / (double)stackTime.count())
                   << "x slower than stack" << std::endl;
     }
 };
@@ -5217,6 +5217,3253 @@ int main() {
     demonstrateStackAllocation();
     demonstrateHeapAllocation();
     StackVsHeapDemo::comparePerformance();
-    
+
     return 0;
 }
+```
+
+### Pointers and References
+
+#### Understanding Pointers
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "=== Pointer Basics ===" << std::endl;
+
+    int value = 42;
+    int* ptr = &value;  // Pointer to int
+
+    std::cout << "Value: " << value << std::endl;
+    std::cout << "Address of value: " << &value << std::endl;
+    std::cout << "Pointer ptr: " << ptr << std::endl;
+    std::cout << "Value pointed to by ptr: " << *ptr << std::endl;
+
+    // Modifying through pointer
+    *ptr = 100;
+    std::cout << "After *ptr = 100, value is: " << value << std::endl;
+
+    // Pointer arithmetic
+    int array[] = {10, 20, 30, 40, 50};
+    int* arrayPtr = array;
+
+    std::cout << "\nPointer arithmetic:" << std::endl;
+    for (int i = 0; i < 5; ++i) {
+        std::cout << "arrayPtr[" << i << "] = " << *(arrayPtr + i) << std::endl;
+    }
+
+    // Null pointers
+    int* nullPtr = nullptr;  // C++11 nullptr
+    if (nullPtr == nullptr) {
+        std::cout << "nullPtr is null" << std::endl;
+    }
+
+    return 0;
+}
+```
+
+#### References vs Pointers
+
+```cpp
+#include <iostream>
+
+void demonstrateReferences() {
+    std::cout << "=== References vs Pointers ===" << std::endl;
+
+    int original = 50;
+
+    // Reference - alias to original
+    int& ref = original;
+
+    // Pointer - stores address
+    int* ptr = &original;
+
+    std::cout << "Original: " << original << std::endl;
+    std::cout << "Reference: " << ref << std::endl;
+    std::cout << "Pointer value: " << *ptr << std::endl;
+
+    // Modifying through reference
+    ref = 75;
+    std::cout << "After ref = 75, original: " << original << std::endl;
+
+    // Modifying through pointer
+    *ptr = 100;
+    std::cout << "After *ptr = 100, original: " << original << std::endl;
+
+    // References cannot be reassigned, pointers can
+    int another = 200;
+    // ref = another;  // This assigns value, not reference!
+    ptr = &another;    // This changes what ptr points to
+
+    std::cout << "After ptr = &another:" << std::endl;
+    std::cout << "Original: " << original << std::endl;
+    std::cout << "Another: " << another << std::endl;
+    std::cout << "Pointer now points to: " << *ptr << std::endl;
+}
+
+// Function parameter examples
+void byValue(int x) {
+    x = 999;  // Only modifies local copy
+}
+
+void byReference(int& x) {
+    x = 999;  // Modifies original
+}
+
+void byPointer(int* x) {
+    if (x) *x = 999;  // Modifies original if pointer is valid
+}
+
+int main() {
+    demonstrateReferences();
+
+    std::cout << "\n=== Function Parameter Passing ===" << std::endl;
+    int value = 42;
+
+    std::cout << "Original value: " << value << std::endl;
+
+    byValue(value);
+    std::cout << "After byValue: " << value << std::endl;
+
+    byReference(value);
+    std::cout << "After byReference: " << value << std::endl;
+
+    value = 42;  // Reset
+    byPointer(&value);
+    std::cout << "After byPointer: " << value << std::endl;
+
+    return 0;
+}
+```
+
+### Smart Pointers
+
+#### Modern Memory Management with Smart Pointers
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <string>
+
+class Resource {
+private:
+    std::string name;
+
+public:
+    Resource(const std::string& n) : name(n) {
+        std::cout << "Resource '" << name << "' created" << std::endl;
+    }
+
+    ~Resource() {
+        std::cout << "Resource '" << name << "' destroyed" << std::endl;
+    }
+
+    void use() const {
+        std::cout << "Using resource '" << name << "'" << std::endl;
+    }
+
+    std::string getName() const { return name; }
+};
+
+void demonstrateUniquePtr() {
+    std::cout << "=== unique_ptr Demo ===" << std::endl;
+
+    // Create unique_ptr
+    std::unique_ptr<Resource> resource1 = std::make_unique<Resource>("Resource1");
+    resource1->use();
+
+    // Transfer ownership
+    std::unique_ptr<Resource> resource2 = std::move(resource1);
+
+    if (!resource1) {
+        std::cout << "resource1 is now null" << std::endl;
+    }
+
+    resource2->use();
+
+    // Automatic cleanup when leaving scope
+    std::cout << "Leaving unique_ptr scope..." << std::endl;
+}
+
+void demonstrateSharedPtr() {
+    std::cout << "\n=== shared_ptr Demo ===" << std::endl;
+
+    std::shared_ptr<Resource> shared1 = std::make_shared<Resource>("SharedResource");
+    std::cout << "Reference count: " << shared1.use_count() << std::endl;
+
+    {
+        std::shared_ptr<Resource> shared2 = shared1;  // Copy - increases ref count
+        std::cout << "Reference count after copy: " << shared1.use_count() << std::endl;
+
+        shared2->use();
+    } // shared2 goes out of scope, decreases ref count
+
+    std::cout << "Reference count after shared2 destroyed: " << shared1.use_count() << std::endl;
+
+    std::cout << "Leaving shared_ptr scope..." << std::endl;
+}
+
+void demonstrateWeakPtr() {
+    std::cout << "\n=== weak_ptr Demo ===" << std::endl;
+
+    std::weak_ptr<Resource> weak;
+
+    {
+        std::shared_ptr<Resource> shared = std::make_shared<Resource>("WeakResource");
+        weak = shared;  // weak_ptr doesn't increase reference count
+
+        std::cout << "shared use_count: " << shared.use_count() << std::endl;
+        std::cout << "weak expired: " << weak.expired() << std::endl;
+
+        if (auto locked = weak.lock()) {  // Convert to shared_ptr if still valid
+            locked->use();
+        }
+    } // shared goes out of scope and destroys the resource
+
+    std::cout << "After shared destroyed, weak expired: " << weak.expired() << std::endl;
+}
+
+// Custom deleter example
+void customDeleter(Resource* ptr) {
+    std::cout << "Custom deleter called for " << ptr->getName() << std::endl;
+    delete ptr;
+}
+
+void demonstrateCustomDeleter() {
+    std::cout << "\n=== Custom Deleter Demo ===" << std::endl;
+
+    std::unique_ptr<Resource, void(*)(Resource*)> resource(
+        new Resource("CustomDeleted"), customDeleter);
+
+    resource->use();
+
+    std::cout << "Leaving custom deleter scope..." << std::endl;
+}
+
+int main() {
+    demonstrateUniquePtr();
+    demonstrateSharedPtr();
+    demonstrateWeakPtr();
+    demonstrateCustomDeleter();
+
+    return 0;
+}
+```
+
+### RAII Principle
+
+#### Resource Acquisition Is Initialization
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <memory>
+#include <vector>
+#include <mutex>
+
+// Example 1: File RAII wrapper
+class FileManager {
+private:
+    std::fstream file;
+    std::string filename;
+
+public:
+    FileManager(const std::string& fname, std::ios::openmode mode)
+        : filename(fname) {
+        file.open(filename, mode);
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+        std::cout << "File '" << filename << "' opened successfully" << std::endl;
+    }
+
+    ~FileManager() {
+        if (file.is_open()) {
+            file.close();
+            std::cout << "File '" << filename << "' closed automatically" << std::endl;
+        }
+    }
+
+    // Delete copy constructor and assignment to prevent issues
+    FileManager(const FileManager&) = delete;
+    FileManager& operator=(const FileManager&) = delete;
+
+    // Move constructor and assignment
+    FileManager(FileManager&& other) noexcept
+        : file(std::move(other.file)), filename(std::move(other.filename)) {}
+
+    FileManager& operator=(FileManager&& other) noexcept {
+        if (this != &other) {
+            if (file.is_open()) file.close();
+            file = std::move(other.file);
+            filename = std::move(other.filename);
+        }
+        return *this;
+    }
+
+    std::fstream& getFile() { return file; }
+};
+
+// Example 2: Memory Pool RAII
+class MemoryPool {
+private:
+    std::vector<std::unique_ptr<char[]>> pools;
+    size_t poolSize;
+
+public:
+    explicit MemoryPool(size_t size) : poolSize(size) {
+        std::cout << "Memory pool created with size " << size << std::endl;
+    }
+
+    ~MemoryPool() {
+        std::cout << "Memory pool destroyed, " << pools.size()
+                  << " pools automatically freed" << std::endl;
+    }
+
+    char* allocate() {
+        auto pool = std::make_unique<char[]>(poolSize);
+        char* ptr = pool.get();
+        pools.push_back(std::move(pool));
+        return ptr;
+    }
+
+    size_t getPoolCount() const { return pools.size(); }
+};
+
+// Example 3: Lock Guard (similar to std::lock_guard)
+class CustomLockGuard {
+private:
+    std::mutex& mtx;
+
+public:
+    explicit CustomLockGuard(std::mutex& m) : mtx(m) {
+        mtx.lock();
+        std::cout << "Mutex locked" << std::endl;
+    }
+
+    ~CustomLockGuard() {
+        mtx.unlock();
+        std::cout << "Mutex unlocked automatically" << std::endl;
+    }
+
+    // Non-copyable, non-movable
+    CustomLockGuard(const CustomLockGuard&) = delete;
+    CustomLockGuard& operator=(const CustomLockGuard&) = delete;
+    CustomLockGuard(CustomLockGuard&&) = delete;
+    CustomLockGuard& operator=(CustomLockGuard&&) = delete;
+};
+
+void demonstrateRAII() {
+    std::cout << "=== RAII Demonstration ===" << std::endl;
+
+    try {
+        // File RAII
+        {
+            FileManager file("test.txt", std::ios::out);
+            file.getFile() << "Hello, RAII!" << std::endl;
+        } // File automatically closed here
+
+        // Memory Pool RAII
+        {
+            MemoryPool pool(1024);
+            char* mem1 = pool.allocate();
+            char* mem2 = pool.allocate();
+            std::cout << "Allocated " << pool.getPoolCount() << " memory pools" << std::endl;
+        } // Memory automatically freed here
+
+        // Mutex RAII
+        std::mutex mtx;
+        {
+            CustomLockGuard lock(mtx);
+            std::cout << "Critical section - mutex is locked" << std::endl;
+            // Even if exception is thrown here, mutex will be unlocked
+        } // Mutex automatically unlocked here
+
+    } catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << std::endl;
+        std::cout << "Resources still cleaned up properly due to RAII" << std::endl;
+    }
+}
+
+int main() {
+    demonstrateRAII();
+
+    std::cout << "\n=== RAII Benefits ===" << std::endl;
+    std::cout << "1. Automatic resource cleanup" << std::endl;
+    std::cout << "2. Exception safety" << std::endl;
+    std::cout << "3. No memory leaks" << std::endl;
+    std::cout << "4. Clear ownership semantics" << std::endl;
+
+    return 0;
+}
+```
+
+### 💡 Code Examples
+
+**Example 1: Advanced Memory Management System**
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <map>
+#include <string>
+#include <chrono>
+
+// Object pool for efficient memory reuse
+template<typename T>
+class ObjectPool {
+private:
+    std::vector<std::unique_ptr<T>> available;
+    std::vector<std::unique_ptr<T>> inUse;
+
+public:
+    template<typename... Args>
+    std::shared_ptr<T> acquire(Args&&... args) {
+        std::unique_ptr<T> obj;
+
+        if (!available.empty()) {
+            obj = std::move(available.back());
+            available.pop_back();
+            // Reset object state if needed
+        } else {
+            obj = std::make_unique<T>(std::forward<Args>(args)...);
+        }
+
+        T* rawPtr = obj.get();
+        inUse.push_back(std::move(obj));
+
+        // Return shared_ptr with custom deleter that returns to pool
+        return std::shared_ptr<T>(rawPtr, [this](T* ptr) {
+            this->release(ptr);
+        });
+    }
+
+private:
+    void release(T* ptr) {
+        auto it = std::find_if(inUse.begin(), inUse.end(),
+            [ptr](const std::unique_ptr<T>& obj) {
+                return obj.get() == ptr;
+            });
+
+        if (it != inUse.end()) {
+            available.push_back(std::move(*it));
+            inUse.erase(it);
+        }
+    }
+
+public:
+    size_t availableCount() const { return available.size(); }
+    size_t inUseCount() const { return inUse.size(); }
+};
+
+// Example class for pooling
+class ExpensiveObject {
+private:
+    std::vector<int> data;
+    std::string name;
+
+public:
+    ExpensiveObject(const std::string& n) : name(n), data(1000000) {
+        std::cout << "Expensive object '" << name << "' created" << std::endl;
+        // Simulate expensive initialization
+        std::fill(data.begin(), data.end(), 42);
+    }
+
+    ~ExpensiveObject() {
+        std::cout << "Expensive object '" << name << "' destroyed" << std::endl;
+    }
+
+    void use() const {
+        std::cout << "Using expensive object '" << name << "'" << std::endl;
+    }
+
+    const std::string& getName() const { return name; }
+};
+
+int main() {
+    std::cout << "=== Object Pool Demo ===" << std::endl;
+
+    ObjectPool<ExpensiveObject> pool;
+
+    // Acquire objects
+    {
+        auto obj1 = pool.acquire("Object1");
+        auto obj2 = pool.acquire("Object2");
+
+        obj1->use();
+        obj2->use();
+
+        std::cout << "Pool stats - Available: " << pool.availableCount()
+                  << ", In use: " << pool.inUseCount() << std::endl;
+    } // Objects returned to pool here
+
+    std::cout << "After scope - Available: " << pool.availableCount()
+              << ", In use: " << pool.inUseCount() << std::endl;
+
+    // Reuse pooled objects
+    {
+        auto obj3 = pool.acquire("Object3");  // Reuses pooled object
+        obj3->use();
+    }
+
+    return 0;
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Memory Leaks**: Forgetting to delete dynamically allocated memory
+2. **Double Delete**: Deleting the same memory twice
+3. **Use After Free**: Accessing deleted memory
+4. **Dangling Pointers**: Pointers to deallocated memory
+5. **Circular References**: shared_ptr cycles preventing cleanup
+
+### ✅ Best Practices
+
+1. **Prefer Stack Allocation**: Use stack when possible for better performance
+2. **RAII Everywhere**: Use RAII for automatic resource management
+3. **Smart Pointers**: Use smart pointers instead of raw pointers
+4. **unique_ptr by Default**: Use unique_ptr unless sharing is needed
+5. **Make Functions**: Use make_unique and make_shared
+
+### 🏋️ Exercise: Memory Management System
+
+**Difficulty:** 🔴 Advanced
+**Estimated Time:** 45 minutes
+
+Create a comprehensive memory management system with object pools, smart pointers, and RAII principles.
+
+<details>
+<summary>💡 Click to see hints</summary>
+
+- Implement custom smart pointer class
+- Create object pool for memory reuse
+- Use RAII for automatic cleanup
+- Include memory usage statistics
+- Handle circular references properly
+
+</details>
+
+<details>
+<summary>✅ Click to see solution</summary>
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <unordered_map>
+#include <atomic>
+#include <chrono>
+
+class MemoryStats {
+private:
+    std::atomic<size_t> allocations{0};
+    std::atomic<size_t> deallocations{0};
+    std::atomic<size_t> currentAllocated{0};
+    std::atomic<size_t> peakAllocated{0};
+
+public:
+    void recordAllocation(size_t bytes) {
+        allocations.fetch_add(1);
+        size_t current = currentAllocated.fetch_add(bytes) + bytes;
+
+        // Update peak if necessary
+        size_t peak = peakAllocated.load();
+        while (current > peak && !peakAllocated.compare_exchange_weak(peak, current)) {
+            // Keep trying until we successfully update or peak becomes larger
+        }
+    }
+
+    void recordDeallocation(size_t bytes) {
+        deallocations.fetch_add(1);
+        currentAllocated.fetch_sub(bytes);
+    }
+
+    void printStats() const {
+        std::cout << "Memory Statistics:" << std::endl;
+        std::cout << "  Allocations: " << allocations.load() << std::endl;
+        std::cout << "  Deallocations: " << deallocations.load() << std::endl;
+        std::cout << "  Current allocated: " << currentAllocated.load() << " bytes" << std::endl;
+        std::cout << "  Peak allocated: " << peakAllocated.load() << " bytes" << std::endl;
+        std::cout << "  Active allocations: " << (allocations.load() - deallocations.load()) << std::endl;
+    }
+};
+
+// Global memory statistics
+MemoryStats g_memStats;
+
+// Custom allocator that tracks memory usage
+template<typename T>
+class TrackedAllocator {
+public:
+    using value_type = T;
+
+    T* allocate(std::size_t n) {
+        size_t bytes = n * sizeof(T);
+        T* ptr = static_cast<T*>(std::malloc(bytes));
+        if (!ptr) {
+            throw std::bad_alloc();
+        }
+        g_memStats.recordAllocation(bytes);
+        return ptr;
+    }
+
+    void deallocate(T* ptr, std::size_t n) {
+        size_t bytes = n * sizeof(T);
+        g_memStats.recordDeallocation(bytes);
+        std::free(ptr);
+    }
+
+    template<typename U>
+    bool operator==(const TrackedAllocator<U>&) const { return true; }
+
+    template<typename U>
+    bool operator!=(const TrackedAllocator<U>&) const { return false; }
+};
+
+// Managed object base class
+class ManagedObject {
+protected:
+    static std::atomic<size_t> nextId;
+    size_t id;
+
+public:
+    ManagedObject() : id(nextId.fetch_add(1)) {
+        std::cout << "ManagedObject " << id << " created" << std::endl;
+    }
+
+    virtual ~ManagedObject() {
+        std::cout << "ManagedObject " << id << " destroyed" << std::endl;
+    }
+
+    size_t getId() const { return id; }
+};
+
+std::atomic<size_t> ManagedObject::nextId{1};
+
+// Resource-intensive object for demonstration
+class ResourceHeavyObject : public ManagedObject {
+private:
+    std::vector<int, TrackedAllocator<int>> data;
+    std::string name;
+
+public:
+    ResourceHeavyObject(const std::string& n, size_t dataSize = 1000)
+        : name(n), data(dataSize, 42) {
+        std::cout << "ResourceHeavyObject '" << name << "' with "
+                  << dataSize << " elements created" << std::endl;
+    }
+
+    ~ResourceHeavyObject() {
+        std::cout << "ResourceHeavyObject '" << name << "' destroyed" << std::endl;
+    }
+
+    void process() const {
+        std::cout << "Processing " << name << " (ID: " << getId() << ")" << std::endl;
+        // Simulate processing
+        volatile int sum = 0;
+        for (size_t i = 0; i < std::min(data.size(), size_t(1000)); ++i) {
+            sum += data[i];
+        }
+    }
+
+    const std::string& getName() const { return name; }
+    size_t getDataSize() const { return data.size(); }
+};
+
+// Advanced object pool with statistics
+template<typename T>
+class AdvancedObjectPool {
+private:
+    std::vector<std::unique_ptr<T>> available;
+    std::unordered_map<T*, std::unique_ptr<T>> inUse;
+    std::atomic<size_t> totalCreated{0};
+    std::atomic<size_t> totalReused{0};
+
+public:
+    template<typename... Args>
+    std::shared_ptr<T> acquire(Args&&... args) {
+        std::unique_ptr<T> obj;
+
+        if (!available.empty()) {
+            obj = std::move(available.back());
+            available.pop_back();
+            totalReused.fetch_add(1);
+        } else {
+            obj = std::make_unique<T>(std::forward<Args>(args)...);
+            totalCreated.fetch_add(1);
+        }
+
+        T* rawPtr = obj.get();
+        inUse[rawPtr] = std::move(obj);
+
+        return std::shared_ptr<T>(rawPtr, [this](T* ptr) {
+            this->release(ptr);
+        });
+    }
+
+private:
+    void release(T* ptr) {
+        auto it = inUse.find(ptr);
+        if (it != inUse.end()) {
+            available.push_back(std::move(it->second));
+            inUse.erase(it);
+        }
+    }
+
+public:
+    void printStats() const {
+        std::cout << "Object Pool Statistics:" << std::endl;
+        std::cout << "  Total created: " << totalCreated.load() << std::endl;
+        std::cout << "  Total reused: " << totalReused.load() << std::endl;
+        std::cout << "  Available: " << available.size() << std::endl;
+        std::cout << "  In use: " << inUse.size() << std::endl;
+        std::cout << "  Reuse ratio: " <<
+            (totalCreated.load() > 0 ?
+             (double)totalReused.load() / totalCreated.load() * 100 : 0)
+            << "%" << std::endl;
+    }
+
+    void cleanup() {
+        available.clear();
+        // inUse objects are managed by shared_ptr, will be cleaned up when references are gone
+    }
+};
+
+// RAII wrapper for timing operations
+class Timer {
+private:
+    std::chrono::high_resolution_clock::time_point start;
+    std::string operation;
+
+public:
+    Timer(const std::string& op) : operation(op), start(std::chrono::high_resolution_clock::now()) {
+        std::cout << "Starting " << operation << "..." << std::endl;
+    }
+
+    ~Timer() {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << operation << " completed in " << duration.count() << "ms" << std::endl;
+    }
+};
+
+int main() {
+    std::cout << "=== Advanced Memory Management System ===" << std::endl;
+
+    AdvancedObjectPool<ResourceHeavyObject> pool;
+
+    // Demonstrate pool usage with timing
+    {
+        Timer timer("Object pool demonstration");
+
+        std::vector<std::shared_ptr<ResourceHeavyObject>> objects;
+
+        // Create and use objects
+        for (int i = 0; i < 5; ++i) {
+            auto obj = pool.acquire("Object" + std::to_string(i), 10000);
+            obj->process();
+            objects.push_back(obj);
+        }
+
+        // Objects still in scope, using memory
+        std::cout << "\nObjects in scope:" << std::endl;
+        pool.printStats();
+        g_memStats.printStats();
+
+        // Clear some objects
+        objects.erase(objects.begin(), objects.begin() + 3);
+
+        std::cout << "\nAfter clearing 3 objects:" << std::endl;
+        pool.printStats();
+
+        // Reuse objects from pool
+        for (int i = 0; i < 3; ++i) {
+            auto obj = pool.acquire("Reused" + std::to_string(i), 5000);
+            obj->process();
+            objects.push_back(obj);
+        }
+
+        std::cout << "\nAfter reusing objects:" << std::endl;
+        pool.printStats();
+
+    } // All objects destroyed here due to RAII
+
+    std::cout << "\nFinal statistics:" << std::endl;
+    pool.printStats();
+    g_memStats.printStats();
+
+    // Cleanup pool
+    pool.cleanup();
+
+    std::cout << "\nAfter cleanup:" << std::endl;
+    g_memStats.printStats();
+
+    return 0;
+}
+```
+
+**Explanation:**
+- Thread-safe memory statistics tracking
+- Custom allocator that monitors memory usage
+- Advanced object pool with reuse statistics
+- RAII timer for performance measurement
+- Comprehensive memory management demonstration
+- Proper cleanup and resource management
+- Real-world applicable memory optimization techniques
+
+</details>
+
+[Back to top](#-c-documentation)
+
+---
+
+## 📦 Templates & Generic Programming
+
+**📊 Chapter 8 of 14**
+
+🎯 **Learning Objectives:**
+- Master function and class template creation
+- Understand template specialization and SFINAE
+- Learn modern C++20 concepts and constraints
+- Explore advanced template metaprogramming techniques
+
+⏱️ **Estimated Reading Time:** 35 minutes
+
+📋 **Prerequisites:** Strong understanding of functions, classes, and C++ syntax
+
+### Function Templates
+
+#### Basic Function Templates
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <type_traits>
+
+// Simple function template
+template<typename T>
+T maximum(T a, T b) {
+    return (a > b) ? a : b;
+}
+
+// Function template with multiple type parameters
+template<typename T, typename U>
+auto add(T a, U b) -> decltype(a + b) {
+    return a + b;
+}
+
+// Function template with non-type parameter
+template<typename T, size_t N>
+constexpr size_t arraySize(T (&)[N]) {
+    return N;
+}
+
+// Variadic function template (C++11)
+template<typename... Args>
+void print(Args... args) {
+    ((std::cout << args << " "), ...);  // C++17 fold expression
+    std::cout << std::endl;
+}
+
+// Template with default parameter
+template<typename T = int, typename Compare = std::less<T>>
+T findExtreme(const std::vector<T>& vec, Compare comp = Compare{}) {
+    if (vec.empty()) {
+        throw std::invalid_argument("Empty vector");
+    }
+
+    T result = vec[0];
+    for (const auto& item : vec) {
+        if (comp(result, item)) {
+            result = item;
+        }
+    }
+    return result;
+}
+
+int main() {
+    std::cout << "=== Function Templates Demo ===" << std::endl;
+
+    // Basic template usage
+    std::cout << "max(5, 10) = " << maximum(5, 10) << std::endl;
+    std::cout << "max(3.14, 2.71) = " << maximum(3.14, 2.71) << std::endl;
+    std::cout << "max('a', 'z') = " << maximum('a', 'z') << std::endl;
+
+    // Multiple type parameters
+    std::cout << "add(5, 3.14) = " << add(5, 3.14) << std::endl;
+    std::cout << "add(std::string(\"Hello \"), \"World\") = "
+              << add(std::string("Hello "), "World") << std::endl;
+
+    // Non-type parameters
+    int arr[] = {1, 2, 3, 4, 5};
+    std::cout << "Array size: " << arraySize(arr) << std::endl;
+
+    // Variadic templates
+    std::cout << "Printing multiple values: ";
+    print(1, 2.5, "hello", 'c');
+
+    // Template with defaults
+    std::vector<int> numbers = {3, 7, 1, 9, 2, 8};
+    std::cout << "Maximum: " << findExtreme(numbers) << std::endl;
+    std::cout << "Minimum: " << findExtreme(numbers, std::greater<int>{}) << std::endl;
+
+    return 0;
+}
+```
+
+### Class Templates
+
+#### Basic Class Templates
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <memory>
+#include <stdexcept>
+
+// Simple class template
+template<typename T>
+class Stack {
+private:
+    std::vector<T> elements;
+
+public:
+    void push(const T& element) {
+        elements.push_back(element);
+    }
+
+    void pop() {
+        if (elements.empty()) {
+            throw std::runtime_error("Stack is empty");
+        }
+        elements.pop_back();
+    }
+
+    const T& top() const {
+        if (elements.empty()) {
+            throw std::runtime_error("Stack is empty");
+        }
+        return elements.back();
+    }
+
+    bool empty() const {
+        return elements.empty();
+    }
+
+    size_t size() const {
+        return elements.size();
+    }
+};
+
+// Class template with multiple parameters
+template<typename Key, typename Value, typename Compare = std::less<Key>>
+class SimpleBST {
+private:
+    struct Node {
+        Key key;
+        Value value;
+        std::unique_ptr<Node> left;
+        std::unique_ptr<Node> right;
+
+        Node(const Key& k, const Value& v) : key(k), value(v) {}
+    };
+
+    std::unique_ptr<Node> root;
+    Compare comp;
+
+public:
+    void insert(const Key& key, const Value& value) {
+        root = insertHelper(std::move(root), key, value);
+    }
+
+    bool find(const Key& key, Value& value) const {
+        return findHelper(root.get(), key, value);
+    }
+
+    void inorderTraversal() const {
+        inorderHelper(root.get());
+        std::cout << std::endl;
+    }
+
+private:
+    std::unique_ptr<Node> insertHelper(std::unique_ptr<Node> node, const Key& key, const Value& value) {
+        if (!node) {
+            return std::make_unique<Node>(key, value);
+        }
+
+        if (comp(key, node->key)) {
+            node->left = insertHelper(std::move(node->left), key, value);
+        } else if (comp(node->key, key)) {
+            node->right = insertHelper(std::move(node->right), key, value);
+        } else {
+            node->value = value; // Update existing key
+        }
+
+        return node;
+    }
+
+    bool findHelper(Node* node, const Key& key, Value& value) const {
+        if (!node) return false;
+
+        if (comp(key, node->key)) {
+            return findHelper(node->left.get(), key, value);
+        } else if (comp(node->key, key)) {
+            return findHelper(node->right.get(), key, value);
+        } else {
+            value = node->value;
+            return true;
+        }
+    }
+
+    void inorderHelper(Node* node) const {
+        if (node) {
+            inorderHelper(node->left.get());
+            std::cout << "(" << node->key << ", " << node->value << ") ";
+            inorderHelper(node->right.get());
+        }
+    }
+};
+
+// Template with non-type parameters
+template<typename T, size_t Size>
+class FixedArray {
+private:
+    T data[Size];
+
+public:
+    constexpr size_t size() const { return Size; }
+
+    T& operator[](size_t index) {
+        if (index >= Size) {
+            throw std::out_of_range("Index out of range");
+        }
+        return data[index];
+    }
+
+    const T& operator[](size_t index) const {
+        if (index >= Size) {
+            throw std::out_of_range("Index out of range");
+        }
+        return data[index];
+    }
+
+    T* begin() { return data; }
+    T* end() { return data + Size; }
+    const T* begin() const { return data; }
+    const T* end() const { return data + Size; }
+};
+
+int main() {
+    std::cout << "=== Class Templates Demo ===" << std::endl;
+
+    // Stack template
+    Stack<int> intStack;
+    intStack.push(1);
+    intStack.push(2);
+    intStack.push(3);
+
+    std::cout << "Stack contents (top to bottom): ";
+    while (!intStack.empty()) {
+        std::cout << intStack.top() << " ";
+        intStack.pop();
+    }
+    std::cout << std::endl;
+
+    // BST template
+    SimpleBST<std::string, int> nameAges;
+    nameAges.insert("Alice", 25);
+    nameAges.insert("Bob", 30);
+    nameAges.insert("Charlie", 35);
+    nameAges.insert("Diana", 28);
+
+    std::cout << "BST inorder traversal: ";
+    nameAges.inorderTraversal();
+
+    int age;
+    if (nameAges.find("Bob", age)) {
+        std::cout << "Bob's age: " << age << std::endl;
+    }
+
+    // Fixed array template
+    FixedArray<double, 5> fixedArr;
+    for (size_t i = 0; i < fixedArr.size(); ++i) {
+        fixedArr[i] = i * 1.5;
+    }
+
+    std::cout << "Fixed array contents: ";
+    for (const auto& val : fixedArr) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+```
+
+### Template Specialization
+
+#### Explicit and Partial Specialization
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstring>
+
+// Primary template
+template<typename T>
+class TypeInfo {
+public:
+    static std::string getName() {
+        return "Unknown type";
+    }
+
+    static void printInfo(const T& value) {
+        std::cout << "Generic type: " << value << std::endl;
+    }
+
+    static bool isNumeric() { return false; }
+};
+
+// Explicit specialization for int
+template<>
+class TypeInfo<int> {
+public:
+    static std::string getName() {
+        return "Integer";
+    }
+
+    static void printInfo(const int& value) {
+        std::cout << "Integer value: " << value << std::endl;
+    }
+
+    static bool isNumeric() { return true; }
+};
+
+// Explicit specialization for std::string
+template<>
+class TypeInfo<std::string> {
+public:
+    static std::string getName() {
+        return "String";
+    }
+
+    static void printInfo(const std::string& value) {
+        std::cout << "String value: \"" << value << "\" (length: " << value.length() << ")" << std::endl;
+    }
+
+    static bool isNumeric() { return false; }
+};
+
+// Partial specialization for pointers
+template<typename T>
+class TypeInfo<T*> {
+public:
+    static std::string getName() {
+        return "Pointer to " + TypeInfo<T>::getName();
+    }
+
+    static void printInfo(T* const& value) {
+        if (value) {
+            std::cout << "Pointer to " << TypeInfo<T>::getName()
+                      << " at address " << value << ", pointing to: ";
+            TypeInfo<T>::printInfo(*value);
+        } else {
+            std::cout << "Null pointer to " << TypeInfo<T>::getName() << std::endl;
+        }
+    }
+
+    static bool isNumeric() { return false; }
+};
+
+// Partial specialization for std::vector
+template<typename T>
+class TypeInfo<std::vector<T>> {
+public:
+    static std::string getName() {
+        return "Vector of " + TypeInfo<T>::getName();
+    }
+
+    static void printInfo(const std::vector<T>& value) {
+        std::cout << "Vector of " << TypeInfo<T>::getName()
+                  << " with " << value.size() << " elements: [";
+        for (size_t i = 0; i < value.size(); ++i) {
+            if (i > 0) std::cout << ", ";
+            std::cout << value[i];
+        }
+        std::cout << "]" << std::endl;
+    }
+
+    static bool isNumeric() { return false; }
+};
+
+// Function template specialization
+template<typename T>
+void processValue(const T& value) {
+    std::cout << "Processing generic value: " << value << std::endl;
+}
+
+// Specialized for const char*
+template<>
+void processValue<const char*>(const char* const& value) {
+    std::cout << "Processing C-string: \"" << value << "\" (length: " << strlen(value) << ")" << std::endl;
+}
+
+// SFINAE example (Substitution Failure Is Not An Error)
+template<typename T>
+typename std::enable_if<std::is_arithmetic<T>::value, void>::type
+printArithmetic(const T& value) {
+    std::cout << "Arithmetic value: " << value << std::endl;
+}
+
+template<typename T>
+typename std::enable_if<!std::is_arithmetic<T>::value, void>::type
+printArithmetic(const T& value) {
+    std::cout << "Non-arithmetic value: " << value << std::endl;
+}
+
+int main() {
+    std::cout << "=== Template Specialization Demo ===" << std::endl;
+
+    // Test primary template and specializations
+    int intVal = 42;
+    std::string strVal = "Hello, World!";
+    double doubleVal = 3.14;
+
+    std::cout << TypeInfo<int>::getName() << std::endl;
+    TypeInfo<int>::printInfo(intVal);
+
+    std::cout << TypeInfo<std::string>::getName() << std::endl;
+    TypeInfo<std::string>::printInfo(strVal);
+
+    std::cout << TypeInfo<double>::getName() << std::endl;
+    TypeInfo<double>::printInfo(doubleVal);
+
+    // Test pointer specialization
+    int* intPtr = &intVal;
+    std::cout << TypeInfo<int*>::getName() << std::endl;
+    TypeInfo<int*>::printInfo(intPtr);
+
+    // Test vector specialization
+    std::vector<int> intVec = {1, 2, 3, 4, 5};
+    std::cout << TypeInfo<std::vector<int>>::getName() << std::endl;
+    TypeInfo<std::vector<int>>::printInfo(intVec);
+
+    // Function template specialization
+    processValue(42);
+    processValue("Hello");
+    processValue(std::string("World"));
+
+    // SFINAE demonstration
+    printArithmetic(42);
+    printArithmetic(3.14);
+    printArithmetic(std::string("Not arithmetic"));
+
+    return 0;
+}
+```
+
+### Concepts (C++20)
+
+#### Modern Template Constraints
+
+```cpp
+#include <iostream>
+#include <concepts>
+#include <type_traits>
+#include <vector>
+#include <string>
+
+// Define custom concepts
+template<typename T>
+concept Numeric = std::is_arithmetic_v<T>;
+
+template<typename T>
+concept Printable = requires(T t) {
+    std::cout << t;
+};
+
+template<typename T>
+concept Container = requires(T t) {
+    t.begin();
+    t.end();
+    t.size();
+};
+
+template<typename T>
+concept Comparable = requires(T a, T b) {
+    { a < b } -> std::convertible_to<bool>;
+    { a > b } -> std::convertible_to<bool>;
+    { a == b } -> std::convertible_to<bool>;
+};
+
+// Function templates using concepts
+template<Numeric T>
+T multiply(T a, T b) {
+    return a * b;
+}
+
+template<Printable T>
+void print(const T& value) {
+    std::cout << "Printing: " << value << std::endl;
+}
+
+template<Container C>
+void printContainer(const C& container) {
+    std::cout << "Container with " << container.size() << " elements: ";
+    for (const auto& item : container) {
+        std::cout << item << " ";
+    }
+    std::cout << std::endl;
+}
+
+template<Comparable T>
+T findMax(const std::vector<T>& vec) {
+    if (vec.empty()) {
+        throw std::invalid_argument("Empty vector");
+    }
+
+    T maxVal = vec[0];
+    for (const auto& item : vec) {
+        if (item > maxVal) {
+            maxVal = item;
+        }
+    }
+    return maxVal;
+}
+
+int main() {
+    std::cout << "=== Concepts Demo ===" << std::endl;
+
+    // Numeric concept
+    std::cout << "multiply(5, 3) = " << multiply(5, 3) << std::endl;
+    std::cout << "multiply(2.5, 4.0) = " << multiply(2.5, 4.0) << std::endl;
+
+    // Printable concept
+    print(42);
+    print(std::string("Hello, Concepts!"));
+    print(3.14159);
+
+    // Container concept
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    printContainer(numbers);
+
+    std::string text = "Hello";
+    printContainer(text);  // string is a container of chars
+
+    // Comparable concept
+    std::cout << "Max in vector: " << findMax(numbers) << std::endl;
+
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## 🌊 STL - Standard Template Library
+
+**📊 Chapter 9 of 14**
+
+🎯 **Learning Objectives:**
+- Master STL containers and their use cases
+- Understand iterators and their categories
+- Learn STL algorithms and functional programming
+- Explore custom comparators and function objects
+
+⏱️ **Estimated Reading Time:** 40 minutes
+
+📋 **Prerequisites:** Understanding of templates and object-oriented programming
+
+### Containers
+
+#### Sequential Containers
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <deque>
+#include <list>
+#include <array>
+#include <forward_list>
+#include <algorithm>
+#include <chrono>
+
+void demonstrateVector() {
+    std::cout << "=== std::vector ===" << std::endl;
+
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+
+    // Basic operations
+    vec.push_back(6);
+    vec.insert(vec.begin() + 2, 99);  // Insert at position 2
+
+    std::cout << "Vector contents: ";
+    for (const auto& val : vec) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Access methods
+    std::cout << "First element: " << vec.front() << std::endl;
+    std::cout << "Last element: " << vec.back() << std::endl;
+    std::cout << "Element at index 3: " << vec[3] << std::endl;
+    std::cout << "Element at index 3 (safe): " << vec.at(3) << std::endl;
+
+    // Capacity information
+    std::cout << "Size: " << vec.size() << ", Capacity: " << vec.capacity() << std::endl;
+
+    // Reserve space to avoid reallocations
+    vec.reserve(100);
+    std::cout << "After reserve(100) - Size: " << vec.size() << ", Capacity: " << vec.capacity() << std::endl;
+}
+
+void demonstrateDeque() {
+    std::cout << "\n=== std::deque ===" << std::endl;
+
+    std::deque<int> deq = {3, 4, 5};
+
+    // Efficient insertion at both ends
+    deq.push_front(2);
+    deq.push_front(1);
+    deq.push_back(6);
+    deq.push_back(7);
+
+    std::cout << "Deque contents: ";
+    for (const auto& val : deq) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Random access like vector
+    std::cout << "Middle element: " << deq[deq.size()/2] << std::endl;
+}
+
+void demonstrateList() {
+    std::cout << "\n=== std::list ===" << std::endl;
+
+    std::list<std::string> lst = {"banana", "apple", "orange"};
+
+    // Efficient insertion anywhere
+    auto it = std::find(lst.begin(), lst.end(), "apple");
+    if (it != lst.end()) {
+        lst.insert(it, "grape");
+    }
+
+    // Sort the list
+    lst.sort();
+
+    std::cout << "Sorted list: ";
+    for (const auto& val : lst) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Splice operation (move elements from another list)
+    std::list<std::string> otherList = {"mango", "kiwi"};
+    lst.splice(lst.end(), otherList);
+
+    std::cout << "After splice: ";
+    for (const auto& val : lst) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+
+void demonstrateArray() {
+    std::cout << "\n=== std::array ===" << std::endl;
+
+    std::array<int, 5> arr = {1, 2, 3, 4, 5};
+
+    std::cout << "Array contents: ";
+    for (const auto& val : arr) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Array-specific operations
+    std::cout << "Size: " << arr.size() << std::endl;
+    std::cout << "Max size: " << arr.max_size() << std::endl;
+
+    // Fill array
+    std::array<int, 3> fillArr;
+    fillArr.fill(42);
+    std::cout << "Filled array: ";
+    for (const auto& val : fillArr) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    demonstrateVector();
+    demonstrateDeque();
+    demonstrateList();
+    demonstrateArray();
+
+    return 0;
+}
+```
+
+#### Associative Containers
+
+```cpp
+#include <iostream>
+#include <set>
+#include <map>
+#include <unordered_set>
+#include <unordered_map>
+#include <string>
+
+void demonstrateSet() {
+    std::cout << "=== std::set ===" << std::endl;
+
+    std::set<int> s = {3, 1, 4, 1, 5, 9, 2, 6};  // Duplicates automatically removed
+
+    std::cout << "Set contents (sorted): ";
+    for (const auto& val : s) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Insert and find
+    s.insert(7);
+    if (s.find(5) != s.end()) {
+        std::cout << "Found 5 in set" << std::endl;
+    }
+
+    // Count (always 0 or 1 for set)
+    std::cout << "Count of 5: " << s.count(5) << std::endl;
+
+    // Range-based operations
+    auto lower = s.lower_bound(4);
+    auto upper = s.upper_bound(6);
+    std::cout << "Elements in range [4, 6]: ";
+    for (auto it = lower; it != upper; ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+
+void demonstrateMap() {
+    std::cout << "\n=== std::map ===" << std::endl;
+
+    std::map<std::string, int> ageMap = {
+        {"Alice", 25},
+        {"Bob", 30},
+        {"Charlie", 35}
+    };
+
+    // Insert new elements
+    ageMap["Diana"] = 28;
+    ageMap.insert({"Eve", 32});
+
+    std::cout << "Age map contents:" << std::endl;
+    for (const auto& [name, age] : ageMap) {  // C++17 structured binding
+        std::cout << name << ": " << age << " years old" << std::endl;
+    }
+
+    // Safe access with find
+    if (auto it = ageMap.find("Bob"); it != ageMap.end()) {
+        std::cout << "Bob's age: " << it->second << std::endl;
+    }
+
+    // Update existing element
+    ageMap["Alice"] = 26;
+    std::cout << "Updated Alice's age: " << ageMap["Alice"] << std::endl;
+}
+
+void demonstrateUnorderedContainers() {
+    std::cout << "\n=== Unordered Containers ===" << std::endl;
+
+    // Unordered set (hash table)
+    std::unordered_set<std::string> words = {"apple", "banana", "cherry", "date"};
+    words.insert("elderberry");
+
+    std::cout << "Unordered set contents: ";
+    for (const auto& word : words) {
+        std::cout << word << " ";
+    }
+    std::cout << std::endl;
+
+    // Unordered map (hash table)
+    std::unordered_map<std::string, double> prices = {
+        {"apple", 0.5},
+        {"banana", 0.3},
+        {"cherry", 2.0}
+    };
+
+    prices["date"] = 1.5;
+
+    std::cout << "Price list:" << std::endl;
+    for (const auto& [item, price] : prices) {
+        std::cout << item << ": $" << price << std::endl;
+    }
+
+    // Hash table statistics
+    std::cout << "Bucket count: " << prices.bucket_count() << std::endl;
+    std::cout << "Load factor: " << prices.load_factor() << std::endl;
+}
+
+int main() {
+    demonstrateSet();
+    demonstrateMap();
+    demonstrateUnorderedContainers();
+
+    return 0;
+}
+```
+
+### Iterators
+
+#### Iterator Categories and Usage
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <list>
+#include <iterator>
+#include <algorithm>
+
+void demonstrateIteratorCategories() {
+    std::cout << "=== Iterator Categories ===" << std::endl;
+
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+    std::list<int> lst = {10, 20, 30, 40, 50};
+
+    // Random access iterators (vector)
+    auto vecIt = vec.begin();
+    vecIt += 2;  // Jump to 3rd element
+    std::cout << "Vector element at +2: " << *vecIt << std::endl;
+
+    // Bidirectional iterators (list)
+    auto lstIt = lst.begin();
+    ++lstIt; ++lstIt;  // Move forward twice
+    std::cout << "List element after ++, ++: " << *lstIt << std::endl;
+    --lstIt;  // Move backward once
+    std::cout << "List element after --: " << *lstIt << std::endl;
+
+    // Iterator arithmetic with random access iterators
+    auto distance = vec.end() - vec.begin();
+    std::cout << "Vector size using iterator arithmetic: " << distance << std::endl;
+
+    // std::distance works with all iterator categories
+    auto lstDistance = std::distance(lst.begin(), lst.end());
+    std::cout << "List size using std::distance: " << lstDistance << std::endl;
+}
+
+void demonstrateIteratorAdapters() {
+    std::cout << "\n=== Iterator Adapters ===" << std::endl;
+
+    std::vector<int> vec = {1, 2, 3, 4, 5};
+
+    // Reverse iterators
+    std::cout << "Vector in reverse: ";
+    for (auto it = vec.rbegin(); it != vec.rend(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // Insert iterators
+    std::vector<int> dest;
+
+    // back_insert_iterator
+    std::copy(vec.begin(), vec.end(), std::back_inserter(dest));
+    std::cout << "After back_inserter copy: ";
+    for (const auto& val : dest) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // front_insert_iterator (works with deque, list, etc.)
+    std::list<int> destList;
+    std::copy(vec.begin(), vec.end(), std::front_inserter(destList));
+    std::cout << "After front_inserter copy (reversed): ";
+    for (const auto& val : destList) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // insert_iterator
+    std::vector<int> destVec = {100, 200};
+    auto insertPos = destVec.begin() + 1;
+    std::copy(vec.begin(), vec.begin() + 3, std::inserter(destVec, insertPos));
+    std::cout << "After inserter copy: ";
+    for (const auto& val : destVec) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+
+void demonstrateStreamIterators() {
+    std::cout << "\n=== Stream Iterators ===" << std::endl;
+
+    // ostream_iterator
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    std::cout << "Using ostream_iterator: ";
+    std::copy(numbers.begin(), numbers.end(),
+              std::ostream_iterator<int>(std::cout, " "));
+    std::cout << std::endl;
+
+    // istream_iterator (commented out for automated testing)
+    /*
+    std::cout << "Enter some integers (Ctrl+D to end): ";
+    std::vector<int> input_numbers;
+    std::copy(std::istream_iterator<int>(std::cin),
+              std::istream_iterator<int>(),
+              std::back_inserter(input_numbers));
+
+    std::cout << "You entered: ";
+    for (const auto& num : input_numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+    */
+}
+
+int main() {
+    demonstrateIteratorCategories();
+    demonstrateIteratorAdapters();
+    demonstrateStreamIterators();
+
+    return 0;
+}
+```
+
+### Algorithms
+
+#### Common STL Algorithms
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+#include <functional>
+#include <string>
+
+void demonstrateSearchingAlgorithms() {
+    std::cout << "=== Searching Algorithms ===" << std::endl;
+
+    std::vector<int> vec = {1, 3, 5, 7, 9, 11, 13, 15};
+
+    // find
+    auto it = std::find(vec.begin(), vec.end(), 7);
+    if (it != vec.end()) {
+        std::cout << "Found 7 at position: " << std::distance(vec.begin(), it) << std::endl;
+    }
+
+    // find_if
+    auto evenIt = std::find_if(vec.begin(), vec.end(), [](int x) { return x % 2 == 0; });
+    if (evenIt == vec.end()) {
+        std::cout << "No even numbers found" << std::endl;
+    }
+
+    // binary_search (requires sorted container)
+    bool found = std::binary_search(vec.begin(), vec.end(), 9);
+    std::cout << "Binary search for 9: " << (found ? "found" : "not found") << std::endl;
+
+    // lower_bound and upper_bound
+    auto lower = std::lower_bound(vec.begin(), vec.end(), 7);
+    auto upper = std::upper_bound(vec.begin(), vec.end(), 7);
+    std::cout << "Range for value 7: [" << std::distance(vec.begin(), lower)
+              << ", " << std::distance(vec.begin(), upper) << ")" << std::endl;
+
+    // count and count_if
+    std::vector<int> numbers = {1, 2, 3, 2, 4, 2, 5};
+    int count = std::count(numbers.begin(), numbers.end(), 2);
+    std::cout << "Count of 2s: " << count << std::endl;
+
+    int evenCount = std::count_if(numbers.begin(), numbers.end(), [](int x) { return x % 2 == 0; });
+    std::cout << "Count of even numbers: " << evenCount << std::endl;
+}
+
+void demonstrateModifyingAlgorithms() {
+    std::cout << "\n=== Modifying Algorithms ===" << std::endl;
+
+    std::vector<int> source = {1, 2, 3, 4, 5};
+    std::vector<int> dest(source.size());
+
+    // copy
+    std::copy(source.begin(), source.end(), dest.begin());
+    std::cout << "After copy: ";
+    for (const auto& val : dest) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // transform
+    std::vector<int> squared(source.size());
+    std::transform(source.begin(), source.end(), squared.begin(),
+                   [](int x) { return x * x; });
+    std::cout << "After transform (square): ";
+    for (const auto& val : squared) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // fill and fill_n
+    std::vector<int> filled(5);
+    std::fill(filled.begin(), filled.end(), 42);
+    std::cout << "After fill with 42: ";
+    for (const auto& val : filled) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // generate
+    std::vector<int> generated(5);
+    int counter = 0;
+    std::generate(generated.begin(), generated.end(), [&counter]() { return ++counter * 10; });
+    std::cout << "After generate: ";
+    for (const auto& val : generated) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // replace and replace_if
+    std::vector<int> values = {1, 2, 3, 2, 4, 2, 5};
+    std::replace(values.begin(), values.end(), 2, 99);
+    std::cout << "After replace 2 with 99: ";
+    for (const auto& val : values) std::cout << val << " ";
+    std::cout << std::endl;
+}
+
+void demonstrateSortingAlgorithms() {
+    std::cout << "\n=== Sorting Algorithms ===" << std::endl;
+
+    std::vector<int> vec = {3, 1, 4, 1, 5, 9, 2, 6};
+
+    // sort
+    std::vector<int> sorted = vec;
+    std::sort(sorted.begin(), sorted.end());
+    std::cout << "After sort: ";
+    for (const auto& val : sorted) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // sort with custom comparator
+    std::vector<int> descending = vec;
+    std::sort(descending.begin(), descending.end(), std::greater<int>());
+    std::cout << "After sort (descending): ";
+    for (const auto& val : descending) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // partial_sort
+    std::vector<int> partial = vec;
+    std::partial_sort(partial.begin(), partial.begin() + 3, partial.end());
+    std::cout << "After partial_sort (first 3): ";
+    for (const auto& val : partial) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // nth_element
+    std::vector<int> nthVec = vec;
+    std::nth_element(nthVec.begin(), nthVec.begin() + 3, nthVec.end());
+    std::cout << "4th element (0-indexed): " << nthVec[3] << std::endl;
+
+    // is_sorted
+    bool isSorted = std::is_sorted(sorted.begin(), sorted.end());
+    std::cout << "Is sorted vector actually sorted? " << (isSorted ? "Yes" : "No") << std::endl;
+}
+
+void demonstrateNumericAlgorithms() {
+    std::cout << "\n=== Numeric Algorithms ===" << std::endl;
+
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+    // accumulate
+    int sum = std::accumulate(numbers.begin(), numbers.end(), 0);
+    std::cout << "Sum: " << sum << std::endl;
+
+    int product = std::accumulate(numbers.begin(), numbers.end(), 1, std::multiplies<int>());
+    std::cout << "Product: " << product << std::endl;
+
+    // partial_sum
+    std::vector<int> partialSums(numbers.size());
+    std::partial_sum(numbers.begin(), numbers.end(), partialSums.begin());
+    std::cout << "Partial sums: ";
+    for (const auto& val : partialSums) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // adjacent_difference
+    std::vector<int> differences(numbers.size());
+    std::adjacent_difference(numbers.begin(), numbers.end(), differences.begin());
+    std::cout << "Adjacent differences: ";
+    for (const auto& val : differences) std::cout << val << " ";
+    std::cout << std::endl;
+
+    // iota (C++11)
+    std::vector<int> sequence(10);
+    std::iota(sequence.begin(), sequence.end(), 1);
+    std::cout << "Sequence from iota: ";
+    for (const auto& val : sequence) std::cout << val << " ";
+    std::cout << std::endl;
+}
+
+int main() {
+    demonstrateSearchingAlgorithms();
+    demonstrateModifyingAlgorithms();
+    demonstrateSortingAlgorithms();
+    demonstrateNumericAlgorithms();
+
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## ⚠️ Error Handling
+
+**📊 Chapter 10 of 14**
+
+🎯 **Learning Objectives:**
+- Master exception handling with try-catch blocks
+- Understand error codes and their appropriate usage
+- Learn RAII principles for exception safety
+- Explore modern error handling techniques
+
+⏱️ **Estimated Reading Time:** 25 minutes
+
+📋 **Prerequisites:** Understanding of functions and basic C++ syntax
+
+### Exceptions
+
+#### Basic Exception Handling
+
+```cpp
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+void demonstrateBasicExceptions() {
+    std::cout << "=== Basic Exception Handling ===" << std::endl;
+
+    try {
+        // Throw a standard exception
+        throw std::runtime_error("Something went wrong!");
+    } catch (const std::runtime_error& e) {
+        std::cout << "Caught runtime_error: " << e.what() << std::endl;
+    }
+
+    // Multiple catch blocks
+    try {
+        int choice;
+        std::cout << "Enter 1 for logic_error, 2 for runtime_error, 3 for int: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: throw std::logic_error("Logic error occurred");
+            case 2: throw std::runtime_error("Runtime error occurred");
+            case 3: throw 42;
+            default: std::cout << "No exception thrown" << std::endl;
+        }
+    } catch (const std::logic_error& e) {
+        std::cout << "Caught logic_error: " << e.what() << std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cout << "Caught runtime_error: " << e.what() << std::endl;
+    } catch (int value) {
+        std::cout << "Caught integer: " << value << std::endl;
+    } catch (...) {
+        std::cout << "Caught unknown exception" << std::endl;
+    }
+}
+
+// Custom exception class
+class CustomException : public std::exception {
+private:
+    std::string message;
+    int errorCode;
+
+public:
+    CustomException(const std::string& msg, int code)
+        : message(msg), errorCode(code) {}
+
+    const char* what() const noexcept override {
+        return message.c_str();
+    }
+
+    int getErrorCode() const { return errorCode; }
+};
+
+void demonstrateCustomExceptions() {
+    std::cout << "\n=== Custom Exceptions ===" << std::endl;
+
+    try {
+        throw CustomException("Custom error occurred", 404);
+    } catch (const CustomException& e) {
+        std::cout << "Caught CustomException: " << e.what()
+                  << " (Code: " << e.getErrorCode() << ")" << std::endl;
+    }
+}
+
+// Function that might throw
+double divide(double a, double b) {
+    if (b == 0) {
+        throw std::invalid_argument("Division by zero");
+    }
+    return a / b;
+}
+
+void demonstrateExceptionPropagation() {
+    std::cout << "\n=== Exception Propagation ===" << std::endl;
+
+    try {
+        std::cout << "10 / 2 = " << divide(10, 2) << std::endl;
+        std::cout << "10 / 0 = " << divide(10, 0) << std::endl;  // This will throw
+        std::cout << "This line won't be reached" << std::endl;
+    } catch (const std::invalid_argument& e) {
+        std::cout << "Caught exception: " << e.what() << std::endl;
+    }
+
+    std::cout << "Program continues after exception handling" << std::endl;
+}
+
+int main() {
+    demonstrateBasicExceptions();
+    demonstrateCustomExceptions();
+    demonstrateExceptionPropagation();
+
+    return 0;
+}
+```
+
+### RAII and Exception Safety
+
+#### Exception-Safe Resource Management
+
+```cpp
+#include <iostream>
+#include <memory>
+#include <fstream>
+#include <vector>
+#include <stdexcept>
+
+// RAII class for file handling
+class FileHandler {
+private:
+    std::FILE* file;
+    std::string filename;
+
+public:
+    FileHandler(const std::string& fname, const char* mode)
+        : filename(fname) {
+        file = std::fopen(fname.c_str(), mode);
+        if (!file) {
+            throw std::runtime_error("Failed to open file: " + filename);
+        }
+        std::cout << "File '" << filename << "' opened successfully" << std::endl;
+    }
+
+    ~FileHandler() {
+        if (file) {
+            std::fclose(file);
+            std::cout << "File '" << filename << "' closed automatically" << std::endl;
+        }
+    }
+
+    // Delete copy operations to prevent double-close
+    FileHandler(const FileHandler&) = delete;
+    FileHandler& operator=(const FileHandler&) = delete;
+
+    // Move operations
+    FileHandler(FileHandler&& other) noexcept
+        : file(other.file), filename(std::move(other.filename)) {
+        other.file = nullptr;
+    }
+
+    FileHandler& operator=(FileHandler&& other) noexcept {
+        if (this != &other) {
+            if (file) std::fclose(file);
+            file = other.file;
+            filename = std::move(other.filename);
+            other.file = nullptr;
+        }
+        return *this;
+    }
+
+    std::FILE* get() const { return file; }
+
+    void write(const std::string& data) {
+        if (!file) {
+            throw std::runtime_error("File not open");
+        }
+        if (std::fputs(data.c_str(), file) == EOF) {
+            throw std::runtime_error("Write failed");
+        }
+    }
+};
+
+// Exception-safe transaction class
+class Transaction {
+private:
+    std::vector<std::function<void()>> rollbackOperations;
+    bool committed = false;
+
+public:
+    ~Transaction() {
+        if (!committed) {
+            rollback();
+        }
+    }
+
+    void addRollbackOperation(std::function<void()> operation) {
+        rollbackOperations.push_back(std::move(operation));
+    }
+
+    void commit() {
+        committed = true;
+        rollbackOperations.clear();
+    }
+
+    void rollback() {
+        std::cout << "Rolling back transaction..." << std::endl;
+        for (auto it = rollbackOperations.rbegin(); it != rollbackOperations.rend(); ++it) {
+            try {
+                (*it)();
+            } catch (...) {
+                // Log rollback failure but continue
+                std::cout << "Rollback operation failed" << std::endl;
+            }
+        }
+        rollbackOperations.clear();
+    }
+};
+
+void demonstrateRAIIExceptionSafety() {
+    std::cout << "=== RAII Exception Safety ===" << std::endl;
+
+    try {
+        FileHandler file("test.txt", "w");
+        file.write("Hello, RAII!\n");
+
+        // Simulate an exception
+        throw std::runtime_error("Something went wrong!");
+
+        file.write("This won't be written\n");
+    } catch (const std::exception& e) {
+        std::cout << "Exception caught: " << e.what() << std::endl;
+        std::cout << "File was automatically closed due to RAII" << std::endl;
+    }
+}
+
+void demonstrateTransactionRollback() {
+    std::cout << "\n=== Transaction Rollback ===" << std::endl;
+
+    std::vector<int> data = {1, 2, 3};
+
+    try {
+        Transaction txn;
+
+        // Operation 1: Add element
+        data.push_back(4);
+        txn.addRollbackOperation([&data]() { data.pop_back(); });
+        std::cout << "Added 4, data size: " << data.size() << std::endl;
+
+        // Operation 2: Add another element
+        data.push_back(5);
+        txn.addRollbackOperation([&data]() { data.pop_back(); });
+        std::cout << "Added 5, data size: " << data.size() << std::endl;
+
+        // Simulate failure - exception will trigger rollback
+        throw std::runtime_error("Transaction failed!");
+
+        txn.commit();  // This won't be reached
+    } catch (const std::exception& e) {
+        std::cout << "Exception: " << e.what() << std::endl;
+        std::cout << "After rollback, data size: " << data.size() << std::endl;
+    }
+}
+
+int main() {
+    demonstrateRAIIExceptionSafety();
+    demonstrateTransactionRollback();
+
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## 🔄 Modern C++ Features
+
+**📊 Chapter 11 of 14**
+
+🎯 **Learning Objectives:**
+- Master move semantics and perfect forwarding
+- Understand range-based loops and structured bindings
+- Learn about modules and coroutines in C++20
+- Explore other modern C++ features and best practices
+
+⏱️ **Estimated Reading Time:** 30 minutes
+
+📋 **Prerequisites:** Understanding of templates and object-oriented programming
+
+### Move Semantics
+
+#### Understanding Move Operations
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+#include <utility>
+#include <chrono>
+
+class Resource {
+private:
+    std::vector<int> data;
+    std::string name;
+
+public:
+    // Constructor
+    Resource(const std::string& n, size_t size) : name(n), data(size, 42) {
+        std::cout << "Resource '" << name << "' created with " << size << " elements" << std::endl;
+    }
+
+    // Copy constructor
+    Resource(const Resource& other) : name(other.name + "_copy"), data(other.data) {
+        std::cout << "Resource copied: " << name << std::endl;
+    }
+
+    // Move constructor
+    Resource(Resource&& other) noexcept : name(std::move(other.name)), data(std::move(other.data)) {
+        std::cout << "Resource moved: " << name << std::endl;
+        other.name = "moved_from";
+    }
+
+    // Copy assignment
+    Resource& operator=(const Resource& other) {
+        if (this != &other) {
+            name = other.name + "_assigned";
+            data = other.data;
+            std::cout << "Resource copy-assigned: " << name << std::endl;
+        }
+        return *this;
+    }
+
+    // Move assignment
+    Resource& operator=(Resource&& other) noexcept {
+        if (this != &other) {
+            name = std::move(other.name);
+            data = std::move(other.data);
+            std::cout << "Resource move-assigned: " << name << std::endl;
+            other.name = "moved_from";
+        }
+        return *this;
+    }
+
+    // Destructor
+    ~Resource() {
+        std::cout << "Resource destroyed: " << name << std::endl;
+    }
+
+    const std::string& getName() const { return name; }
+    size_t getSize() const { return data.size(); }
+};
+
+void demonstrateMoveSemantics() {
+    std::cout << "=== Move Semantics Demo ===" << std::endl;
+
+    // Create resource
+    Resource res1("Original", 1000000);
+
+    // Copy vs Move timing
+    auto start = std::chrono::high_resolution_clock::now();
+    Resource res2 = res1;  // Copy constructor
+    auto end = std::chrono::high_resolution_clock::now();
+    auto copyTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    start = std::chrono::high_resolution_clock::now();
+    Resource res3 = std::move(res1);  // Move constructor
+    end = std::chrono::high_resolution_clock::now();
+    auto moveTime = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    std::cout << "Copy time: " << copyTime.count() << "μs" << std::endl;
+    std::cout << "Move time: " << moveTime.count() << "μs" << std::endl;
+    std::cout << "Original resource after move: " << res1.getName() << std::endl;
+}
+
+// Perfect forwarding example
+template<typename T>
+void processValue(T&& value) {
+    std::cout << "Processing: " << value << std::endl;
+    // Forward the value to another function
+    someFunction(std::forward<T>(value));
+}
+
+void someFunction(const std::string& s) {
+    std::cout << "someFunction called with lvalue: " << s << std::endl;
+}
+
+void someFunction(std::string&& s) {
+    std::cout << "someFunction called with rvalue: " << s << std::endl;
+}
+
+int main() {
+    demonstrateMoveSemantics();
+
+    // Perfect forwarding
+    std::string str = "Hello";
+    processValue(str);                    // Forwards as lvalue
+    processValue(std::string("World"));   // Forwards as rvalue
+    processValue("Temporary");            // Forwards as rvalue
+
+    return 0;
+}
+```
+
+### Range-based Loops
+
+#### Modern Iteration Techniques
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+#include <ranges>
+
+void demonstrateBasicRangeLoops() {
+    std::cout << "=== Basic Range-based Loops ===" << std::endl;
+
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+    // Basic range-based for loop
+    std::cout << "Numbers: ";
+    for (const auto& num : numbers) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    // Modifying elements
+    std::cout << "Doubling numbers: ";
+    for (auto& num : numbers) {
+        num *= 2;
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    // With maps
+    std::map<std::string, int> ages = {{"Alice", 25}, {"Bob", 30}, {"Charlie", 35}};
+
+    std::cout << "Ages:" << std::endl;
+    for (const auto& [name, age] : ages) {  // C++17 structured binding
+        std::cout << name << ": " << age << " years old" << std::endl;
+    }
+}
+
+void demonstrateRangesLibrary() {
+    std::cout << "\n=== C++20 Ranges Library ===" << std::endl;
+
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    // Filter and transform with ranges
+    auto evenSquares = numbers
+        | std::views::filter([](int n) { return n % 2 == 0; })
+        | std::views::transform([](int n) { return n * n; });
+
+    std::cout << "Even numbers squared: ";
+    for (int value : evenSquares) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+
+    // Take first N elements
+    auto firstFive = numbers | std::views::take(5);
+    std::cout << "First 5 elements: ";
+    for (int value : firstFive) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+
+    // Reverse view
+    auto reversed = numbers | std::views::reverse;
+    std::cout << "Reversed: ";
+    for (int value : reversed) {
+        std::cout << value << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    demonstrateBasicRangeLoops();
+    demonstrateRangesLibrary();
+
+    return 0;
+}
+```
+
+### Structured Bindings
+
+#### C++17 Structured Bindings
+
+```cpp
+#include <iostream>
+#include <tuple>
+#include <map>
+#include <array>
+#include <utility>
+
+struct Point {
+    double x, y, z;
+};
+
+std::tuple<int, std::string, double> getPersonInfo() {
+    return std::make_tuple(25, "Alice", 175.5);
+}
+
+std::pair<bool, std::string> validateInput(const std::string& input) {
+    if (input.empty()) {
+        return {false, "Input cannot be empty"};
+    }
+    return {true, "Input is valid"};
+}
+
+void demonstrateStructuredBindings() {
+    std::cout << "=== Structured Bindings Demo ===" << std::endl;
+
+    // With tuples
+    auto [age, name, height] = getPersonInfo();
+    std::cout << "Person: " << name << ", Age: " << age << ", Height: " << height << "cm" << std::endl;
+
+    // With pairs
+    auto [isValid, message] = validateInput("Hello World");
+    std::cout << "Validation result: " << (isValid ? "Valid" : "Invalid") << " - " << message << std::endl;
+
+    // With structs
+    Point p{1.5, 2.5, 3.5};
+    auto [x, y, z] = p;
+    std::cout << "Point coordinates: (" << x << ", " << y << ", " << z << ")" << std::endl;
+
+    // With arrays
+    std::array<int, 3> arr = {10, 20, 30};
+    auto [first, second, third] = arr;
+    std::cout << "Array elements: " << first << ", " << second << ", " << third << std::endl;
+
+    // With maps (in range-based for loop)
+    std::map<std::string, int> scores = {{"Alice", 95}, {"Bob", 87}, {"Charlie", 92}};
+    std::cout << "Scores:" << std::endl;
+    for (const auto& [student, score] : scores) {
+        std::cout << student << ": " << score << std::endl;
+    }
+}
+
+int main() {
+    demonstrateStructuredBindings();
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## ⚡ Concurrency & Parallelism
+
+**📊 Chapter 12 of 14**
+
+🎯 **Learning Objectives:**
+- Master thread creation and management
+- Understand synchronization primitives and thread safety
+- Learn atomic operations and lock-free programming
+- Explore parallel algorithms and execution policies
+
+⏱️ **Estimated Reading Time:** 35 minutes
+
+📋 **Prerequisites:** Understanding of modern C++ features and memory management
+
+### Threads
+
+#### Basic Threading
+
+```cpp
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <chrono>
+#include <atomic>
+
+void simpleTask(int id, int duration) {
+    std::cout << "Thread " << id << " starting work..." << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    std::cout << "Thread " << id << " finished work after " << duration << "ms" << std::endl;
+}
+
+void demonstrateBasicThreads() {
+    std::cout << "=== Basic Threading ===" << std::endl;
+
+    // Create and start threads
+    std::thread t1(simpleTask, 1, 1000);
+    std::thread t2(simpleTask, 2, 1500);
+    std::thread t3(simpleTask, 3, 800);
+
+    std::cout << "Main thread waiting for workers..." << std::endl;
+
+    // Wait for threads to complete
+    t1.join();
+    t2.join();
+    t3.join();
+
+    std::cout << "All threads completed!" << std::endl;
+}
+
+// Thread-safe counter example
+class ThreadSafeCounter {
+private:
+    std::atomic<int> count{0};
+
+public:
+    void increment() {
+        count.fetch_add(1);
+    }
+
+    void decrement() {
+        count.fetch_sub(1);
+    }
+
+    int getValue() const {
+        return count.load();
+    }
+};
+
+void counterWorker(ThreadSafeCounter& counter, int iterations) {
+    for (int i = 0; i < iterations; ++i) {
+        counter.increment();
+        std::this_thread::sleep_for(std::chrono::microseconds(1));
+    }
+}
+
+void demonstrateThreadSafety() {
+    std::cout << "\n=== Thread Safety with Atomic ===" << std::endl;
+
+    ThreadSafeCounter counter;
+    const int iterations = 1000;
+    const int numThreads = 4;
+
+    std::vector<std::thread> threads;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Launch worker threads
+    for (int i = 0; i < numThreads; ++i) {
+        threads.emplace_back(counterWorker, std::ref(counter), iterations);
+    }
+
+    // Wait for all threads
+    for (auto& t : threads) {
+        t.join();
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+    std::cout << "Expected count: " << (iterations * numThreads) << std::endl;
+    std::cout << "Actual count: " << counter.getValue() << std::endl;
+    std::cout << "Time taken: " << duration.count() << "ms" << std::endl;
+}
+
+int main() {
+    demonstrateBasicThreads();
+    demonstrateThreadSafety();
+
+    return 0;
+}
+```
+
+### Synchronization
+
+#### Mutexes and Lock Guards
+
+```cpp
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <vector>
+#include <chrono>
+
+class SafePrinter {
+private:
+    std::mutex mtx;
+
+public:
+    void print(const std::string& message, int id) {
+        std::lock_guard<std::mutex> lock(mtx);
+        std::cout << "Thread " << id << ": " << message << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+};
+
+void demonstrateMutex() {
+    std::cout << "=== Mutex and Lock Guard ===" << std::endl;
+
+    SafePrinter printer;
+    std::vector<std::thread> threads;
+
+    for (int i = 1; i <= 5; ++i) {
+        threads.emplace_back([&printer, i]() {
+            printer.print("Hello from thread", i);
+            printer.print("Second message from thread", i);
+        });
+    }
+
+    for (auto& t : threads) {
+        t.join();
+    }
+}
+
+// Producer-Consumer pattern with condition variables
+template<typename T>
+class ThreadSafeQueue {
+private:
+    std::queue<T> queue;
+    std::mutex mtx;
+    std::condition_variable condition;
+
+public:
+    void push(T item) {
+        std::lock_guard<std::mutex> lock(mtx);
+        queue.push(std::move(item));
+        condition.notify_one();
+    }
+
+    T pop() {
+        std::unique_lock<std::mutex> lock(mtx);
+        condition.wait(lock, [this] { return !queue.empty(); });
+
+        T result = std::move(queue.front());
+        queue.pop();
+        return result;
+    }
+
+    bool tryPop(T& item) {
+        std::lock_guard<std::mutex> lock(mtx);
+        if (queue.empty()) {
+            return false;
+        }
+        item = std::move(queue.front());
+        queue.pop();
+        return true;
+    }
+
+    size_t size() const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return queue.size();
+    }
+
+    bool empty() const {
+        std::lock_guard<std::mutex> lock(mtx);
+        return queue.empty();
+    }
+};
+
+void producer(ThreadSafeQueue<int>& queue, int id, int count) {
+    for (int i = 1; i <= count; ++i) {
+        int value = id * 1000 + i;
+        queue.push(value);
+        std::cout << "Producer " << id << " produced: " << value << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    std::cout << "Producer " << id << " finished" << std::endl;
+}
+
+void consumer(ThreadSafeQueue<int>& queue, int id, int count) {
+    for (int i = 0; i < count; ++i) {
+        int value = queue.pop();
+        std::cout << "Consumer " << id << " consumed: " << value << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(150));
+    }
+    std::cout << "Consumer " << id << " finished" << std::endl;
+}
+
+void demonstrateProducerConsumer() {
+    std::cout << "\n=== Producer-Consumer Pattern ===" << std::endl;
+
+    ThreadSafeQueue<int> queue;
+    const int itemsPerProducer = 3;
+    const int numProducers = 2;
+    const int numConsumers = 2;
+    const int itemsPerConsumer = (itemsPerProducer * numProducers) / numConsumers;
+
+    std::vector<std::thread> threads;
+
+    // Start producers
+    for (int i = 1; i <= numProducers; ++i) {
+        threads.emplace_back(producer, std::ref(queue), i, itemsPerProducer);
+    }
+
+    // Start consumers
+    for (int i = 1; i <= numConsumers; ++i) {
+        threads.emplace_back(consumer, std::ref(queue), i, itemsPerConsumer);
+    }
+
+    // Wait for all threads
+    for (auto& t : threads) {
+        t.join();
+    }
+
+    std::cout << "Remaining items in queue: " << queue.size() << std::endl;
+}
+
+int main() {
+    demonstrateMutex();
+    demonstrateProducerConsumer();
+
+    return 0;
+}
+```
+
+[Back to top](#-c-documentation)
+
+---
+
+## 🚀 Real-World Applications
+
+**📊 Chapter 13 of 14**
+
+🎯 **Learning Objectives:**
+- Build practical projects using C++ concepts
+- Understand industry use cases and applications
+- Learn about popular frameworks and libraries
+- Explore performance optimization techniques
+
+⏱️ **Estimated Reading Time:** 45 minutes
+
+### Project 1: File Manager
+
+#### Complete File Management System
+
+```cpp
+#include <iostream>
+#include <filesystem>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <chrono>
+#include <algorithm>
+#include <iomanip>
+
+namespace fs = std::filesystem;
+
+class FileManager {
+private:
+    fs::path currentPath;
+
+public:
+    FileManager() : currentPath(fs::current_path()) {}
+
+    void listDirectory(const fs::path& path = "") {
+        fs::path targetPath = path.empty() ? currentPath : path;
+
+        std::cout << "\n=== Directory Listing: " << targetPath << " ===" << std::endl;
+        std::cout << std::left << std::setw(20) << "Name"
+                  << std::setw(10) << "Type"
+                  << std::setw(15) << "Size"
+                  << std::setw(20) << "Last Modified" << std::endl;
+        std::cout << std::string(65, '-') << std::endl;
+
+        try {
+            std::vector<fs::directory_entry> entries;
+            for (const auto& entry : fs::directory_iterator(targetPath)) {
+                entries.push_back(entry);
+            }
+
+            // Sort entries: directories first, then files
+            std::sort(entries.begin(), entries.end(), [](const auto& a, const auto& b) {
+                if (a.is_directory() && !b.is_directory()) return true;
+                if (!a.is_directory() && b.is_directory()) return false;
+                return a.path().filename() < b.path().filename();
+            });
+
+            for (const auto& entry : entries) {
+                std::string name = entry.path().filename().string();
+                std::string type = entry.is_directory() ? "DIR" : "FILE";
+
+                std::string size = "-";
+                if (entry.is_regular_file()) {
+                    auto fileSize = fs::file_size(entry);
+                    size = formatSize(fileSize);
+                }
+
+                auto ftime = fs::last_write_time(entry);
+                auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+                    ftime - fs::file_time_type::clock::now() + std::chrono::system_clock::now());
+                auto cftime = std::chrono::system_clock::to_time_t(sctp);
+
+                std::cout << std::left << std::setw(20) << name.substr(0, 19)
+                          << std::setw(10) << type
+                          << std::setw(15) << size
+                          << std::put_time(std::localtime(&cftime), "%Y-%m-%d %H:%M") << std::endl;
+            }
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error: " << e.what() << std::endl;
+        }
+    }
+
+    bool changeDirectory(const std::string& path) {
+        try {
+            fs::path newPath = path.empty() ? fs::current_path() : fs::path(path);
+            if (!fs::exists(newPath) || !fs::is_directory(newPath)) {
+                std::cout << "Directory not found: " << path << std::endl;
+                return false;
+            }
+
+            currentPath = fs::canonical(newPath);
+            std::cout << "Changed directory to: " << currentPath << std::endl;
+            return true;
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error changing directory: " << e.what() << std::endl;
+            return false;
+        }
+    }
+
+    bool createDirectory(const std::string& name) {
+        try {
+            fs::path newDir = currentPath / name;
+            if (fs::create_directory(newDir)) {
+                std::cout << "Directory created: " << newDir << std::endl;
+                return true;
+            } else {
+                std::cout << "Failed to create directory (may already exist): " << name << std::endl;
+                return false;
+            }
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error creating directory: " << e.what() << std::endl;
+            return false;
+        }
+    }
+
+    bool deleteFile(const std::string& filename) {
+        try {
+            fs::path filePath = currentPath / filename;
+            if (!fs::exists(filePath)) {
+                std::cout << "File not found: " << filename << std::endl;
+                return false;
+            }
+
+            if (fs::remove(filePath)) {
+                std::cout << "Deleted: " << filename << std::endl;
+                return true;
+            } else {
+                std::cout << "Failed to delete: " << filename << std::endl;
+                return false;
+            }
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error deleting file: " << e.what() << std::endl;
+            return false;
+        }
+    }
+
+    void searchFiles(const std::string& pattern) {
+        std::cout << "\n=== Search Results for: " << pattern << " ===" << std::endl;
+
+        try {
+            for (const auto& entry : fs::recursive_directory_iterator(currentPath)) {
+                if (entry.is_regular_file()) {
+                    std::string filename = entry.path().filename().string();
+                    if (filename.find(pattern) != std::string::npos) {
+                        auto relativePath = fs::relative(entry.path(), currentPath);
+                        std::cout << relativePath << std::endl;
+                    }
+                }
+            }
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error during search: " << e.what() << std::endl;
+        }
+    }
+
+    void copyFile(const std::string& source, const std::string& destination) {
+        try {
+            fs::path srcPath = currentPath / source;
+            fs::path destPath = currentPath / destination;
+
+            if (!fs::exists(srcPath)) {
+                std::cout << "Source file not found: " << source << std::endl;
+                return;
+            }
+
+            fs::copy_file(srcPath, destPath, fs::copy_options::overwrite_existing);
+            std::cout << "File copied from " << source << " to " << destination << std::endl;
+
+        } catch (const fs::filesystem_error& e) {
+            std::cout << "Error copying file: " << e.what() << std::endl;
+        }
+    }
+
+    fs::path getCurrentPath() const { return currentPath; }
+
+private:
+    std::string formatSize(std::uintmax_t size) {
+        const char* units[] = {"B", "KB", "MB", "GB", "TB"};
+        int unitIndex = 0;
+        double dsize = static_cast<double>(size);
+
+        while (dsize >= 1024.0 && unitIndex < 4) {
+            dsize /= 1024.0;
+            ++unitIndex;
+        }
+
+        std::ostringstream oss;
+        oss << std::fixed << std::setprecision(1) << dsize << units[unitIndex];
+        return oss.str();
+    }
+};
+
+void showHelp() {
+    std::cout << "\n=== File Manager Commands ===" << std::endl;
+    std::cout << "ls [path]          - List directory contents" << std::endl;
+    std::cout << "cd <path>          - Change directory" << std::endl;
+    std::cout << "mkdir <name>       - Create directory" << std::endl;
+    std::cout << "rm <filename>      - Delete file" << std::endl;
+    std::cout << "search <pattern>   - Search for files" << std::endl;
+    std::cout << "copy <src> <dest>  - Copy file" << std::endl;
+    std::cout << "pwd                - Show current directory" << std::endl;
+    std::cout << "help               - Show this help" << std::endl;
+    std::cout << "exit               - Exit the program" << std::endl;
+}
+
+int main() {
+    FileManager fm;
+    std::string command, arg1, arg2;
+
+    std::cout << "=== C++ File Manager ===" << std::endl;
+    showHelp();
+
+    while (true) {
+        std::cout << "\n[" << fm.getCurrentPath().filename() << "]$ ";
+        std::getline(std::cin, command);
+
+        std::istringstream iss(command);
+        iss >> command >> arg1 >> arg2;
+
+        if (command == "exit") {
+            break;
+        } else if (command == "ls") {
+            fm.listDirectory(arg1);
+        } else if (command == "cd") {
+            fm.changeDirectory(arg1);
+        } else if (command == "mkdir") {
+            fm.createDirectory(arg1);
+        } else if (command == "rm") {
+            fm.deleteFile(arg1);
+        } else if (command == "search") {
+            fm.searchFiles(arg1);
+        } else if (command == "copy") {
+            fm.copyFile(arg1, arg2);
+        } else if (command == "pwd") {
+            std::cout << fm.getCurrentPath() << std::endl;
+        } else if (command == "help") {
+            showHelp();
+        } else if (!command.empty()) {
+            std::cout << "Unknown command: " << command << std::endl;
+        }
+    }
+
+    std::cout << "Goodbye!" << std::endl;
+    return 0;
+}
+```
+
+### Industry Use Cases
+
+#### Performance-Critical Applications
+
+C++ is widely used in industries where performance is paramount:
+
+1. **Game Development**
+   - Real-time graphics rendering
+   - Physics simulations
+   - Memory-constrained environments
+   - Popular engines: Unreal Engine, CryEngine
+
+2. **Financial Systems**
+   - High-frequency trading
+   - Risk management systems
+   - Real-time market data processing
+   - Low-latency requirements
+
+3. **System Software**
+   - Operating systems (Windows, Linux kernel components)
+   - Device drivers
+   - Embedded systems
+   - Real-time systems
+
+4. **Scientific Computing**
+   - Numerical simulations
+   - Scientific modeling
+   - Data analysis frameworks
+   - High-performance computing
+
+[Back to top](#-c-documentation)
+
+---
+
+## 📖 Appendices
+
+**📊 Chapter 14 of 14**
+
+### Glossary
+
+**Abstract Class**: A class that contains one or more pure virtual functions and cannot be instantiated directly.
+
+**RAII**: Resource Acquisition Is Initialization - a programming idiom where resource management is tied to object lifetime.
+
+**Template**: A feature that allows functions and classes to operate with generic types.
+
+**STL**: Standard Template Library - a collection of template classes and functions.
+
+**Lambda**: Anonymous function objects that can capture variables from their surrounding scope.
+
+**Move Semantics**: C++11 feature that allows efficient transfer of resources from temporary objects.
+
+**Smart Pointer**: Objects that manage the lifetime of dynamically allocated memory automatically.
+
+### Quick Reference Card
+
+#### Common Containers
+```cpp
+std::vector<T>        // Dynamic array
+std::list<T>          // Doubly-linked list
+std::deque<T>         // Double-ended queue
+std::set<T>           // Sorted unique elements
+std::map<K,V>         // Sorted key-value pairs
+std::unordered_set<T> // Hash set
+std::unordered_map<K,V> // Hash map
+```
+
+#### Smart Pointers
+```cpp
+std::unique_ptr<T>    // Exclusive ownership
+std::shared_ptr<T>    // Shared ownership
+std::weak_ptr<T>      // Non-owning observer
+```
+
+#### Common Algorithms
+```cpp
+std::sort()           // Sort elements
+std::find()           // Find element
+std::transform()      // Transform elements
+std::accumulate()     // Reduce to single value
+std::for_each()       // Apply function to each
+```
+
+### Further Reading
+
+**Books:**
+- "Effective C++" by Scott Meyers
+- "The C++ Programming Language" by Bjarne Stroustrup
+- "Modern C++ Design" by Andrei Alexandrescu
+- "C++ Concurrency in Action" by Anthony Williams
+
+**Online Resources:**
+- [cppreference.com](https://cppreference.com) - Comprehensive reference
+- [isocpp.org](https://isocpp.org) - ISO C++ Standard Committee
+- [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines) - Best practices
+- [Compiler Explorer](https://godbolt.org) - Online compiler and assembly viewer
+- [C++ Weekly](https://www.youtube.com/user/lefticus1) - Weekly C++ tips
+
+### Community Resources
+
+**Forums and Communities:**
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/c++) - Q&A community
+- [Reddit r/cpp](https://www.reddit.com/r/cpp/) - C++ discussions
+- [C++ Slack](https://cpplang.slack.com) - Real-time chat community
+- [Discord C++ Community](https://discord.gg/cpp) - Discord server for C++ developers
+
+**Conferences:**
+- CppCon - Annual C++ conference
+- Meeting C++ - European C++ conference
+- C++ Now - Advanced C++ conference
+- ACCU Conference - Programming conference with strong C++ track
+
+**Podcasts:**
+- CppCast - Weekly C++ podcast
+- cpp.chat - Conversations about C++
+
+### Contributing Guidelines
+
+#### Code Style Guidelines
+
+```cpp
+// Use consistent naming conventions
+class MyClass {        // PascalCase for classes
+private:
+    int memberVar_;    // camelCase with trailing underscore for members
+
+public:
+    void doSomething(int param) const;  // camelCase for functions
+};
+
+// Use const whenever possible
+void processData(const std::vector<int>& data) {
+    // Function body
+}
+
+// Prefer auto for type deduction
+auto result = computeValue();
+
+// Use range-based for loops
+for (const auto& item : container) {
+    // Process item
+}
+```
+
+#### Documentation Standards
+
+```cpp
+/**
+ * @brief Brief description of the function
+ * @param input Description of input parameter
+ * @param output Description of output parameter
+ * @return Description of return value
+ * @throws std::exception Description of when exceptions are thrown
+ *
+ * Detailed description of the function's behavior,
+ * including any side effects or special considerations.
+ *
+ * @code
+ * // Example usage
+ * auto result = myFunction(42, "test");
+ * @endcode
+ */
+int myFunction(int input, const std::string& output);
+```
+
+#### Testing Guidelines
+
+```cpp
+#include <cassert>
+#include <iostream>
+
+// Simple assertion-based testing
+void testMyFunction() {
+    // Test normal cases
+    assert(add(2, 3) == 5);
+    assert(add(-1, 1) == 0);
+    assert(add(0, 0) == 0);
+
+    // Test edge cases
+    assert(add(INT_MAX, 0) == INT_MAX);
+
+    std::cout << "All tests passed!" << std::endl;
+}
+
+// Using a testing framework like Google Test
+#include <gtest/gtest.h>
+
+TEST(MathTest, AdditionTest) {
+    EXPECT_EQ(add(2, 3), 5);
+    EXPECT_EQ(add(-1, 1), 0);
+    EXPECT_EQ(add(0, 0), 0);
+}
+```
+
+#### Performance Guidelines
+
+```cpp
+// 1. Prefer stack allocation over heap allocation
+void goodExample() {
+    std::array<int, 1000> arr;  // Stack allocated
+    // Process arr
+}
+
+void poorExample() {
+    int* arr = new int[1000];   // Heap allocated
+    // Process arr
+    delete[] arr;               // Manual memory management
+}
+
+// 2. Use move semantics for expensive objects
+std::vector<std::string> createLargeVector() {
+    std::vector<std::string> result;
+    // Fill vector
+    return result;  // Move semantics automatically applied
+}
+
+// 3. Prefer const references for large objects
+void processLargeObject(const LargeClass& obj) {  // No copy
+    // Process obj
+}
+
+// 4. Use reserve() for vectors when size is known
+void fillVector() {
+    std::vector<int> vec;
+    vec.reserve(1000);  // Avoid multiple reallocations
+    for (int i = 0; i < 1000; ++i) {
+        vec.push_back(i);
+    }
+}
+```
+
+#### Error Handling Guidelines
+
+```cpp
+// Prefer exceptions for exceptional conditions
+class FileProcessor {
+public:
+    void processFile(const std::string& filename) {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            throw std::runtime_error("Cannot open file: " + filename);
+        }
+
+        // Process file
+        if (file.bad()) {
+            throw std::runtime_error("Error reading file: " + filename);
+        }
+    }
+};
+
+// Use error codes for expected failure modes
+enum class ErrorCode {
+    SUCCESS,
+    FILE_NOT_FOUND,
+    PERMISSION_DENIED,
+    INVALID_FORMAT
+};
+
+std::pair<ErrorCode, std::string> readConfiguration(const std::string& filename) {
+    // Implementation that returns error code and result
+    return {ErrorCode::SUCCESS, "configuration data"};
+}
+```
+
+#### Modern C++ Best Practices Summary
+
+1. **Use Modern Features**: Prefer C++11/14/17/20 features over legacy approaches
+2. **RAII Everywhere**: Use RAII for all resource management
+3. **Smart Pointers**: Prefer smart pointers over raw pointers
+4. **Const Correctness**: Use const wherever possible
+5. **Type Safety**: Prefer strong types over primitive types
+6. **Standard Library**: Use STL algorithms and containers
+7. **Exception Safety**: Write exception-safe code
+8. **Move Semantics**: Understand and use move semantics
+9. **Template Programming**: Use templates for generic code
+10. **Testing**: Write comprehensive tests for your code
+
+---
+
+## 🎯 Final Thoughts
+
+Congratulations! You've completed this comprehensive C++ documentation covering everything from basic syntax to advanced concepts like concurrency and modern C++ features.
+
+C++ is a powerful language that continues to evolve with new standards every few years. The key to mastering C++ is:
+
+1. **Practice Regularly**: Build projects and solve problems
+2. **Stay Updated**: Follow C++ standards evolution (C++23, C++26)
+3. **Join the Community**: Participate in forums, conferences, and open source
+4. **Read Quality Code**: Study well-written C++ projects
+5. **Understand the Fundamentals**: Master memory management and object lifetimes
+
+Remember that C++ is not just about syntax—it's about understanding system-level programming, performance optimization, and writing maintainable code. The concepts you've learned here will serve as a foundation for building high-performance, robust applications.
+
+Keep coding, keep learning, and welcome to the C++ community!
+
+---
+
+> **"C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do it blows your whole leg off."** - Bjarne Stroustrup (Creator of C++)
+
+*This documentation is a living document. As C++ evolves, so should your understanding and application of these concepts.*
