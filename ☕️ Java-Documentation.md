@@ -1,4 +1,4 @@
-# ☕ Java Documentation
+# ☕️ Java Documentation
 *Version: JDK 21 | Last Updated: December 2024*
 
 Java is a versatile, object-oriented programming language designed for platform independence through the "write once, run anywhere" philosophy. Originally developed by Sun Microsystems in 1995, Java has become one of the world's most popular programming languages for enterprise applications, web development, mobile applications, and large-scale distributed systems.
