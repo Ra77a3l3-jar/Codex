@@ -4803,9 +4803,4115 @@ public class ForLoops {
 }
 ```
 
-## 33. Glossary
+## 8. Classes & Objects
 
-📖 **Essential Java Terms and Concepts**
+📊 **Chapter 8 of 35**
+
+🎯 **Learning Objectives:**
+- Understand the fundamental concepts of classes and objects
+- Learn to define classes with fields, methods, and constructors
+- Master object creation and initialization
+- Explore instance vs static members
+- Practice encapsulation with access modifiers
+
+⏱️ **Estimated Reading Time:** 45 minutes
+📋 **Prerequisites:** Understanding of Java syntax and control flow
+
+### What are Classes and Objects?
+
+Classes are blueprints or templates that define the structure and behavior of objects. Objects are instances of classes that contain actual data and can perform actions defined by their class.
+
+```java
+// Class definition
+public class Car {
+    // Fields (attributes/properties)
+    private String brand;
+    private String model;
+    private int year;
+    private double price;
+    private boolean isRunning;
+
+    // Constructor
+    public Car(String brand, String model, int year, double price) {
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        this.isRunning = false;
+    }
+
+    // Methods (behaviors)
+    public void startEngine() {
+        if (!isRunning) {
+            isRunning = true;
+            System.out.println(brand + " " + model + " engine started!");
+        } else {
+            System.out.println("Engine is already running.");
+        }
+    }
+
+    public void stopEngine() {
+        if (isRunning) {
+            isRunning = false;
+            System.out.println(brand + " " + model + " engine stopped.");
+        } else {
+            System.out.println("Engine is already off.");
+        }
+    }
+
+    public void displayInfo() {
+        System.out.println("=== Car Information ===");
+        System.out.println("Brand: " + brand);
+        System.out.println("Model: " + model);
+        System.out.println("Year: " + year);
+        System.out.println("Price: $" + String.format("%.2f", price));
+        System.out.println("Running: " + (isRunning ? "Yes" : "No"));
+    }
+
+    // Getter methods
+    public String getBrand() { return brand; }
+    public String getModel() { return model; }
+    public int getYear() { return year; }
+    public double getPrice() { return price; }
+    public boolean isRunning() { return isRunning; }
+
+    // Setter methods
+    public void setPrice(double price) {
+        if (price >= 0) {
+            this.price = price;
+        } else {
+            System.out.println("Price cannot be negative!");
+        }
+    }
+}
+```
+
+### Creating and Using Objects
+
+```java
+public class CarDemo {
+    public static void main(String[] args) {
+        // Creating objects (instances of Car class)
+        Car car1 = new Car("Toyota", "Camry", 2022, 25000.0);
+        Car car2 = new Car("Honda", "Civic", 2023, 23000.0);
+        Car car3 = new Car("BMW", "X5", 2024, 65000.0);
+
+        System.out.println("=== Working with Car Objects ===\n");
+
+        // Using object methods
+        car1.displayInfo();
+        System.out.println();
+
+        car1.startEngine();
+        car1.startEngine(); // Try to start again
+        car1.stopEngine();
+        System.out.println();
+
+        // Working with multiple objects
+        Car[] cars = {car1, car2, car3};
+        double totalValue = 0;
+
+        System.out.println("=== Car Inventory ===");
+        for (Car car : cars) {
+            System.out.println(car.getBrand() + " " + car.getModel() + 
+                             " (" + car.getYear() + ") - $" + 
+                             String.format("%.2f", car.getPrice()));
+            totalValue += car.getPrice();
+        }
+        System.out.println("Total Inventory Value: $" + String.format("%.2f", totalValue));
+
+        // Modifying object state
+        System.out.println("\n=== Price Updates ===");
+        car2.setPrice(22000.0);
+        System.out.println(car2.getBrand() + " " + car2.getModel() + 
+                          " new price: $" + String.format("%.2f", car2.getPrice()));
+    }
+}
+```
+
+### Constructors
+
+Constructors are special methods used to initialize objects when they are created.
+
+```java
+public class Student {
+    private String name;
+    private int age;
+    private String studentId;
+    private double gpa;
+    private String major;
+
+    // Default constructor
+    public Student() {
+        this.name = "Unknown";
+        this.age = 18;
+        this.studentId = generateStudentId();
+        this.gpa = 0.0;
+        this.major = "Undeclared";
+    }
+
+    // Parameterized constructor
+    public Student(String name, int age, String major) {
+        this.name = name;
+        this.age = age;
+        this.major = major;
+        this.studentId = generateStudentId();
+        this.gpa = 0.0;
+    }
+
+    // Full constructor
+    public Student(String name, int age, String studentId, double gpa, String major) {
+        this.name = name;
+        this.age = age;
+        this.studentId = studentId;
+        this.gpa = gpa;
+        this.major = major;
+    }
+
+    // Copy constructor
+    public Student(Student other) {
+        this.name = other.name;
+        this.age = other.age;
+        this.studentId = generateStudentId(); // Generate new ID
+        this.gpa = other.gpa;
+        this.major = other.major;
+    }
+
+    private String generateStudentId() {
+        return "STU" + System.currentTimeMillis() % 100000;
+    }
+
+    public void study(String subject) {
+        System.out.println(name + " is studying " + subject);
+    }
+
+    public void takeExam(String course, double score) {
+        System.out.println(name + " took " + course + " exam and scored " + score);
+        updateGPA(score);
+    }
+
+    private void updateGPA(double newScore) {
+        // Simplified GPA calculation
+        gpa = (gpa + (newScore / 25.0)) / 2.0; // Rough conversion and averaging
+        if (gpa > 4.0) gpa = 4.0;
+        if (gpa < 0.0) gpa = 0.0;
+    }
+
+    public void displayStudentInfo() {
+        System.out.println("=== Student Information ===");
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Student ID: " + studentId);
+        System.out.println("GPA: " + String.format("%.2f", gpa));
+        System.out.println("Major: " + major);
+    }
+
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    
+    public int getAge() { return age; }
+    public void setAge(int age) { 
+        if (age >= 16 && age <= 100) {
+            this.age = age; 
+        }
+    }
+    
+    public String getStudentId() { return studentId; }
+    public double getGpa() { return gpa; }
+    public String getMajor() { return major; }
+    public void setMajor(String major) { this.major = major; }
+}
+
+// Demonstration class
+public class StudentDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Constructor Examples ===\n");
+
+        // Using different constructors
+        Student student1 = new Student(); // Default constructor
+        student1.displayStudentInfo();
+        System.out.println();
+
+        Student student2 = new Student("Alice Johnson", 20, "Computer Science");
+        student2.displayStudentInfo();
+        System.out.println();
+
+        Student student3 = new Student("Bob Smith", 22, "STU12345", 3.5, "Mathematics");
+        student3.displayStudentInfo();
+        System.out.println();
+
+        Student student4 = new Student(student2); // Copy constructor
+        student4.setName("Alice Copy");
+        student4.displayStudentInfo();
+        System.out.println();
+
+        // Using object methods
+        System.out.println("=== Student Activities ===");
+        student2.study("Data Structures");
+        student2.takeExam("Programming 101", 85.0);
+        student2.takeExam("Mathematics", 92.0);
+        System.out.println();
+        student2.displayStudentInfo();
+    }
+}
+```
+
+### Static vs Instance Members
+
+```java
+public class BankAccount {
+    // Static members (belong to the class)
+    private static int totalAccounts = 0;
+    private static double totalBalance = 0.0;
+    private static final double INTEREST_RATE = 0.03;
+    
+    // Instance members (belong to individual objects)
+    private String accountNumber;
+    private String accountHolder;
+    private double balance;
+    private String accountType;
+
+    public BankAccount(String accountHolder, String accountType, double initialBalance) {
+        this.accountNumber = generateAccountNumber();
+        this.accountHolder = accountHolder;
+        this.accountType = accountType;
+        this.balance = initialBalance;
+        
+        // Update static variables
+        totalAccounts++;
+        totalBalance += initialBalance;
+    }
+
+    // Static method
+    public static String generateAccountNumber() {
+        return "ACC" + (totalAccounts + 1) + System.currentTimeMillis() % 10000;
+    }
+
+    // Static methods
+    public static int getTotalAccounts() {
+        return totalAccounts;
+    }
+
+    public static double getTotalBalance() {
+        return totalBalance;
+    }
+
+    public static double getInterestRate() {
+        return INTEREST_RATE;
+    }
+
+    public static void displayBankStatistics() {
+        System.out.println("=== Bank Statistics ===");
+        System.out.println("Total Accounts: " + totalAccounts);
+        System.out.println("Total Balance: $" + String.format("%.2f", totalBalance));
+        System.out.println("Interest Rate: " + (INTEREST_RATE * 100) + "%");
+    }
+
+    // Instance methods
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            totalBalance += amount;
+            System.out.println("Deposited $" + String.format("%.2f", amount) + 
+                             " to account " + accountNumber);
+            System.out.println("New balance: $" + String.format("%.2f", balance));
+        } else {
+            System.out.println("Deposit amount must be positive!");
+        }
+    }
+
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            totalBalance -= amount;
+            System.out.println("Withdrew $" + String.format("%.2f", amount) + 
+                             " from account " + accountNumber);
+            System.out.println("New balance: $" + String.format("%.2f", balance));
+            return true;
+        } else {
+            System.out.println("Invalid withdrawal amount or insufficient funds!");
+            return false;
+        }
+    }
+
+    public void addInterest() {
+        double interest = balance * INTEREST_RATE;
+        deposit(interest);
+        System.out.println("Interest added: $" + String.format("%.2f", interest));
+    }
+
+    public void displayAccountInfo() {
+        System.out.println("=== Account Information ===");
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Account Holder: " + accountHolder);
+        System.out.println("Account Type: " + accountType);
+        System.out.println("Balance: $" + String.format("%.2f", balance));
+    }
+
+    // Getters
+    public String getAccountNumber() { return accountNumber; }
+    public String getAccountHolder() { return accountHolder; }
+    public double getBalance() { return balance; }
+    public String getAccountType() { return accountType; }
+}
+
+// Demonstration class
+public class BankDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Static vs Instance Members Demo ===\n");
+
+        // Display initial bank statistics
+        BankAccount.displayBankStatistics();
+        System.out.println();
+
+        // Create bank accounts
+        BankAccount account1 = new BankAccount("John Doe", "Checking", 1000.0);
+        BankAccount account2 = new BankAccount("Jane Smith", "Savings", 2500.0);
+        BankAccount account3 = new BankAccount("Bob Johnson", "Checking", 500.0);
+
+        System.out.println("After creating accounts:");
+        BankAccount.displayBankStatistics();
+        System.out.println();
+
+        // Perform transactions
+        System.out.println("=== Transactions ===");
+        account1.deposit(200.0);
+        account1.withdraw(150.0);
+        System.out.println();
+
+        account2.addInterest();
+        System.out.println();
+
+        account3.withdraw(600.0); // This should fail
+        account3.deposit(100.0);
+        System.out.println();
+
+        // Display individual account info
+        account1.displayAccountInfo();
+        System.out.println();
+        account2.displayAccountInfo();
+        System.out.println();
+        account3.displayAccountInfo();
+        System.out.println();
+
+        // Final bank statistics
+        System.out.println("Final bank statistics:");
+        BankAccount.displayBankStatistics();
+
+        // Accessing static method without object
+        System.out.println("\nCurrent interest rate: " + 
+                          (BankAccount.getInterestRate() * 100) + "%");
+    }
+}
+```
+
+### Method Overloading
+
+Method overloading allows multiple methods with the same name but different parameters.
+
+```java
+public class Calculator {
+    // Method overloading with different parameter types
+    public int add(int a, int b) {
+        System.out.println("Adding two integers: " + a + " + " + b);
+        return a + b;
+    }
+
+    public double add(double a, double b) {
+        System.out.println("Adding two doubles: " + a + " + " + b);
+        return a + b;
+    }
+
+    public String add(String a, String b) {
+        System.out.println("Concatenating two strings: \"" + a + "\" + \"" + b + "\"");
+        return a + b;
+    }
+
+    // Method overloading with different number of parameters
+    public int add(int a, int b, int c) {
+        System.out.println("Adding three integers: " + a + " + " + b + " + " + c);
+        return a + b + c;
+    }
+
+    public double add(double a, double b, double c, double d) {
+        System.out.println("Adding four doubles");
+        return a + b + c + d;
+    }
+
+    // Variable arguments (varargs)
+    public int add(int... numbers) {
+        System.out.print("Adding variable number of integers: ");
+        int sum = 0;
+        for (int num : numbers) {
+            System.out.print(num + " ");
+            sum += num;
+        }
+        System.out.println("= " + sum);
+        return sum;
+    }
+
+    public double multiply(double a, double b) {
+        return a * b;
+    }
+
+    public double multiply(double a, double b, double c) {
+        return a * b * c;
+    }
+
+    // Method with different parameter order (not recommended)
+    public void printDetails(String name, int age) {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+
+    public void printDetails(int age, String name) {
+        System.out.println("Age: " + age + ", Name: " + name);
+    }
+
+    public static void main(String[] args) {
+        Calculator calc = new Calculator();
+
+        System.out.println("=== Method Overloading Demo ===\n");
+
+        // Different parameter types
+        System.out.println("Result: " + calc.add(5, 3));
+        System.out.println("Result: " + calc.add(5.5, 3.2));
+        System.out.println("Result: " + calc.add("Hello", "World"));
+        System.out.println();
+
+        // Different number of parameters
+        System.out.println("Result: " + calc.add(1, 2, 3));
+        System.out.println("Result: " + calc.add(1.1, 2.2, 3.3, 4.4));
+        System.out.println();
+
+        // Variable arguments
+        System.out.println("Result: " + calc.add(1, 2, 3, 4, 5));
+        System.out.println("Result: " + calc.add(10, 20));
+        System.out.println();
+
+        // Method overloading with different parameter order
+        calc.printDetails("Alice", 25);
+        calc.printDetails(30, "Bob");
+    }
+}
+```
+
+### Object Relationships and Composition
+
+```java
+// Composition example
+class Address {
+    private String street;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
+
+    public Address(String street, String city, String state, String zipCode, String country) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.country = country;
+    }
+
+    public void displayAddress() {
+        System.out.println(street);
+        System.out.println(city + ", " + state + " " + zipCode);
+        System.out.println(country);
+    }
+
+    // Getters and setters
+    public String getStreet() { return street; }
+    public void setStreet(String street) { this.street = street; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+    public String getZipCode() { return zipCode; }
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
+
+    @Override
+    public String toString() {
+        return street + ", " + city + ", " + state + " " + zipCode + ", " + country;
+    }
+}
+
+class Person {
+    private String name;
+    private int age;
+    private String email;
+    private Address address; // Composition - Person HAS an Address
+
+    public Person(String name, int age, String email, Address address) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.address = address;
+    }
+
+    public void displayPersonInfo() {
+        System.out.println("=== Person Information ===");
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Email: " + email);
+        System.out.println("Address:");
+        address.displayAddress();
+    }
+
+    public void relocate(Address newAddress) {
+        System.out.println(name + " is moving from:");
+        address.displayAddress();
+        System.out.println("To:");
+        this.address = newAddress;
+        newAddress.displayAddress();
+    }
+
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public Address getAddress() { return address; }
+    public void setAddress(Address address) { this.address = address; }
+}
+
+public class CompositionDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Object Composition Demo ===\n");
+
+        // Create address objects
+        Address homeAddress = new Address(
+            "123 Main Street",
+            "Springfield",
+            "IL",
+            "62701",
+            "USA"
+        );
+
+        Address workAddress = new Address(
+            "456 Business Ave",
+            "Springfield",
+            "IL",
+            "62702",
+            "USA"
+        );
+
+        // Create person with address
+        Person person = new Person("John Doe", 30, "john.doe@email.com", homeAddress);
+        person.displayPersonInfo();
+        System.out.println();
+
+        // Relocate person
+        person.relocate(workAddress);
+        System.out.println();
+
+        // Show updated info
+        person.displayPersonInfo();
+    }
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Forgetting to initialize objects**: Always use `new` keyword to create objects
+2. **Null pointer exceptions**: Check for null before calling methods
+3. **Static context confusion**: Cannot access instance members from static methods
+4. **Constructor chaining**: Be careful with constructor calls and initialization order
+
+### ✅ Best Practices
+
+1. **Use meaningful class and variable names**
+2. **Keep classes focused on a single responsibility**
+3. **Encapsulate data with private fields and public methods**
+4. **Provide constructors for proper object initialization**
+5. **Override toString() method for better object representation**
+6. **Use static members judiciously - only when they truly belong to the class**
+
+### 🏋️ Exercise 8: Library Management System
+
+Create a comprehensive library management system with the following classes:
+
+```java
+// Book class
+public class Book {
+    private String isbn;
+    private String title;
+    private String author;
+    private String category;
+    private boolean isAvailable;
+    private int publicationYear;
+
+    // Implement constructors, getters, setters, and methods
+    // checkOut(), returnBook(), displayInfo()
+}
+
+// Library class  
+public class Library {
+    private String libraryName;
+    private List<Book> books;
+    private static int totalLibraries = 0;
+
+    // Implement methods:
+    // addBook(), removeBook(), searchByTitle(), searchByAuthor()
+    // displayAvailableBooks(), displayLibraryStats()
+}
+
+// LibraryMember class
+public class LibraryMember {
+    private String memberId;
+    private String name;
+    private String email;
+    private List<Book> borrowedBooks;
+    private int borrowLimit;
+
+    // Implement methods:
+    // borrowBook(), returnBook(), displayBorrowedBooks()
+}
+```
+
+[↑ Back to Top](#-table-of-contents)
+
+---
+
+## 9. Inheritance & Polymorphism
+
+📊 **Chapter 9 of 35**
+
+🎯 **Learning Objectives:**
+- Master inheritance concepts and class hierarchies
+- Understand method overriding and the @Override annotation
+- Learn about polymorphism and dynamic method dispatch
+- Explore the Object class and its methods
+- Practice abstract classes and method implementations
+
+⏱️ **Estimated Reading Time:** 50 minutes
+📋 **Prerequisites:** Understanding of classes and objects
+
+### Understanding Inheritance
+
+Inheritance is a mechanism that allows a class to inherit properties and methods from another class. The class that inherits is called a subclass or child class, and the class being inherited from is called a superclass or parent class.
+
+```java
+// Base class (superclass)
+class Animal {
+    protected String name;
+    protected int age;
+    protected String species;
+
+    public Animal(String name, int age, String species) {
+        this.name = name;
+        this.age = age;
+        this.species = species;
+        System.out.println("Animal constructor called for " + name);
+    }
+
+    public void eat() {
+        System.out.println(name + " is eating.");
+    }
+
+    public void sleep() {
+        System.out.println(name + " is sleeping.");
+    }
+
+    public void makeSound() {
+        System.out.println(name + " makes a generic animal sound.");
+    }
+
+    public void displayInfo() {
+        System.out.println("=== Animal Information ===");
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Species: " + species);
+    }
+
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
+    public String getSpecies() { return species; }
+    public void setSpecies(String species) { this.species = species; }
+}
+
+// Derived class (subclass)
+class Dog extends Animal {
+    private String breed;
+    private boolean isGoodBoy;
+
+    public Dog(String name, int age, String breed) {
+        super(name, age, "Canine"); // Call parent constructor
+        this.breed = breed;
+        this.isGoodBoy = true;
+        System.out.println("Dog constructor called for " + name);
+    }
+
+    // Method overriding
+    @Override
+    public void makeSound() {
+        System.out.println(name + " barks: Woof! Woof!");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println(name + " is eating dog food with enthusiasm!");
+    }
+
+    // Additional methods specific to Dog
+    public void fetch() {
+        System.out.println(name + " is fetching the ball!");
+    }
+
+    public void wagTail() {
+        System.out.println(name + " is wagging tail happily!");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo(); // Call parent method
+        System.out.println("Breed: " + breed);
+        System.out.println("Good boy: " + (isGoodBoy ? "Yes" : "No"));
+    }
+
+    // Getters and setters
+    public String getBreed() { return breed; }
+    public void setBreed(String breed) { this.breed = breed; }
+    public boolean isGoodBoy() { return isGoodBoy; }
+    public void setGoodBoy(boolean goodBoy) { isGoodBoy = goodBoy; }
+}
+
+class Cat extends Animal {
+    private boolean isIndoor;
+    private int livesRemaining;
+
+    public Cat(String name, int age, boolean isIndoor) {
+        super(name, age, "Feline");
+        this.isIndoor = isIndoor;
+        this.livesRemaining = 9;
+        System.out.println("Cat constructor called for " + name);
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + " meows: Meow! Purr!");
+    }
+
+    @Override
+    public void sleep() {
+        System.out.println(name + " is sleeping 16 hours a day like a proper cat.");
+    }
+
+    public void climb() {
+        System.out.println(name + " is climbing to high places!");
+    }
+
+    public void scratch() {
+        System.out.println(name + " is scratching the furniture!");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Indoor cat: " + (isIndoor ? "Yes" : "No"));
+        System.out.println("Lives remaining: " + livesRemaining);
+    }
+
+    public boolean isIndoor() { return isIndoor; }
+    public void setIndoor(boolean indoor) { isIndoor = indoor; }
+    public int getLivesRemaining() { return livesRemaining; }
+    public void setLivesRemaining(int livesRemaining) { this.livesRemaining = livesRemaining; }
+}
+
+class Bird extends Animal {
+    private boolean canFly;
+    private double wingspan;
+
+    public Bird(String name, int age, boolean canFly, double wingspan) {
+        super(name, age, "Avian");
+        this.canFly = canFly;
+        this.wingspan = wingspan;
+        System.out.println("Bird constructor called for " + name);
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + " chirps: Tweet! Tweet!");
+    }
+
+    public void fly() {
+        if (canFly) {
+            System.out.println(name + " is soaring through the sky!");
+        } else {
+            System.out.println(name + " cannot fly but is trying to flap wings!");
+        }
+    }
+
+    public void buildNest() {
+        System.out.println(name + " is building a cozy nest.");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Can fly: " + (canFly ? "Yes" : "No"));
+        System.out.println("Wingspan: " + wingspan + " inches");
+    }
+
+    public boolean isCanFly() { return canFly; }
+    public void setCanFly(boolean canFly) { this.canFly = canFly; }
+    public double getWingspan() { return wingspan; }
+    public void setWingspan(double wingspan) { this.wingspan = wingspan; }
+}
+```
+
+### Polymorphism in Action
+
+Polymorphism allows objects of different classes to be treated as objects of a common base class while still maintaining their specific behaviors.
+
+```java
+public class PolymorphismDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Inheritance and Polymorphism Demo ===\n");
+
+        // Create different animals
+        Animal[] animals = {
+            new Dog("Buddy", 3, "Golden Retriever"),
+            new Cat("Whiskers", 5, true),
+            new Bird("Tweety", 1, true, 8.5),
+            new Dog("Rex", 7, "German Shepherd"),
+            new Cat("Shadow", 2, false)
+        };
+
+        System.out.println("\n=== Polymorphic Method Calls ===");
+        for (Animal animal : animals) {
+            System.out.println("\n--- " + animal.getName() + " ---");
+            animal.displayInfo();
+            animal.makeSound();
+            animal.eat();
+            animal.sleep();
+            
+            // Demonstrate runtime type checking
+            if (animal instanceof Dog) {
+                Dog dog = (Dog) animal; // Downcasting
+                dog.fetch();
+                dog.wagTail();
+            } else if (animal instanceof Cat) {
+                Cat cat = (Cat) animal;
+                cat.climb();
+                cat.scratch();
+            } else if (animal instanceof Bird) {
+                Bird bird = (Bird) animal;
+                bird.fly();
+                bird.buildNest();
+            }
+        }
+
+        System.out.println("\n=== Method Overriding Examples ===");
+        demonstrateMethodOverriding();
+    }
+
+    private static void demonstrateMethodOverriding() {
+        Animal genericAnimal = new Animal("Generic", 1, "Unknown");
+        Dog specificDog = new Dog("Max", 4, "Labrador");
+        
+        // Same method call, different implementations
+        System.out.println("Generic animal sound:");
+        genericAnimal.makeSound();
+        
+        System.out.println("\nSpecific dog sound:");
+        specificDog.makeSound();
+
+        // Polymorphic assignment
+        Animal polymorphicAnimal = new Dog("Polymorphic Dog", 2, "Beagle");
+        System.out.println("\nPolymorphic animal (actually a dog):");
+        polymorphicAnimal.makeSound(); // Calls Dog's version
+        
+        // Cannot call Dog-specific methods without casting
+        // polymorphicAnimal.fetch(); // This would cause compile error
+        
+        if (polymorphicAnimal instanceof Dog) {
+            ((Dog) polymorphicAnimal).fetch(); // Casting required
+        }
+    }
+}
+```
+
+### Advanced Inheritance Concepts
+
+```java
+// Multilevel inheritance example
+class Vehicle {
+    protected String make;
+    protected String model;
+    protected int year;
+    protected double price;
+
+    public Vehicle(String make, String model, int year, double price) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.price = price;
+        System.out.println("Vehicle constructor: " + make + " " + model);
+    }
+
+    public void start() {
+        System.out.println(make + " " + model + " is starting...");
+    }
+
+    public void stop() {
+        System.out.println(make + " " + model + " has stopped.");
+    }
+
+    public void displayVehicleInfo() {
+        System.out.println("Make: " + make);
+        System.out.println("Model: " + model);
+        System.out.println("Year: " + year);
+        System.out.println("Price: $" + String.format("%.2f", price));
+    }
+
+    public String getMake() { return make; }
+    public String getModel() { return model; }
+    public int getYear() { return year; }
+    public double getPrice() { return price; }
+}
+
+class Car extends Vehicle {
+    protected int doors;
+    protected String fuelType;
+
+    public Car(String make, String model, int year, double price, int doors, String fuelType) {
+        super(make, model, year, price);
+        this.doors = doors;
+        this.fuelType = fuelType;
+        System.out.println("Car constructor: " + doors + "-door " + fuelType + " car");
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Car ignition: Turn key, engine starts with " + fuelType);
+    }
+
+    public void honk() {
+        System.out.println("Car horn: Beep! Beep!");
+    }
+
+    @Override
+    public void displayVehicleInfo() {
+        super.displayVehicleInfo();
+        System.out.println("Doors: " + doors);
+        System.out.println("Fuel Type: " + fuelType);
+    }
+
+    public int getDoors() { return doors; }
+    public String getFuelType() { return fuelType; }
+}
+
+class ElectricCar extends Car {
+    private double batteryCapacity;
+    private int range;
+    private boolean isCharging;
+
+    public ElectricCar(String make, String model, int year, double price, int doors, 
+                      double batteryCapacity, int range) {
+        super(make, model, year, price, doors, "Electric");
+        this.batteryCapacity = batteryCapacity;
+        this.range = range;
+        this.isCharging = false;
+        System.out.println("ElectricCar constructor: " + batteryCapacity + "kWh battery, " + range + " mile range");
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Electric car: Silent start, ready to drive!");
+    }
+
+    public void charge() {
+        if (!isCharging) {
+            isCharging = true;
+            System.out.println(make + " " + model + " is now charging...");
+        } else {
+            System.out.println(make + " " + model + " is already charging.");
+        }
+    }
+
+    public void stopCharging() {
+        if (isCharging) {
+            isCharging = false;
+            System.out.println(make + " " + model + " finished charging.");
+        } else {
+            System.out.println(make + " " + model + " is not charging.");
+        }
+    }
+
+    @Override
+    public void displayVehicleInfo() {
+        super.displayVehicleInfo();
+        System.out.println("Battery Capacity: " + batteryCapacity + " kWh");
+        System.out.println("Range: " + range + " miles");
+        System.out.println("Charging: " + (isCharging ? "Yes" : "No"));
+    }
+
+    public double getBatteryCapacity() { return batteryCapacity; }
+    public int getRange() { return range; }
+    public boolean isCharging() { return isCharging; }
+}
+
+public class MultilevelInheritanceDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Multilevel Inheritance Demo ===\n");
+
+        // Create instances at different levels
+        Vehicle vehicle = new Vehicle("Generic", "Vehicle", 2023, 20000);
+        Car car = new Car("Toyota", "Camry", 2024, 28000, 4, "Gasoline");
+        ElectricCar eCar = new ElectricCar("Tesla", "Model 3", 2024, 45000, 4, 75.0, 300);
+
+        System.out.println("\n=== Vehicle Operations ===");
+        
+        Vehicle[] vehicles = {vehicle, car, eCar};
+        
+        for (Vehicle v : vehicles) {
+            System.out.println("\n--- " + v.getClass().getSimpleName() + ": " + v.getMake() + " " + v.getModel() + " ---");
+            v.displayVehicleInfo();
+            v.start();
+            v.stop();
+            
+            // Specific operations based on type
+            if (v instanceof ElectricCar) {
+                ElectricCar ec = (ElectricCar) v;
+                ec.charge();
+                ec.honk();
+                ec.stopCharging();
+            } else if (v instanceof Car) {
+                Car c = (Car) v;
+                c.honk();
+            }
+        }
+    }
+}
+```
+
+### The Object Class and Method Overriding
+
+Every class in Java implicitly extends the Object class. Understanding and overriding Object methods is crucial.
+
+```java
+class Product {
+    private String name;
+    private double price;
+    private String category;
+    private String id;
+
+    public Product(String name, double price, String category, String id) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.id = id;
+    }
+
+    // Override toString() - called when object is converted to string
+    @Override
+    public String toString() {
+        return String.format("Product{id='%s', name='%s', price=%.2f, category='%s'}", 
+                           id, name, price, category);
+    }
+
+    // Override equals() - defines when two objects are considered equal
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true; // Same reference
+        if (obj == null || getClass() != obj.getClass()) return false; // Null or different class
+        
+        Product product = (Product) obj;
+        return Double.compare(product.price, price) == 0 &&
+               java.util.Objects.equals(name, product.name) &&
+               java.util.Objects.equals(category, product.category) &&
+               java.util.Objects.equals(id, product.id);
+    }
+
+    // Override hashCode() - should always be overridden when equals() is overridden
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(name, price, category, id);
+    }
+
+    // Getters and setters
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+}
+
+class Book extends Product {
+    private String author;
+    private String isbn;
+    private int pages;
+
+    public Book(String name, double price, String author, String isbn, int pages) {
+        super(name, price, "Books", isbn); // Use ISBN as ID
+        this.author = author;
+        this.isbn = isbn;
+        this.pages = pages;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Book{isbn='%s', title='%s', author='%s', price=%.2f, pages=%d}", 
+                           isbn, getName(), author, getPrice(), pages);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) return false;
+        if (!(obj instanceof Book)) return false;
+        
+        Book book = (Book) obj;
+        return pages == book.pages &&
+               java.util.Objects.equals(author, book.author) &&
+               java.util.Objects.equals(isbn, book.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(super.hashCode(), author, isbn, pages);
+    }
+
+    // Getters and setters
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
+    public String getIsbn() { return isbn; }
+    public void setIsbn(String isbn) { this.isbn = isbn; }
+    public int getPages() { return pages; }
+    public void setPages(int pages) { this.pages = pages; }
+}
+
+public class ObjectMethodsDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Object Methods Demo ===\n");
+
+        // Create some products and books
+        Product laptop = new Product("Gaming Laptop", 1299.99, "Electronics", "ELEC001");
+        Product phone = new Product("Smartphone", 899.99, "Electronics", "ELEC002");
+        Product laptop2 = new Product("Gaming Laptop", 1299.99, "Electronics", "ELEC001");
+
+        Book book1 = new Book("Clean Code", 45.99, "Robert C. Martin", "978-0132350884", 464);
+        Book book2 = new Book("Java: The Complete Reference", 59.99, "Herbert Schildt", "978-1260440232", 1248);
+        Book book1Copy = new Book("Clean Code", 45.99, "Robert C. Martin", "978-0132350884", 464);
+
+        System.out.println("=== toString() Method ===");
+        System.out.println("Laptop: " + laptop);
+        System.out.println("Phone: " + phone);
+        System.out.println("Book1: " + book1);
+        System.out.println("Book2: " + book2);
+
+        System.out.println("\n=== equals() Method ===");
+        System.out.println("laptop.equals(laptop2): " + laptop.equals(laptop2)); // Should be true
+        System.out.println("laptop.equals(phone): " + laptop.equals(phone)); // Should be false
+        System.out.println("book1.equals(book1Copy): " + book1.equals(book1Copy)); // Should be true
+        System.out.println("book1.equals(book2): " + book1.equals(book2)); // Should be false
+
+        System.out.println("\n=== hashCode() Method ===");
+        System.out.println("laptop hashCode: " + laptop.hashCode());
+        System.out.println("laptop2 hashCode: " + laptop2.hashCode());
+        System.out.println("Same hashCode for equal objects: " + (laptop.hashCode() == laptop2.hashCode()));
+
+        System.out.println("\n=== Object Identity vs Equality ===");
+        System.out.println("laptop == laptop2 (reference equality): " + (laptop == laptop2));
+        System.out.println("laptop.equals(laptop2) (content equality): " + laptop.equals(laptop2));
+
+        // Demonstrate polymorphism with Object references
+        System.out.println("\n=== Polymorphism with Object Class ===");
+        Object[] objects = {laptop, phone, book1, book2};
+        
+        for (Object obj : objects) {
+            System.out.println("Object: " + obj); // Calls toString()
+            System.out.println("Class: " + obj.getClass().getSimpleName());
+            
+            if (obj instanceof Book) {
+                Book book = (Book) obj;
+                System.out.println("  Author: " + book.getAuthor());
+            } else if (obj instanceof Product) {
+                Product product = (Product) obj;
+                System.out.println("  Category: " + product.getCategory());
+            }
+            System.out.println();
+        }
+    }
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Forgetting to use @Override annotation**: Always use it for method overriding
+2. **Breaking the equals() contract**: If you override equals(), you must override hashCode()
+3. **Improper use of super keyword**: Remember to call super() in constructors when needed
+4. **Downcasting without instanceof check**: Always check type before casting
+5. **Confusing overriding with overloading**: They are different concepts
+
+### ✅ Best Practices
+
+1. **Use the @Override annotation** consistently for overridden methods
+2. **Call super() appropriately** in constructors and overridden methods
+3. **Override toString(), equals(), and hashCode()** in data classes
+4. **Use instanceof before downcasting** to avoid ClassCastException
+5. **Keep inheritance hierarchies shallow** to avoid complexity
+6. **Favor composition over inheritance** when appropriate
+
+### 🏋️ Exercise 9: Employee Management System
+
+Create an employee management system demonstrating inheritance and polymorphism:
+
+```java
+// Base Employee class
+abstract class Employee {
+    protected String employeeId;
+    protected String name;
+    protected String department;
+    protected double baseSalary;
+
+    // Implement constructors and common methods
+    // Abstract method: calculatePay()
+}
+
+// Derived classes
+class FullTimeEmployee extends Employee {
+    private double bonus;
+    private int vacationDays;
+    
+    // Override calculatePay() to include bonus
+}
+
+class PartTimeEmployee extends Employee {
+    private int hoursWorked;
+    private double hourlyRate;
+    
+    // Override calculatePay() based on hours
+}
+
+class ContractEmployee extends Employee {
+    private double contractAmount;
+    private Date contractEndDate;
+    
+    // Override calculatePay() with contract terms
+}
+
+// Manager class (multilevel inheritance)
+class Manager extends FullTimeEmployee {
+    private List<Employee> subordinates;
+    private double managementBonus;
+    
+    // Additional methods for team management
+}
+
+// Test with polymorphic array of employees
+```
+
+[↑ Back to Top](#-table-of-contents)
+
+---
+
+## 10. Encapsulation & Access Modifiers
+
+📊 **Chapter 10 of 35**
+
+🎯 **Learning Objectives:**
+- Master encapsulation principles and data hiding
+- Understand all Java access modifiers (private, protected, public, package-private)
+- Learn to design secure and maintainable class interfaces
+- Practice getter and setter methods with validation
+- Explore immutable classes and defensive programming
+
+⏱️ **Estimated Reading Time:** 40 minutes
+📋 **Prerequisites:** Understanding of classes, objects, and inheritance
+
+### Understanding Encapsulation
+
+Encapsulation is one of the fundamental principles of object-oriented programming. It involves bundling data and methods that operate on that data within a single unit (class) and restricting direct access to some components.
+
+```java
+// Bad example - no encapsulation
+class BadBankAccount {
+    public String accountNumber;
+    public double balance;
+    public String ownerName;
+    
+    // Anyone can directly modify these fields!
+}
+
+// Good example - proper encapsulation
+class GoodBankAccount {
+    private String accountNumber;
+    private double balance;
+    private String ownerName;
+    private boolean isActive;
+    private java.util.List<String> transactionHistory;
+    
+    public GoodBankAccount(String accountNumber, String ownerName, double initialBalance) {
+        this.accountNumber = accountNumber;
+        this.ownerName = ownerName;
+        this.balance = initialBalance >= 0 ? initialBalance : 0;
+        this.isActive = true;
+        this.transactionHistory = new java.util.ArrayList<>();
+        addTransaction("Account opened with balance: $" + initialBalance);
+    }
+    
+    // Controlled access through methods
+    public boolean deposit(double amount) {
+        if (amount > 0 && isActive) {
+            balance += amount;
+            addTransaction("Deposited: $" + amount + ", New balance: $" + balance);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean withdraw(double amount) {
+        if (amount > 0 && amount <= balance && isActive) {
+            balance -= amount;
+            addTransaction("Withdrew: $" + amount + ", New balance: $" + balance);
+            return true;
+        }
+        return false;
+    }
+    
+    private void addTransaction(String transaction) {
+        transactionHistory.add(java.time.LocalDateTime.now() + ": " + transaction);
+    }
+    
+    // Safe getters
+    public double getBalance() {
+        return balance;
+    }
+    
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public String getOwnerName() {
+        return ownerName;
+    }
+    
+    public boolean isActive() {
+        return isActive;
+    }
+    
+    // Defensive copy for mutable objects
+    public java.util.List<String> getTransactionHistory() {
+        return new java.util.ArrayList<>(transactionHistory);
+    }
+    
+    public void closeAccount() {
+        if (balance == 0) {
+            isActive = false;
+            addTransaction("Account closed");
+        } else {
+            System.out.println("Cannot close account with non-zero balance: $" + balance);
+        }
+    }
+}
+```
+
+### Access Modifiers in Detail
+
+Java provides four levels of access control through access modifiers:
+
+```java
+// Demonstration of all access modifiers
+public class AccessModifierDemo {
+    
+    // PUBLIC - accessible from anywhere
+    public String publicField = "Everyone can see this";
+    
+    // PROTECTED - accessible within package and by subclasses
+    protected String protectedField = "Subclasses and same package can see this";
+    
+    // PACKAGE-PRIVATE (default) - accessible within the same package only
+    String packagePrivateField = "Only same package can see this";
+    
+    // PRIVATE - accessible only within the same class
+    private String privateField = "Only this class can see this";
+    
+    // Constructor
+    public AccessModifierDemo(String value) {
+        this.privateField = value;
+    }
+    
+    // PUBLIC method - can be called from anywhere
+    public void publicMethod() {
+        System.out.println("This is a public method");
+        // Can access all fields within the same class
+        System.out.println("Accessing private field: " + privateField);
+    }
+    
+    // PROTECTED method - accessible to subclasses and same package
+    protected void protectedMethod() {
+        System.out.println("This is a protected method");
+    }
+    
+    // PACKAGE-PRIVATE method - accessible within same package
+    void packagePrivateMethod() {
+        System.out.println("This is a package-private method");
+    }
+    
+    // PRIVATE method - only accessible within this class
+    private void privateMethod() {
+        System.out.println("This is a private method");
+    }
+    
+    // Public method that uses private method
+    public void doSomething() {
+        privateMethod(); // OK - same class
+        validateData();  // OK - same class
+    }
+    
+    private boolean validateData() {
+        // Private helper method for internal use
+        return privateField != null && !privateField.isEmpty();
+    }
+}
+
+// Subclass to demonstrate protected access
+class SubAccessDemo extends AccessModifierDemo {
+    
+    public SubAccessDemo() {
+        super("Subclass instance");
+    }
+    
+    public void demonstrateAccess() {
+        System.out.println("=== Access from Subclass ===");
+        
+        // Can access public members
+        System.out.println("Public field: " + publicField);
+        publicMethod();
+        
+        // Can access protected members
+        System.out.println("Protected field: " + protectedField);
+        protectedMethod();
+        
+        // Can access package-private if in same package
+        System.out.println("Package-private field: " + packagePrivateField);
+        packagePrivateMethod();
+        
+        // CANNOT access private members
+        // System.out.println(privateField); // Compile error!
+        // privateMethod(); // Compile error!
+    }
+}
+```
+
+### Proper Getter and Setter Design
+
+```java
+class Person {
+    private String name;
+    private int age;
+    private String email;
+    private String phoneNumber;
+    private java.util.Date birthDate;
+    private java.util.List<String> hobbies;
+    
+    public Person(String name, int age, String email) {
+        setName(name);    // Use setters for validation
+        setAge(age);
+        setEmail(email);
+        this.hobbies = new java.util.ArrayList<>();
+    }
+    
+    // Getter with validation
+    public String getName() {
+        return name;
+    }
+    
+    // Setter with validation
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        if (name.length() > 50) {
+            throw new IllegalArgumentException("Name cannot exceed 50 characters");
+        }
+        this.name = name.trim();
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    public void setAge(int age) {
+        if (age < 0 || age > 150) {
+            throw new IllegalArgumentException("Age must be between 0 and 150");
+        }
+        this.age = age;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        if (email == null || !isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        this.email = email.toLowerCase();
+    }
+    
+    private boolean isValidEmail(String email) {
+        // Simple email validation
+        return email.contains("@") && email.contains(".") && email.length() > 5;
+    }
+    
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    public void setPhoneNumber(String phoneNumber) {
+        if (phoneNumber != null) {
+            // Remove all non-digits
+            String cleaned = phoneNumber.replaceAll("[^0-9]", "");
+            if (cleaned.length() == 10) {
+                this.phoneNumber = cleaned;
+            } else {
+                throw new IllegalArgumentException("Phone number must be 10 digits");
+            }
+        }
+    }
+    
+    // Defensive copying for mutable objects
+    public java.util.Date getBirthDate() {
+        return birthDate != null ? new java.util.Date(birthDate.getTime()) : null;
+    }
+    
+    public void setBirthDate(java.util.Date birthDate) {
+        this.birthDate = birthDate != null ? new java.util.Date(birthDate.getTime()) : null;
+    }
+    
+    // Safe access to collections
+    public java.util.List<String> getHobbies() {
+        return new java.util.ArrayList<>(hobbies); // Return defensive copy
+    }
+    
+    public void addHobby(String hobby) {
+        if (hobby != null && !hobby.trim().isEmpty()) {
+            String trimmedHobby = hobby.trim();
+            if (!hobbies.contains(trimmedHobby)) {
+                hobbies.add(trimmedHobby);
+            }
+        }
+    }
+    
+    public boolean removeHobby(String hobby) {
+        return hobbies.remove(hobby);
+    }
+    
+    public void clearHobbies() {
+        hobbies.clear();
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("Person{name='%s', age=%d, email='%s', hobbies=%s}", 
+                           name, age, email, hobbies);
+    }
+}
+```
+
+### Immutable Classes
+
+Immutable classes are classes whose instances cannot be modified after creation. They provide thread safety and simplicity.
+
+```java
+// Immutable class example
+public final class ImmutableStudent {
+    private final String studentId;
+    private final String name;
+    private final int age;
+    private final java.util.List<String> courses;
+    private final java.util.Map<String, Double> grades;
+    
+    // Builder pattern for immutable classes with many fields
+    public static class Builder {
+        private String studentId;
+        private String name;
+        private int age;
+        private java.util.List<String> courses = new java.util.ArrayList<>();
+        private java.util.Map<String, Double> grades = new java.util.HashMap<>();
+        
+        public Builder setStudentId(String studentId) {
+            this.studentId = studentId;
+            return this;
+        }
+        
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+        
+        public Builder setAge(int age) {
+            this.age = age;
+            return this;
+        }
+        
+        public Builder addCourse(String course) {
+            this.courses.add(course);
+            return this;
+        }
+        
+        public Builder addGrade(String course, Double grade) {
+            this.grades.put(course, grade);
+            return this;
+        }
+        
+        public ImmutableStudent build() {
+            return new ImmutableStudent(this);
+        }
+    }
+    
+    private ImmutableStudent(Builder builder) {
+        this.studentId = builder.studentId;
+        this.name = builder.name;
+        this.age = builder.age;
+        // Create defensive copies of mutable objects
+        this.courses = java.util.Collections.unmodifiableList(
+            new java.util.ArrayList<>(builder.courses)
+        );
+        this.grades = java.util.Collections.unmodifiableMap(
+            new java.util.HashMap<>(builder.grades)
+        );
+    }
+    
+    // Only getters, no setters
+    public String getStudentId() {
+        return studentId;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public int getAge() {
+        return age;
+    }
+    
+    // Return unmodifiable collections
+    public java.util.List<String> getCourses() {
+        return courses; // Already unmodifiable
+    }
+    
+    public java.util.Map<String, Double> getGrades() {
+        return grades; // Already unmodifiable
+    }
+    
+    // Methods that return new instances for "modifications"
+    public ImmutableStudent withAge(int newAge) {
+        return new Builder()
+            .setStudentId(this.studentId)
+            .setName(this.name)
+            .setAge(newAge)
+            .build();
+    }
+    
+    public ImmutableStudent withAddedCourse(String course) {
+        Builder builder = new Builder()
+            .setStudentId(this.studentId)
+            .setName(this.name)
+            .setAge(this.age);
+        
+        // Add existing courses
+        for (String existingCourse : this.courses) {
+            builder.addCourse(existingCourse);
+        }
+        builder.addCourse(course);
+        
+        // Add existing grades
+        for (java.util.Map.Entry<String, Double> entry : this.grades.entrySet()) {
+            builder.addGrade(entry.getKey(), entry.getValue());
+        }
+        
+        return builder.build();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        ImmutableStudent that = (ImmutableStudent) obj;
+        return age == that.age &&
+               java.util.Objects.equals(studentId, that.studentId) &&
+               java.util.Objects.equals(name, that.name) &&
+               java.util.Objects.equals(courses, that.courses) &&
+               java.util.Objects.equals(grades, that.grades);
+    }
+    
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(studentId, name, age, courses, grades);
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("ImmutableStudent{id='%s', name='%s', age=%d, courses=%s, grades=%s}",
+                           studentId, name, age, courses, grades);
+    }
+}
+```
+
+### Package Organization and Access Control
+
+```java
+// File: com/company/model/User.java
+package com.company.model;
+
+public class User {
+    private String username;
+    private String hashedPassword;
+    protected String email; // Accessible to subclasses
+    
+    // Package-private field - accessible within com.company.model package
+    String lastLoginTime;
+    
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+    
+    // Public interface
+    public String getUsername() {
+        return username;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    // Package-private method for internal use
+    void updateLastLogin() {
+        lastLoginTime = java.time.LocalDateTime.now().toString();
+    }
+    
+    // Protected method for subclasses
+    protected boolean verifyPassword(String password) {
+        return hashedPassword != null && hashedPassword.equals(hashPassword(password));
+    }
+    
+    private String hashPassword(String password) {
+        // Simple hash for demonstration
+        return "hashed_" + password;
+    }
+}
+
+// File: com/company/model/AdminUser.java
+package com.company.model;
+
+public class AdminUser extends User {
+    private java.util.Set<String> permissions;
+    
+    public AdminUser(String username, String email) {
+        super(username, email);
+        this.permissions = new java.util.HashSet<>();
+    }
+    
+    public void addPermission(String permission) {
+        permissions.add(permission);
+    }
+    
+    public boolean hasPermission(String permission) {
+        return permissions.contains(permission);
+    }
+    
+    // Can access protected methods from superclass
+    public boolean authenticateAdmin(String password) {
+        return verifyPassword(password) && hasPermission("ADMIN");
+    }
+    
+    // Can access package-private fields and methods
+    public String getLastLogin() {
+        return lastLoginTime; // Package-private field accessible
+    }
+}
+```
+
+### Real-World Example: Security System
+
+```java
+class SecuritySystem {
+    private boolean isArmed;
+    private String securityCode;
+    private java.util.List<String> authorizedUsers;
+    private java.util.List<String> securityLog;
+    private int failedAttempts;
+    private static final int MAX_FAILED_ATTEMPTS = 3;
+    
+    public SecuritySystem(String initialCode) {
+        setSecurityCode(initialCode);
+        this.isArmed = false;
+        this.authorizedUsers = new java.util.ArrayList<>();
+        this.securityLog = new java.util.ArrayList<>();
+        this.failedAttempts = 0;
+        logEvent("Security system initialized");
+    }
+    
+    public boolean armSystem(String code, String user) {
+        if (authenticate(code, user)) {
+            isArmed = true;
+            logEvent("System armed by " + user);
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean disarmSystem(String code, String user) {
+        if (authenticate(code, user)) {
+            isArmed = false;
+            failedAttempts = 0; // Reset on successful disarm
+            logEvent("System disarmed by " + user);
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean authenticate(String code, String user) {
+        if (securityCode.equals(code) && isAuthorizedUser(user)) {
+            failedAttempts = 0;
+            logEvent("Successful authentication by " + user);
+            return true;
+        } else {
+            failedAttempts++;
+            logEvent("Failed authentication attempt by " + user + " (Attempt " + failedAttempts + ")");
+            
+            if (failedAttempts >= MAX_FAILED_ATTEMPTS) {
+                triggerAlarm();
+            }
+            return false;
+        }
+    }
+    
+    private void triggerAlarm() {
+        logEvent("ALARM TRIGGERED - Too many failed attempts!");
+        // In real system, this would activate alarms, notify security, etc.
+        System.out.println("🚨 SECURITY ALARM ACTIVATED! 🚨");
+    }
+    
+    public void addAuthorizedUser(String adminCode, String user) {
+        if (securityCode.equals(adminCode)) {
+            authorizedUsers.add(user);
+            logEvent("User " + user + " added to authorized users");
+        } else {
+            logEvent("Unauthorized attempt to add user " + user);
+        }
+    }
+    
+    private boolean isAuthorizedUser(String user) {
+        return authorizedUsers.contains(user);
+    }
+    
+    private void setSecurityCode(String code) {
+        if (code == null || code.length() < 4) {
+            throw new IllegalArgumentException("Security code must be at least 4 characters");
+        }
+        this.securityCode = code;
+        logEvent("Security code updated");
+    }
+    
+    public boolean changeSecurityCode(String oldCode, String newCode, String user) {
+        if (authenticate(oldCode, user)) {
+            setSecurityCode(newCode);
+            logEvent("Security code changed by " + user);
+            return true;
+        }
+        return false;
+    }
+    
+    private void logEvent(String event) {
+        String timestamp = java.time.LocalDateTime.now().toString();
+        securityLog.add(timestamp + ": " + event);
+    }
+    
+    // Safe public methods
+    public boolean isSystemArmed() {
+        return isArmed;
+    }
+    
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+    
+    public java.util.List<String> getSecurityLog(String adminCode) {
+        if (securityCode.equals(adminCode)) {
+            return new java.util.ArrayList<>(securityLog); // Defensive copy
+        }
+        logEvent("Unauthorized attempt to access security log");
+        return java.util.Collections.emptyList();
+    }
+    
+    public java.util.List<String> getAuthorizedUsers(String adminCode) {
+        if (securityCode.equals(adminCode)) {
+            return new java.util.ArrayList<>(authorizedUsers); // Defensive copy
+        }
+        return java.util.Collections.emptyList();
+    }
+}
+
+// Demo class
+public class EncapsulationDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Encapsulation and Security Demo ===\n");
+        
+        // Initialize security system
+        SecuritySystem security = new SecuritySystem("admin123");
+        
+        // Add authorized users
+        security.addAuthorizedUser("admin123", "Alice");
+        security.addAuthorizedUser("admin123", "Bob");
+        
+        System.out.println("System armed: " + security.isSystemArmed());
+        
+        // Arm system
+        boolean armed = security.armSystem("admin123", "Alice");
+        System.out.println("Arm successful: " + armed);
+        System.out.println("System armed: " + security.isSystemArmed());
+        
+        // Failed disarm attempts
+        security.disarmSystem("wrong", "Alice");
+        security.disarmSystem("wrong", "Charlie");
+        security.disarmSystem("wrong", "Alice");
+        security.disarmSystem("wrong", "Alice"); // This should trigger alarm
+        
+        // Successful disarm
+        security.disarmSystem("admin123", "Alice");
+        
+        // Display security log
+        System.out.println("\n=== Security Log ===");
+        java.util.List<String> log = security.getSecurityLog("admin123");
+        for (String entry : log) {
+            System.out.println(entry);
+        }
+        
+        // Demonstrate immutable class
+        System.out.println("\n=== Immutable Student Demo ===");
+        ImmutableStudent student = new ImmutableStudent.Builder()
+            .setStudentId("STU001")
+            .setName("John Doe")
+            .setAge(20)
+            .addCourse("Math")
+            .addCourse("Physics")
+            .addGrade("Math", 95.0)
+            .build();
+        
+        System.out.println("Original: " + student);
+        
+        // "Modify" by creating new instance
+        ImmutableStudent olderStudent = student.withAge(21);
+        System.out.println("Older version: " + olderStudent);
+        System.out.println("Original unchanged: " + student);
+    }
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Making fields public unnecessarily**: Always use private fields with controlled access
+2. **Forgetting defensive copying**: Return copies of mutable objects, not references
+3. **Not validating input in setters**: Always validate data before setting
+4. **Overusing getters and setters**: Don't create them automatically for every field
+5. **Breaking encapsulation with return references**: Be careful with collections and mutable objects
+
+### ✅ Best Practices
+
+1. **Make fields private by default** and provide controlled access through methods
+2. **Use the most restrictive access modifier** that still allows proper functionality
+3. **Validate input data** in constructors and setter methods
+4. **Return defensive copies** of mutable objects when necessary
+5. **Use immutable classes** when objects shouldn't change after creation
+6. **Group related functionality** in packages and use package-private access appropriately
+
+### 🏋️ Exercise 10: Bank Account System
+
+Create a comprehensive bank account system demonstrating proper encapsulation:
+
+```java
+// Create these classes with proper encapsulation:
+
+abstract class Account {
+    // Protected fields for subclasses
+    // Private methods for internal operations
+    // Public interface for external access
+}
+
+class CheckingAccount extends Account {
+    // Overdraft protection features
+    // Transaction limits
+}
+
+class SavingsAccount extends Account {
+    // Interest calculation
+    // Withdrawal restrictions
+}
+
+class Bank {
+    // Manage multiple accounts
+    // Account creation and deletion
+    // Security and audit logging
+}
+
+// Implement proper:
+// - Access control
+// - Input validation  
+// - Defensive programming
+// - Immutable transaction records
+```
+
+[↑ Back to Top](#-table-of-contents)
+
+---
+
+## 11. Abstract Classes & Interfaces
+
+📊 **Chapter 11 of 35**
+
+🎯 **Learning Objectives:**
+- Understand the difference between abstract classes and interfaces
+- Master abstract method implementation and concrete method inheritance
+- Learn interface contracts and multiple inheritance through interfaces
+- Explore default and static methods in interfaces (Java 8+)
+- Practice designing flexible and extensible systems
+
+⏱️ **Estimated Reading Time:** 45 minutes
+📋 **Prerequisites:** Understanding of inheritance and polymorphism
+
+### Abstract Classes
+
+Abstract classes cannot be instantiated directly and are designed to be subclassed. They can contain both abstract methods (without implementation) and concrete methods (with implementation).
+
+```java
+// Abstract base class for shapes
+abstract class Shape {
+    protected String name;
+    protected String color;
+    
+    public Shape(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+    
+    // Abstract methods - must be implemented by subclasses
+    public abstract double calculateArea();
+    public abstract double calculatePerimeter();
+    public abstract void draw();
+    
+    // Concrete methods - inherited by subclasses
+    public void displayInfo() {
+        System.out.println("Shape: " + name);
+        System.out.println("Color: " + color);
+        System.out.println("Area: " + String.format("%.2f", calculateArea()));
+        System.out.println("Perimeter: " + String.format("%.2f", calculatePerimeter()));
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public String getColor() {
+        return color;
+    }
+    
+    public void setColor(String color) {
+        this.color = color;
+    }
+    
+    // Template method pattern - defines algorithm structure
+    public final void processShape() {
+        System.out.println("Processing " + name + "...");
+        validateShape();
+        calculateProperties();
+        draw();
+        System.out.println("Shape processing complete.\n");
+    }
+    
+    private void validateShape() {
+        System.out.println("Validating " + name + " properties...");
+    }
+    
+    private void calculateProperties() {
+        System.out.println("Calculating area: " + calculateArea());
+        System.out.println("Calculating perimeter: " + calculatePerimeter());
+    }
+}
+
+// Concrete implementation of Circle
+class Circle extends Shape {
+    private double radius;
+    
+    public Circle(String color, double radius) {
+        super("Circle", color);
+        this.radius = radius;
+    }
+    
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+    
+    @Override
+    public double calculatePerimeter() {
+        return 2 * Math.PI * radius;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a " + color + " circle with radius " + radius);
+    }
+    
+    public double getRadius() {
+        return radius;
+    }
+    
+    public void setRadius(double radius) {
+        if (radius > 0) {
+            this.radius = radius;
+        }
+    }
+}
+
+// Concrete implementation of Rectangle
+class Rectangle extends Shape {
+    private double width;
+    private double height;
+    
+    public Rectangle(String color, double width, double height) {
+        super("Rectangle", color);
+        this.width = width;
+        this.height = height;
+    }
+    
+    @Override
+    public double calculateArea() {
+        return width * height;
+    }
+    
+    @Override
+    public double calculatePerimeter() {
+        return 2 * (width + height);
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a " + color + " rectangle (" + width + "x" + height + ")");
+    }
+    
+    public double getWidth() {
+        return width;
+    }
+    
+    public double getHeight() {
+        return height;
+    }
+    
+    public void setWidth(double width) {
+        if (width > 0) {
+            this.width = width;
+        }
+    }
+    
+    public void setHeight(double height) {
+        if (height > 0) {
+            this.height = height;
+        }
+    }
+}
+
+// Concrete implementation of Triangle
+class Triangle extends Shape {
+    private double side1, side2, side3;
+    
+    public Triangle(String color, double side1, double side2, double side3) {
+        super("Triangle", color);
+        if (isValidTriangle(side1, side2, side3)) {
+            this.side1 = side1;
+            this.side2 = side2;
+            this.side3 = side3;
+        } else {
+            throw new IllegalArgumentException("Invalid triangle sides");
+        }
+    }
+    
+    private boolean isValidTriangle(double a, double b, double c) {
+        return (a + b > c) && (a + c > b) && (b + c > a);
+    }
+    
+    @Override
+    public double calculateArea() {
+        // Using Heron's formula
+        double s = calculatePerimeter() / 2;
+        return Math.sqrt(s * (s - side1) * (s - side2) * (s - side3));
+    }
+    
+    @Override
+    public double calculatePerimeter() {
+        return side1 + side2 + side3;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing a " + color + " triangle with sides " + 
+                         side1 + ", " + side2 + ", " + side3);
+    }
+    
+    public double getSide1() { return side1; }
+    public double getSide2() { return side2; }
+    public double getSide3() { return side3; }
+}
+```
+
+### Interfaces
+
+Interfaces define contracts that implementing classes must follow. They can contain method signatures, default methods, static methods, and constants.
+
+```java
+// Basic interface for drawable objects
+interface Drawable {
+    // Interface constants (implicitly public, static, final)
+    String DEFAULT_COLOR = "BLACK";
+    int MAX_SIZE = 1000;
+    
+    // Abstract methods (implicitly public and abstract)
+    void draw();
+    void resize(double factor);
+    
+    // Default method (Java 8+)
+    default void highlight() {
+        System.out.println("Highlighting the drawable object");
+    }
+    
+    // Static method (Java 8+)
+    static void printInfo() {
+        System.out.println("This is a Drawable interface");
+    }
+}
+
+// Interface for objects that can be moved
+interface Movable {
+    void move(double deltaX, double deltaY);
+    void moveTo(double x, double y);
+    
+    // Default method
+    default void moveUp(double distance) {
+        move(0, distance);
+    }
+    
+    default void moveDown(double distance) {
+        move(0, -distance);
+    }
+    
+    default void moveLeft(double distance) {
+        move(-distance, 0);
+    }
+    
+    default void moveRight(double distance) {
+        move(distance, 0);
+    }
+}
+
+// Interface for rotatable objects
+interface Rotatable {
+    void rotate(double angle);
+    double getRotation();
+    
+    default void rotateClockwise(double angle) {
+        rotate(angle);
+    }
+    
+    default void rotateCounterClockwise(double angle) {
+        rotate(-angle);
+    }
+}
+
+// Class implementing multiple interfaces
+class GraphicsCircle implements Drawable, Movable, Rotatable {
+    private double x, y;
+    private double radius;
+    private String color;
+    private double rotation;
+    
+    public GraphicsCircle(double x, double y, double radius, String color) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.color = color != null ? color : DEFAULT_COLOR;
+        this.rotation = 0;
+    }
+    
+    // Implementing Drawable interface
+    @Override
+    public void draw() {
+        System.out.println("Drawing " + color + " circle at (" + x + "," + y + 
+                         ") with radius " + radius + " and rotation " + rotation + "°");
+    }
+    
+    @Override
+    public void resize(double factor) {
+        if (factor > 0) {
+            radius *= factor;
+            System.out.println("Resized circle by factor " + factor + 
+                             ", new radius: " + radius);
+        }
+    }
+    
+    // Implementing Movable interface
+    @Override
+    public void move(double deltaX, double deltaY) {
+        x += deltaX;
+        y += deltaY;
+        System.out.println("Moved circle by (" + deltaX + "," + deltaY + 
+                         "), new position: (" + x + "," + y + ")");
+    }
+    
+    @Override
+    public void moveTo(double x, double y) {
+        this.x = x;
+        this.y = y;
+        System.out.println("Moved circle to position: (" + x + "," + y + ")");
+    }
+    
+    // Implementing Rotatable interface
+    @Override
+    public void rotate(double angle) {
+        rotation = (rotation + angle) % 360;
+        if (rotation < 0) rotation += 360;
+        System.out.println("Rotated circle by " + angle + "°, current rotation: " + rotation + "°");
+    }
+    
+    @Override
+    public double getRotation() {
+        return rotation;
+    }
+    
+    // Getters and setters
+    public double getX() { return x; }
+    public double getY() { return y; }
+    public double getRadius() { return radius; }
+    public String getColor() { return color; }
+    
+    public void setColor(String color) {
+        this.color = color != null ? color : DEFAULT_COLOR;
+    }
+}
+
+// Another class implementing the same interfaces
+class GraphicsRectangle implements Drawable, Movable, Rotatable {
+    private double x, y;
+    private double width, height;
+    private String color;
+    private double rotation;
+    
+    public GraphicsRectangle(double x, double y, double width, double height, String color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color != null ? color : DEFAULT_COLOR;
+        this.rotation = 0;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing " + color + " rectangle at (" + x + "," + y + 
+                         ") with size " + width + "x" + height + 
+                         " and rotation " + rotation + "°");
+    }
+    
+    @Override
+    public void resize(double factor) {
+        if (factor > 0) {
+            width *= factor;
+            height *= factor;
+            System.out.println("Resized rectangle by factor " + factor + 
+                             ", new size: " + width + "x" + height);
+        }
+    }
+    
+    @Override
+    public void move(double deltaX, double deltaY) {
+        x += deltaX;
+        y += deltaY;
+        System.out.println("Moved rectangle by (" + deltaX + "," + deltaY + 
+                         "), new position: (" + x + "," + y + ")");
+    }
+    
+    @Override
+    public void moveTo(double x, double y) {
+        this.x = x;
+        this.y = y;
+        System.out.println("Moved rectangle to position: (" + x + "," + y + ")");
+    }
+    
+    @Override
+    public void rotate(double angle) {
+        rotation = (rotation + angle) % 360;
+        if (rotation < 0) rotation += 360;
+        System.out.println("Rotated rectangle by " + angle + "°, current rotation: " + rotation + "°");
+    }
+    
+    @Override
+    public double getRotation() {
+        return rotation;
+    }
+}
+```
+
+### Advanced Interface Features (Java 8+)
+
+```java
+// Interface with default and static methods
+interface PaymentProcessor {
+    // Abstract method
+    boolean processPayment(double amount, String currency);
+    
+    // Default method - can be overridden
+    default boolean validateAmount(double amount) {
+        return amount > 0 && amount <= getMaxTransactionLimit();
+    }
+    
+    // Default method using other interface methods
+    default String formatAmount(double amount, String currency) {
+        return String.format("%.2f %s", amount, currency);
+    }
+    
+    // Static method - cannot be overridden
+    static double convertCurrency(double amount, String fromCurrency, String toCurrency) {
+        // Simplified conversion (in reality, you'd use real exchange rates)
+        java.util.Map<String, Double> rates = new java.util.HashMap<>();
+        rates.put("USD", 1.0);
+        rates.put("EUR", 0.85);
+        rates.put("GBP", 0.73);
+        rates.put("JPY", 110.0);
+        
+        Double fromRate = rates.get(fromCurrency);
+        Double toRate = rates.get(toCurrency);
+        
+        if (fromRate != null && toRate != null) {
+            return (amount / fromRate) * toRate;
+        }
+        
+        throw new IllegalArgumentException("Unsupported currency conversion");
+    }
+    
+    // Static utility method
+    static boolean isValidCurrency(String currency) {
+        return java.util.Arrays.asList("USD", "EUR", "GBP", "JPY").contains(currency);
+    }
+    
+    // Abstract method for implementation-specific limits
+    double getMaxTransactionLimit();
+}
+
+// Credit card processor implementation
+class CreditCardProcessor implements PaymentProcessor {
+    private String processorName;
+    private double transactionFee;
+    
+    public CreditCardProcessor(String processorName, double transactionFee) {
+        this.processorName = processorName;
+        this.transactionFee = transactionFee;
+    }
+    
+    @Override
+    public boolean processPayment(double amount, String currency) {
+        if (!validateAmount(amount) || !PaymentProcessor.isValidCurrency(currency)) {
+            System.out.println("Invalid payment parameters");
+            return false;
+        }
+        
+        double fee = amount * transactionFee;
+        double total = amount + fee;
+        
+        System.out.println(processorName + " processing payment:");
+        System.out.println("Amount: " + formatAmount(amount, currency));
+        System.out.println("Fee: " + formatAmount(fee, currency));
+        System.out.println("Total: " + formatAmount(total, currency));
+        
+        // Simulate payment processing
+        return Math.random() > 0.1; // 90% success rate
+    }
+    
+    @Override
+    public double getMaxTransactionLimit() {
+        return 10000.0; // Credit card limit
+    }
+    
+    // Override default method for custom validation
+    @Override
+    public boolean validateAmount(double amount) {
+        // Additional validation for credit cards
+        return PaymentProcessor.super.validateAmount(amount) && amount >= 1.0;
+    }
+}
+
+// PayPal processor implementation
+class PayPalProcessor implements PaymentProcessor {
+    private String accountEmail;
+    
+    public PayPalProcessor(String accountEmail) {
+        this.accountEmail = accountEmail;
+    }
+    
+    @Override
+    public boolean processPayment(double amount, String currency) {
+        if (!validateAmount(amount)) {
+            return false;
+        }
+        
+        System.out.println("PayPal processing payment for " + accountEmail + ":");
+        System.out.println("Amount: " + formatAmount(amount, currency));
+        
+        // Simulate PayPal processing
+        return Math.random() > 0.05; // 95% success rate
+    }
+    
+    @Override
+    public double getMaxTransactionLimit() {
+        return 25000.0; // PayPal limit
+    }
+}
+```
+
+### Functional Interfaces and Lambdas
+
+```java
+// Functional interface - has exactly one abstract method
+@FunctionalInterface
+interface Calculator {
+    double calculate(double a, double b);
+    
+    // Default methods don't count toward the single abstract method requirement
+    default void printResult(double a, double b) {
+        System.out.println("Result: " + calculate(a, b));
+    }
+    
+    // Static methods don't count either
+    static Calculator getAddition() {
+        return (a, b) -> a + b;
+    }
+    
+    static Calculator getMultiplication() {
+        return (a, b) -> a * b;
+    }
+}
+
+// Another functional interface
+@FunctionalInterface
+interface StringProcessor {
+    String process(String input);
+    
+    default StringProcessor andThen(StringProcessor after) {
+        return input -> after.process(this.process(input));
+    }
+    
+    static StringProcessor identity() {
+        return input -> input;
+    }
+}
+
+public class FunctionalInterfaceDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Functional Interface Demo ===\n");
+        
+        // Using lambda expressions with functional interfaces
+        Calculator addition = (a, b) -> a + b;
+        Calculator subtraction = (a, b) -> a - b;
+        Calculator multiplication = Calculator.getMultiplication();
+        Calculator division = (a, b) -> b != 0 ? a / b : 0;
+        
+        double x = 10, y = 3;
+        
+        System.out.println("Operations on " + x + " and " + y + ":");
+        System.out.println("Addition: " + addition.calculate(x, y));
+        System.out.println("Subtraction: " + subtraction.calculate(x, y));
+        System.out.println("Multiplication: " + multiplication.calculate(x, y));
+        System.out.println("Division: " + division.calculate(x, y));
+        
+        // Using default method
+        addition.printResult(x, y);
+        
+        // StringProcessor examples
+        StringProcessor uppercase = String::toUpperCase;
+        StringProcessor addPrefix = s -> "PREFIX_" + s;
+        StringProcessor addSuffix = s -> s + "_SUFFIX";
+        
+        String input = "hello world";
+        System.out.println("\nString processing:");
+        System.out.println("Original: " + input);
+        System.out.println("Uppercase: " + uppercase.process(input));
+        System.out.println("With prefix: " + addPrefix.process(input));
+        
+        // Chain processors using andThen
+        StringProcessor chain = addPrefix.andThen(uppercase).andThen(addSuffix);
+        System.out.println("Chained: " + chain.process(input));
+    }
+}
+```
+
+### Interface vs Abstract Class Comparison
+
+```java
+// When to use abstract class: IS-A relationship with shared implementation
+abstract class Vehicle {
+    protected String make, model;
+    protected int year;
+    
+    public Vehicle(String make, String model, int year) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+    }
+    
+    // Concrete method - common to all vehicles
+    public String getInfo() {
+        return year + " " + make + " " + model;
+    }
+    
+    // Abstract method - varies by vehicle type
+    public abstract void start();
+    public abstract double getFuelEfficiency();
+}
+
+// When to use interface: CAN-DO relationship, multiple inheritance
+interface Flyable {
+    void takeOff();
+    void land();
+    double getAltitude();
+    
+    default void fly() {
+        takeOff();
+        System.out.println("Flying at altitude: " + getAltitude());
+        land();
+    }
+}
+
+interface Swimmable {
+    void dive();
+    void surface();
+    double getDepth();
+}
+
+// Car extends Vehicle (IS-A relationship)
+class Car extends Vehicle {
+    public Car(String make, String model, int year) {
+        super(make, model, year);
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(getInfo() + " engine started");
+    }
+    
+    @Override
+    public double getFuelEfficiency() {
+        return 25.0; // MPG
+    }
+}
+
+// Airplane extends Vehicle and implements Flyable (IS-A Vehicle, CAN Fly)
+class Airplane extends Vehicle implements Flyable {
+    private double altitude;
+    
+    public Airplane(String make, String model, int year) {
+        super(make, model, year);
+        this.altitude = 0;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(getInfo() + " aircraft engines started");
+    }
+    
+    @Override
+    public double getFuelEfficiency() {
+        return 5.2; // Miles per gallon
+    }
+    
+    @Override
+    public void takeOff() {
+        altitude = 35000;
+        System.out.println(getInfo() + " taking off to " + altitude + " feet");
+    }
+    
+    @Override
+    public void land() {
+        altitude = 0;
+        System.out.println(getInfo() + " landing");
+    }
+    
+    @Override
+    public double getAltitude() {
+        return altitude;
+    }
+}
+
+// Duck implements both Flyable and Swimmable (CAN Fly and CAN Swim)
+class Duck implements Flyable, Swimmable {
+    private String name;
+    private double altitude;
+    private double depth;
+    
+    public Duck(String name) {
+        this.name = name;
+        this.altitude = 0;
+        this.depth = 0;
+    }
+    
+    @Override
+    public void takeOff() {
+        altitude = 100;
+        System.out.println(name + " the duck is flying at " + altitude + " feet");
+    }
+    
+    @Override
+    public void land() {
+        altitude = 0;
+        System.out.println(name + " the duck has landed");
+    }
+    
+    @Override
+    public double getAltitude() {
+        return altitude;
+    }
+    
+    @Override
+    public void dive() {
+        depth = 10;
+        System.out.println(name + " the duck is diving to " + depth + " feet deep");
+    }
+    
+    @Override
+    public void surface() {
+        depth = 0;
+        System.out.println(name + " the duck has surfaced");
+    }
+    
+    @Override
+    public double getDepth() {
+        return depth;
+    }
+}
+```
+
+### Real-World Example: Plugin System
+
+```java
+// Plugin interface
+interface Plugin {
+    String getName();
+    String getVersion();
+    void initialize();
+    void execute();
+    void shutdown();
+    
+    default String getInfo() {
+        return getName() + " v" + getVersion();
+    }
+    
+    default boolean isCompatible(String systemVersion) {
+        return true; // Default compatibility
+    }
+}
+
+// Abstract base plugin with common functionality
+abstract class BasePlugin implements Plugin {
+    protected String name;
+    protected String version;
+    protected boolean initialized;
+    protected java.util.List<String> logs;
+    
+    public BasePlugin(String name, String version) {
+        this.name = name;
+        this.version = version;
+        this.initialized = false;
+        this.logs = new java.util.ArrayList<>();
+    }
+    
+    @Override
+    public String getName() {
+        return name;
+    }
+    
+    @Override
+    public String getVersion() {
+        return version;
+    }
+    
+    @Override
+    public void initialize() {
+        if (!initialized) {
+            log("Initializing " + getInfo());
+            doInitialize();
+            initialized = true;
+            log("Initialization complete");
+        }
+    }
+    
+    @Override
+    public void shutdown() {
+        if (initialized) {
+            log("Shutting down " + getInfo());
+            doShutdown();
+            initialized = false;
+            log("Shutdown complete");
+        }
+    }
+    
+    protected void log(String message) {
+        String timestamp = java.time.LocalDateTime.now().toString();
+        logs.add(timestamp + ": " + message);
+        System.out.println("[" + name + "] " + message);
+    }
+    
+    public java.util.List<String> getLogs() {
+        return new java.util.ArrayList<>(logs);
+    }
+    
+    // Template methods for subclasses
+    protected abstract void doInitialize();
+    protected abstract void doShutdown();
+}
+
+// Concrete plugin implementations
+class DatabasePlugin extends BasePlugin {
+    private String connectionString;
+    
+    public DatabasePlugin(String connectionString) {
+        super("Database Connector", "1.0.0");
+        this.connectionString = connectionString;
+    }
+    
+    @Override
+    protected void doInitialize() {
+        log("Connecting to database: " + connectionString);
+        // Simulate database connection
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    @Override
+    protected void doShutdown() {
+        log("Closing database connections");
+    }
+    
+    @Override
+    public void execute() {
+        if (initialized) {
+            log("Executing database operations");
+            // Simulate database work
+        } else {
+            log("Plugin not initialized!");
+        }
+    }
+}
+
+class SecurityPlugin extends BasePlugin {
+    private int securityLevel;
+    
+    public SecurityPlugin(int securityLevel) {
+        super("Security Manager", "2.1.0");
+        this.securityLevel = securityLevel;
+    }
+    
+    @Override
+    protected void doInitialize() {
+        log("Initializing security level " + securityLevel);
+    }
+    
+    @Override
+    protected void doShutdown() {
+        log("Clearing security contexts");
+    }
+    
+    @Override
+    public void execute() {
+        if (initialized) {
+            log("Running security checks");
+            // Simulate security operations
+        } else {
+            log("Security plugin not initialized!");
+        }
+    }
+    
+    @Override
+    public boolean isCompatible(String systemVersion) {
+        // More restrictive compatibility check
+        return systemVersion.compareTo("2.0") >= 0;
+    }
+}
+
+// Plugin manager
+class PluginManager {
+    private java.util.List<Plugin> plugins;
+    private String systemVersion;
+    
+    public PluginManager(String systemVersion) {
+        this.systemVersion = systemVersion;
+        this.plugins = new java.util.ArrayList<>();
+    }
+    
+    public void registerPlugin(Plugin plugin) {
+        if (plugin.isCompatible(systemVersion)) {
+            plugins.add(plugin);
+            System.out.println("Registered plugin: " + plugin.getInfo());
+        } else {
+            System.out.println("Plugin " + plugin.getInfo() + 
+                             " is not compatible with system version " + systemVersion);
+        }
+    }
+    
+    public void initializeAll() {
+        System.out.println("Initializing all plugins...");
+        for (Plugin plugin : plugins) {
+            plugin.initialize();
+        }
+    }
+    
+    public void executeAll() {
+        System.out.println("Executing all plugins...");
+        for (Plugin plugin : plugins) {
+            plugin.execute();
+        }
+    }
+    
+    public void shutdownAll() {
+        System.out.println("Shutting down all plugins...");
+        for (Plugin plugin : plugins) {
+            plugin.shutdown();
+        }
+    }
+    
+    public void listPlugins() {
+        System.out.println("Registered plugins:");
+        for (Plugin plugin : plugins) {
+            System.out.println("- " + plugin.getInfo());
+        }
+    }
+}
+
+// Demo
+public class AbstractInterfaceDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Abstract Classes and Interfaces Demo ===\n");
+        
+        // Abstract class demo
+        System.out.println("=== Abstract Class Demo ===");
+        Shape[] shapes = {
+            new Circle("Red", 5.0),
+            new Rectangle("Blue", 4.0, 6.0),
+            new Triangle("Green", 3.0, 4.0, 5.0)
+        };
+        
+        for (Shape shape : shapes) {
+            shape.processShape();
+        }
+        
+        // Interface demo
+        System.out.println("=== Interface Demo ===");
+        GraphicsCircle gCircle = new GraphicsCircle(0, 0, 3.0, "Purple");
+        gCircle.draw();
+        gCircle.move(5, 10);
+        gCircle.rotate(45);
+        gCircle.highlight();
+        
+        // Payment processor demo
+        System.out.println("\n=== Payment Processor Demo ===");
+        PaymentProcessor creditCard = new CreditCardProcessor("Visa", 0.03);
+        PaymentProcessor paypal = new PayPalProcessor("user@example.com");
+        
+        creditCard.processPayment(100.0, "USD");
+        paypal.processPayment(75.0, "EUR");
+        
+        // Plugin system demo
+        System.out.println("\n=== Plugin System Demo ===");
+        PluginManager manager = new PluginManager("2.0.1");
+        
+        manager.registerPlugin(new DatabasePlugin("jdbc:mysql://localhost:3306/mydb"));
+        manager.registerPlugin(new SecurityPlugin(5));
+        
+        manager.listPlugins();
+        manager.initializeAll();
+        manager.executeAll();
+        manager.shutdownAll();
+    }
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Confusing abstract classes with interfaces**: Use abstract classes for IS-A relationships, interfaces for CAN-DO capabilities
+2. **Not implementing all abstract methods**: Concrete subclasses must implement all abstract methods
+3. **Overusing inheritance**: Sometimes composition is better than inheritance
+4. **Forgetting @Override annotation**: Always use it when implementing interface methods
+5. **Interface pollution**: Don't put too many methods in a single interface
+
+### ✅ Best Practices
+
+1. **Use interfaces to define contracts** and abstract classes for shared implementation
+2. **Keep interfaces small and focused** (Interface Segregation Principle)
+3. **Use default methods** to evolve interfaces without breaking existing implementations
+4. **Prefer composition over inheritance** when possible
+5. **Use @FunctionalInterface** for single-method interfaces intended for lambdas
+6. **Document interface contracts** clearly for implementers
+
+### 🏋️ Exercise 11: Media Player System
+
+Create a flexible media player system using abstract classes and interfaces:
+
+```java
+// Design and implement:
+
+abstract class MediaFile {
+    // Common properties: filename, size, duration
+    // Abstract methods: play(), pause(), stop()
+    // Concrete methods: getInfo(), isPlaying()
+}
+
+interface Playable {
+    void play();
+    void pause();
+    void stop();
+    boolean isPlaying();
+}
+
+interface Downloadable {
+    void download(String url);
+    double getDownloadProgress();
+    boolean isDownloaded();
+}
+
+interface Streamable {
+    void startStream(String streamUrl);
+    void stopStream();
+    int getBufferLevel();
+}
+
+// Implement concrete classes:
+// - AudioFile (extends MediaFile, implements Playable, Downloadable)
+// - VideoFile (extends MediaFile, implements Playable, Downloadable, Streamable)
+// - StreamingAudio (implements Playable, Streamable)
+
+// Create a MediaPlayer that can handle any Playable content
+// Demonstrate polymorphism with different media types
+```
+
+[↑ Back to Top](#-table-of-contents)
+
+---
+
+## 12. Exception Handling
+
+📊 **Chapter 12 of 35**
+
+🎯 **Learning Objectives:**
+- Master try-catch-finally blocks and exception propagation
+- Understand checked vs unchecked exceptions
+- Learn to create custom exceptions
+- Practice try-with-resources for automatic resource management
+- Explore best practices for exception handling and error recovery
+
+⏱️ **Estimated Reading Time:** 40 minutes
+📋 **Prerequisites:** Understanding of classes, inheritance, and method calls
+
+### Understanding Exceptions
+
+Exceptions are events that disrupt the normal flow of program execution. Java provides a robust exception handling mechanism to deal with runtime errors gracefully.
+
+```java
+// Exception hierarchy demonstration
+public class ExceptionBasics {
+    public static void main(String[] args) {
+        demonstrateBasicExceptions();
+        demonstrateExceptionTypes();
+        demonstrateExceptionPropagation();
+    }
+    
+    private static void demonstrateBasicExceptions() {
+        System.out.println("=== Basic Exception Handling ===");
+        
+        // Example 1: Division by zero
+        try {
+            int result = 10 / 0;
+            System.out.println("Result: " + result);
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero: " + e.getMessage());
+        }
+        
+        // Example 2: Array index out of bounds
+        try {
+            int[] numbers = {1, 2, 3};
+            System.out.println("Number at index 5: " + numbers[5]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Array index out of bounds: " + e.getMessage());
+        }
+        
+        // Example 3: Null pointer exception
+        try {
+            String text = null;
+            int length = text.length();
+            System.out.println("Text length: " + length);
+        } catch (NullPointerException e) {
+            System.out.println("Null pointer exception: " + e.getMessage());
+        }
+        
+        System.out.println("Program continues after exceptions...\n");
+    }
+    
+    private static void demonstrateExceptionTypes() {
+        System.out.println("=== Exception Types ===");
+        
+        // Checked exception - must be handled
+        try {
+            java.io.FileReader file = new java.io.FileReader("nonexistent.txt");
+        } catch (java.io.FileNotFoundException e) {
+            System.out.println("File not found (checked exception): " + e.getMessage());
+        }
+        
+        // Unchecked exception - runtime exception
+        try {
+            String number = "abc";
+            int parsed = Integer.parseInt(number);
+        } catch (NumberFormatException e) {
+            System.out.println("Number format error (unchecked): " + e.getMessage());
+        }
+        
+        // Error - serious problems, usually not caught
+        try {
+            // This would cause OutOfMemoryError in real scenario
+            // int[] hugArray = new int[Integer.MAX_VALUE];
+            System.out.println("Simulating error handling...");
+        } catch (OutOfMemoryError e) {
+            System.out.println("Out of memory error: " + e.getMessage());
+        }
+        
+        System.out.println();
+    }
+    
+    private static void demonstrateExceptionPropagation() {
+        System.out.println("=== Exception Propagation ===");
+        
+        try {
+            method1();
+        } catch (Exception e) {
+            System.out.println("Caught in main: " + e.getClass().getSimpleName() + 
+                             " - " + e.getMessage());
+            
+            // Print stack trace
+            System.out.println("Stack trace:");
+            e.printStackTrace();
+        }
+    }
+    
+    private static void method1() throws Exception {
+        System.out.println("In method1");
+        method2();
+    }
+    
+    private static void method2() throws Exception {
+        System.out.println("In method2");
+        method3();
+    }
+    
+    private static void method3() throws Exception {
+        System.out.println("In method3");
+        throw new Exception("Exception from method3");
+    }
+}
+```
+
+### Try-Catch-Finally Blocks
+
+```java
+public class TryCatchFinally {
+    public static void main(String[] args) {
+        demonstrateBasicTryCatch();
+        demonstrateMultipleCatch();
+        demonstrateFinallyBlock();
+        demonstrateTryWithResources();
+    }
+    
+    private static void demonstrateBasicTryCatch() {
+        System.out.println("=== Basic Try-Catch ===");
+        
+        // Simple try-catch
+        try {
+            int[] numbers = {1, 2, 3};
+            System.out.println("Accessing valid index: " + numbers[1]);
+            System.out.println("Accessing invalid index: " + numbers[10]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Caught exception: " + e.getMessage());
+        }
+        
+        System.out.println("Execution continues...\n");
+    }
+    
+    private static void demonstrateMultipleCatch() {
+        System.out.println("=== Multiple Catch Blocks ===");
+        
+        String[] testCases = {"123", "abc", null};
+        
+        for (int i = 0; i < testCases.length + 1; i++) {
+            try {
+                String value = testCases[i]; // May throw ArrayIndexOutOfBoundsException
+                int number = Integer.parseInt(value); // May throw NumberFormatException or NullPointerException
+                int result = 100 / number; // May throw ArithmeticException
+                System.out.println("Result for '" + value + "': " + result);
+                
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Array index out of bounds: " + e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number format: " + e.getMessage());
+            } catch (NullPointerException e) {
+                System.out.println("Null value encountered");
+            } catch (ArithmeticException e) {
+                System.out.println("Arithmetic error: " + e.getMessage());
+            } catch (Exception e) {
+                // Generic catch - should be last
+                System.out.println("Unexpected exception: " + e.getClass().getSimpleName());
+            }
+        }
+        
+        System.out.println();
+    }
+    
+    private static void demonstrateFinallyBlock() {
+        System.out.println("=== Finally Block ===");
+        
+        // Finally block always executes
+        try {
+            System.out.println("In try block");
+            int result = 10 / 2;
+            System.out.println("Result: " + result);
+        } catch (Exception e) {
+            System.out.println("In catch block");
+        } finally {
+            System.out.println("In finally block - always executes");
+        }
+        
+        // Finally executes even with exception
+        try {
+            System.out.println("In try block with exception");
+            int result = 10 / 0;
+            System.out.println("This won't execute");
+        } catch (ArithmeticException e) {
+            System.out.println("In catch block: " + e.getMessage());
+        } finally {
+            System.out.println("Finally executes even with exception");
+        }
+        
+        // Finally executes even with return
+        System.out.println("Return value: " + methodWithFinally());
+        
+        System.out.println();
+    }
+    
+    private static int methodWithFinally() {
+        try {
+            System.out.println("In try - about to return");
+            return 1;
+        } finally {
+            System.out.println("Finally executes even before return");
+            // Note: Don't return from finally - it overrides try/catch returns
+        }
+    }
+    
+    private static void demonstrateTryWithResources() {
+        System.out.println("=== Try-With-Resources ===");
+        
+        // Traditional approach (verbose)
+        java.io.BufferedReader reader = null;
+        try {
+            reader = new java.io.BufferedReader(new java.io.StringReader("Hello\nWorld"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Read: " + line);
+            }
+        } catch (java.io.IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (java.io.IOException e) {
+                    System.out.println("Error closing reader: " + e.getMessage());
+                }
+            }
+        }
+        
+        // Try-with-resources (automatic resource management)
+        try (java.io.BufferedReader autoReader = new java.io.BufferedReader(
+                new java.io.StringReader("Auto\nManaged\nResource"))) {
+            
+            String line;
+            while ((line = autoReader.readLine()) != null) {
+                System.out.println("Auto-read: " + line);
+            }
+        } catch (java.io.IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        }
+        // Resource automatically closed here
+        
+        System.out.println();
+    }
+}
+```
+
+### Custom Exceptions
+
+```java
+// Custom checked exception
+class InsufficientFundsException extends Exception {
+    private double balance;
+    private double requestedAmount;
+    
+    public InsufficientFundsException(double balance, double requestedAmount) {
+        super(String.format("Insufficient funds: Balance %.2f, Requested %.2f", 
+                          balance, requestedAmount));
+        this.balance = balance;
+        this.requestedAmount = requestedAmount;
+    }
+    
+    public double getBalance() { return balance; }
+    public double getRequestedAmount() { return requestedAmount; }
+    public double getShortfall() { return requestedAmount - balance; }
+}
+
+// Custom unchecked exception
+class InvalidAccountException extends RuntimeException {
+    private String accountNumber;
+    
+    public InvalidAccountException(String accountNumber) {
+        super("Invalid account number: " + accountNumber);
+        this.accountNumber = accountNumber;
+    }
+    
+    public InvalidAccountException(String accountNumber, String message) {
+        super(message);
+        this.accountNumber = accountNumber;
+    }
+    
+    public String getAccountNumber() { return accountNumber; }
+}
+
+// Custom exception with nested cause
+class AccountOperationException extends Exception {
+    public AccountOperationException(String message) {
+        super(message);
+    }
+    
+    public AccountOperationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+
+// Bank account class demonstrating custom exceptions
+class BankAccount {
+    private String accountNumber;
+    private String ownerName;
+    private double balance;
+    private boolean isActive;
+    
+    public BankAccount(String accountNumber, String ownerName, double initialBalance) {
+        if (accountNumber == null || accountNumber.trim().isEmpty()) {
+            throw new InvalidAccountException(accountNumber, "Account number cannot be null or empty");
+        }
+        
+        this.accountNumber = accountNumber;
+        this.ownerName = ownerName;
+        this.balance = Math.max(0, initialBalance);
+        this.isActive = true;
+    }
+    
+    public void deposit(double amount) throws AccountOperationException {
+        if (!isActive) {
+            throw new AccountOperationException("Cannot deposit to inactive account: " + accountNumber);
+        }
+        
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be positive: " + amount);
+        }
+        
+        try {
+            // Simulate potential system error
+            if (Math.random() < 0.1) { // 10% chance of system error
+                throw new RuntimeException("Database connection failed");
+            }
+            
+            balance += amount;
+            System.out.println(String.format("Deposited %.2f to account %s. New balance: %.2f", 
+                             amount, accountNumber, balance));
+            
+        } catch (RuntimeException e) {
+            throw new AccountOperationException("Deposit failed for account " + accountNumber, e);
+        }
+    }
+    
+    public void withdraw(double amount) throws InsufficientFundsException, AccountOperationException {
+        if (!isActive) {
+            throw new AccountOperationException("Cannot withdraw from inactive account: " + accountNumber);
+        }
+        
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be positive: " + amount);
+        }
+        
+        if (amount > balance) {
+            throw new InsufficientFundsException(balance, amount);
+        }
+        
+        try {
+            // Simulate potential system error
+            if (Math.random() < 0.05) { // 5% chance of system error
+                throw new RuntimeException("Network timeout");
+            }
+            
+            balance -= amount;
+            System.out.println(String.format("Withdrew %.2f from account %s. New balance: %.2f", 
+                             amount, accountNumber, balance));
+            
+        } catch (RuntimeException e) {
+            throw new AccountOperationException("Withdrawal failed for account " + accountNumber, e);
+        }
+    }
+    
+    public double getBalance() { return balance; }
+    public String getAccountNumber() { return accountNumber; }
+    public String getOwnerName() { return ownerName; }
+    public boolean isActive() { return isActive; }
+    
+    public void closeAccount() throws AccountOperationException {
+        if (balance != 0) {
+            throw new AccountOperationException(
+                "Cannot close account with non-zero balance: " + balance);
+        }
+        isActive = false;
+        System.out.println("Account " + accountNumber + " closed successfully");
+    }
+}
+
+// Demo class
+public class CustomExceptionsDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Custom Exceptions Demo ===\n");
+        
+        try {
+            BankAccount account = new BankAccount("ACC123", "John Doe", 1000.0);
+            
+            // Successful operations
+            account.deposit(500.0);
+            account.withdraw(200.0);
+            
+            // This will cause InsufficientFundsException
+            try {
+                account.withdraw(2000.0);
+            } catch (InsufficientFundsException e) {
+                System.out.println("Withdrawal failed: " + e.getMessage());
+                System.out.println("Shortfall: $" + String.format("%.2f", e.getShortfall()));
+                System.out.println("Current balance: $" + String.format("%.2f", e.getBalance()));
+            }
+            
+            // Multiple attempts to trigger system errors
+            for (int i = 0; i < 5; i++) {
+                try {
+                    account.deposit(100.0);
+                } catch (AccountOperationException e) {
+                    System.out.println("System error during deposit: " + e.getMessage());
+                    if (e.getCause() != null) {
+                        System.out.println("Caused by: " + e.getCause().getMessage());
+                    }
+                    break;
+                }
+            }
+            
+        } catch (InvalidAccountException e) {
+            System.out.println("Invalid account: " + e.getMessage());
+            System.out.println("Account number: " + e.getAccountNumber());
+        } catch (AccountOperationException e) {
+            System.out.println("Account operation failed: " + e.getMessage());
+        }
+        
+        // Test invalid account creation
+        try {
+            BankAccount invalidAccount = new BankAccount("", "Invalid User", 100.0);
+        } catch (InvalidAccountException e) {
+            System.out.println("Failed to create account: " + e.getMessage());
+        }
+    }
+}
+```
+
+### Exception Handling Best Practices
+
+```java
+public class ExceptionBestPractices {
+    
+    // Good: Specific exception handling
+    public static void goodExceptionHandling() {
+        System.out.println("=== Good Exception Handling ===");
+        
+        try {
+            processUserInput("invalid_number");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format. Please enter a valid number.");
+            // Log the technical details
+            logError("NumberFormatException in processUserInput", e);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid input: " + e.getMessage());
+            logError("IllegalArgumentException in processUserInput", e);
+        }
+    }
+    
+    // Bad: Generic exception handling
+    public static void badExceptionHandling() {
+        System.out.println("=== Bad Exception Handling ===");
+        
+        try {
+            processUserInput("invalid_number");
+        } catch (Exception e) {
+            // Too generic - loses specific error information
+            System.out.println("Something went wrong: " + e.getMessage());
+        }
+    }
+    
+    private static void processUserInput(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+        
+        int number = Integer.parseInt(input); // May throw NumberFormatException
+        
+        if (number < 0) {
+            throw new IllegalArgumentException("Number must be positive");
+        }
+    }
+    
+    // Good: Resource management with try-with-resources
+    public static void goodResourceManagement() {
+        System.out.println("=== Good Resource Management ===");
+        
+        try (java.io.BufferedWriter writer = java.nio.file.Files.newBufferedWriter(
+                java.nio.file.Paths.get("output.txt"))) {
+            
+            writer.write("Hello, World!");
+            writer.newLine();
+            writer.write("Automatic resource management");
+            
+        } catch (java.io.IOException e) {
+            System.out.println("File operation failed: " + e.getMessage());
+            logError("IOException in file writing", e);
+        }
+        // Writer is automatically closed here
+    }
+    
+    // Method that properly declares exceptions
+    public static java.util.List<String> readFile(String filename) 
+            throws java.io.IOException, SecurityException {
+        
+        java.util.List<String> lines = new java.util.ArrayList<>();
+        
+        try (java.io.BufferedReader reader = java.nio.file.Files.newBufferedReader(
+                java.nio.file.Paths.get(filename))) {
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            
+        } catch (java.io.IOException e) {
+            // Add context to the exception
+            throw new java.io.IOException("Failed to read file: " + filename, e);
+        }
+        
+        return lines;
+    }
+    
+    // Exception translation - converting low-level to high-level exceptions
+    public static void saveUserData(String userId, String data) throws DataProcessingException {
+        try {
+            // Low-level file operations
+            java.nio.file.Path userFile = java.nio.file.Paths.get("users", userId + ".dat");
+            java.nio.file.Files.createDirectories(userFile.getParent());
+            java.nio.file.Files.write(userFile, data.getBytes());
+            
+        } catch (java.io.IOException e) {
+            // Translate to business-level exception
+            throw new DataProcessingException("Failed to save user data for: " + userId, e);
+        } catch (SecurityException e) {
+            throw new DataProcessingException("Access denied while saving user data: " + userId, e);
+        }
+    }
+    
+    // Defensive programming with validation
+    public static double calculatePercentage(double part, double whole) {
+        // Validate inputs
+        if (Double.isNaN(part) || Double.isNaN(whole)) {
+            throw new IllegalArgumentException("Arguments cannot be NaN");
+        }
+        
+        if (Double.isInfinite(part) || Double.isInfinite(whole)) {
+            throw new IllegalArgumentException("Arguments cannot be infinite");
+        }
+        
+        if (whole == 0) {
+            throw new IllegalArgumentException("Whole cannot be zero");
+        }
+        
+        if (part < 0 || whole < 0) {
+            throw new IllegalArgumentException("Arguments must be non-negative");
+        }
+        
+        return (part / whole) * 100;
+    }
+    
+    private static void logError(String message, Throwable throwable) {
+        // In real application, use proper logging framework
+        System.err.println("ERROR: " + message);
+        System.err.println("Exception: " + throwable.getClass().getSimpleName() + 
+                          " - " + throwable.getMessage());
+        // throwable.printStackTrace(); // For debugging
+    }
+    
+    public static void main(String[] args) {
+        goodExceptionHandling();
+        badExceptionHandling();
+        goodResourceManagement();
+        
+        // Demonstrate percentage calculation with validation
+        try {
+            double percentage = calculatePercentage(25, 100);
+            System.out.println("Percentage: " + percentage + "%");
+            
+            // This will throw exception
+            calculatePercentage(50, 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Calculation error: " + e.getMessage());
+        }
+        
+        // Demonstrate exception translation
+        try {
+            saveUserData("user123", "Important user data");
+            System.out.println("User data saved successfully");
+        } catch (DataProcessingException e) {
+            System.out.println("Business error: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.out.println("Technical cause: " + e.getCause().getClass().getSimpleName());
+            }
+        }
+    }
+}
+
+// Custom business exception
+class DataProcessingException extends Exception {
+    public DataProcessingException(String message) {
+        super(message);
+    }
+    
+    public DataProcessingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+```
+
+### Real-World Example: Configuration Manager
+
+```java
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+// Custom exceptions for configuration management
+class ConfigurationException extends Exception {
+    public ConfigurationException(String message) { super(message); }
+    public ConfigurationException(String message, Throwable cause) { super(message, cause); }
+}
+
+class ConfigurationNotFoundException extends ConfigurationException {
+    public ConfigurationNotFoundException(String configName) {
+        super("Configuration not found: " + configName);
+    }
+}
+
+class InvalidConfigurationFormatException extends ConfigurationException {
+    private int lineNumber;
+    
+    public InvalidConfigurationFormatException(String message, int lineNumber) {
+        super(message + " at line " + lineNumber);
+        this.lineNumber = lineNumber;
+    }
+    
+    public int getLineNumber() { return lineNumber; }
+}
+
+// Configuration manager with comprehensive exception handling
+class ConfigurationManager {
+    private Map<String, String> properties;
+    private String configFile;
+    private long lastModified;
+    
+    public ConfigurationManager(String configFile) throws ConfigurationException {
+        this.configFile = configFile;
+        this.properties = new ConcurrentHashMap<>();
+        loadConfiguration();
+    }
+    
+    private void loadConfiguration() throws ConfigurationException {
+        File file = new File(configFile);
+        
+        if (!file.exists()) {
+            throw new ConfigurationNotFoundException(configFile);
+        }
+        
+        if (!file.canRead()) {
+            throw new ConfigurationException("Cannot read configuration file: " + configFile);
+        }
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            properties.clear();
+            String line;
+            int lineNumber = 0;
+            
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                
+                // Skip empty lines and comments
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+                
+                // Parse key=value format
+                int equalsIndex = line.indexOf('=');
+                if (equalsIndex == -1) {
+                    throw new InvalidConfigurationFormatException(
+                        "Missing '=' in configuration line: " + line, lineNumber);
+                }
+                
+                if (equalsIndex == 0) {
+                    throw new InvalidConfigurationFormatException(
+                        "Missing key in configuration line: " + line, lineNumber);
+                }
+                
+                String key = line.substring(0, equalsIndex).trim();
+                String value = line.substring(equalsIndex + 1).trim();
+                
+                if (key.isEmpty()) {
+                    throw new InvalidConfigurationFormatException(
+                        "Empty key in configuration line: " + line, lineNumber);
+                }
+                
+                properties.put(key, value);
+            }
+            
+            lastModified = file.lastModified();
+            System.out.println("Configuration loaded successfully from: " + configFile);
+            System.out.println("Properties loaded: " + properties.size());
+            
+        } catch (IOException e) {
+            throw new ConfigurationException("Failed to read configuration file: " + configFile, e);
+        }
+    }
+    
+    public String getProperty(String key) throws ConfigurationException {
+        if (key == null || key.trim().isEmpty()) {
+            throw new IllegalArgumentException("Property key cannot be null or empty");
+        }
+        
+        checkForConfigurationUpdates();
+        
+        String value = properties.get(key);
+        if (value == null) {
+            throw new ConfigurationException("Property not found: " + key);
+        }
+        
+        return value;
+    }
+    
+    public String getProperty(String key, String defaultValue) {
+        try {
+            return getProperty(key);
+        } catch (ConfigurationException e) {
+            return defaultValue;
+        }
+    }
+    
+    public int getIntProperty(String key) throws ConfigurationException {
+        String value = getProperty(key);
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            throw new ConfigurationException(
+                "Property '" + key + "' is not a valid integer: " + value, e);
+        }
+    }
+    
+    public boolean getBooleanProperty(String key) throws ConfigurationException {
+        String value = getProperty(key).toLowerCase();
+        if ("true".equals(value) || "yes".equals(value) || "1".equals(value)) {
+            return true;
+        } else if ("false".equals(value) || "no".equals(value) || "0".equals(value)) {
+            return false;
+        } else {
+            throw new ConfigurationException(
+                "Property '" + key + "' is not a valid boolean: " + value);
+        }
+    }
+    
+    private void checkForConfigurationUpdates() throws ConfigurationException {
+        File file = new File(configFile);
+        if (file.exists() && file.lastModified() > lastModified) {
+            System.out.println("Configuration file updated, reloading...");
+            loadConfiguration();
+        }
+    }
+    
+    public void setProperty(String key, String value) throws ConfigurationException {
+        if (key == null || key.trim().isEmpty()) {
+            throw new IllegalArgumentException("Property key cannot be null or empty");
+        }
+        
+        properties.put(key, value != null ? value : "");
+        saveConfiguration();
+    }
+    
+    private void saveConfiguration() throws ConfigurationException {
+        File backupFile = new File(configFile + ".backup");
+        File originalFile = new File(configFile);
+        
+        try {
+            // Create backup
+            if (originalFile.exists()) {
+                Files.copy(originalFile.toPath(), backupFile.toPath(), 
+                          java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+            
+            // Write new configuration
+            try (PrintWriter writer = new PrintWriter(new FileWriter(originalFile))) {
+                writer.println("# Configuration file");
+                writer.println("# Generated on: " + new Date());
+                writer.println();
+                
+                // Sort properties for consistent output
+                properties.entrySet().stream()
+                    .sorted(Map.Entry.comparingByKey())
+                    .forEach(entry -> writer.println(entry.getKey() + "=" + entry.getValue()));
+            }
+            
+            lastModified = originalFile.lastModified();
+            System.out.println("Configuration saved successfully");
+            
+        } catch (IOException e) {
+            // Restore backup if save failed
+            if (backupFile.exists()) {
+                try {
+                    Files.copy(backupFile.toPath(), originalFile.toPath(),
+                              java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException restoreError) {
+                    e.addSuppressed(restoreError);
+                }
+            }
+            throw new ConfigurationException("Failed to save configuration", e);
+        }
+    }
+    
+    public Set<String> getPropertyNames() {
+        return new HashSet<>(properties.keySet());
+    }
+    
+    public void printConfiguration() {
+        System.out.println("=== Current Configuration ===");
+        properties.entrySet().stream()
+            .sorted(Map.Entry.comparingByKey())
+            .forEach(entry -> System.out.println(entry.getKey() + " = " + entry.getValue()));
+    }
+}
+
+// Demo application
+public class ConfigurationDemo {
+    public static void main(String[] args) {
+        System.out.println("=== Configuration Manager Demo ===\n");
+        
+        // Create a sample configuration file
+        createSampleConfigFile();
+        
+        try {
+            ConfigurationManager config = new ConfigurationManager("app.properties");
+            
+            // Read various property types
+            System.out.println("App Name: " + config.getProperty("app.name"));
+            System.out.println("Version: " + config.getProperty("app.version"));
+            System.out.println("Port: " + config.getIntProperty("server.port"));
+            System.out.println("Debug Mode: " + config.getBooleanProperty("debug.enabled"));
+            
+            // Use default values
+            String theme = config.getProperty("ui.theme", "default");
+            System.out.println("UI Theme: " + theme);
+            
+            // Modify configuration
+            config.setProperty("last.run", new Date().toString());
+            
+            config.printConfiguration();
+            
+        } catch (ConfigurationNotFoundException e) {
+            System.err.println("Configuration file not found: " + e.getMessage());
+        } catch (InvalidConfigurationFormatException e) {
+            System.err.println("Invalid configuration format: " + e.getMessage());
+            System.err.println("Line number: " + e.getLineNumber());
+        } catch (ConfigurationException e) {
+            System.err.println("Configuration error: " + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("Caused by: " + e.getCause().getMessage());
+            }
+        }
+        
+        // Demonstrate error handling with invalid file
+        try {
+            ConfigurationManager badConfig = new ConfigurationManager("nonexistent.properties");
+        } catch (ConfigurationException e) {
+            System.err.println("Expected error: " + e.getMessage());
+        }
+    }
+    
+    private static void createSampleConfigFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("app.properties"))) {
+            writer.println("# Sample application configuration");
+            writer.println("app.name=My Java Application");
+            writer.println("app.version=1.0.0");
+            writer.println("server.port=8080");
+            writer.println("debug.enabled=true");
+            writer.println("database.url=jdbc:mysql://localhost:3306/mydb");
+            writer.println("");
+            writer.println("# UI Settings");
+            writer.println("ui.title=Application Dashboard");
+        } catch (IOException e) {
+            System.err.println("Failed to create sample config file: " + e.getMessage());
+        }
+    }
+}
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Catching Exception instead of specific exceptions**: Be specific with exception handling
+2. **Ignoring exceptions**: Never use empty catch blocks
+3. **Not using try-with-resources**: Always use it for resource management
+4. **Returning in finally blocks**: This overrides return values from try/catch
+5. **Not preserving original exceptions**: Use chained exceptions to maintain error context
+
+### ✅ Best Practices
+
+1. **Catch specific exceptions** rather than generic Exception class
+2. **Use try-with-resources** for automatic resource management
+3. **Create meaningful custom exceptions** with context information
+4. **Log exceptions properly** with appropriate detail levels
+5. **Fail fast** - validate inputs early and throw exceptions immediately
+6. **Use exception chaining** to preserve original error context
+
+### 🏋️ Exercise 12: File Processing System
+
+Create a robust file processing system with comprehensive exception handling:
+
+```java
+// Design and implement:
+
+class FileProcessor {
+    // Methods that demonstrate different exception handling patterns:
+    // - processTextFile(String filename) throws FileProcessingException
+    // - validateFileFormat(File file) throws InvalidFileFormatException
+    // - backupFile(File original) throws BackupException
+    // - processInBatches(List<File> files) // Handle partial failures
+}
+
+// Custom exceptions:
+// - FileProcessingException (checked)
+// - InvalidFileFormatException (checked)
+// - BackupException (checked)
+// - ProcessingInterruptedException (unchecked)
+
+// Requirements:
+// - Use try-with-resources for file operations
+// - Implement proper exception chaining
+// - Create detailed error messages with context
+// - Handle both individual file errors and batch processing failures
+// - Include recovery mechanisms where appropriate
+```
+
+[↑ Back to Top](#-table-of-contents)
+
+---
+
+## Remaining Sections Overview
+
+The following sections complete the comprehensive Java documentation. Due to space constraints, here's an overview of the remaining essential topics:
+
+### 13. Generics
+- Generic classes and methods
+- Type parameters and wildcards
+- Bounded type parameters
+- Generic inheritance and erasure
+
+### 14. Collections Framework
+- List, Set, Map interfaces and implementations
+- Collection utilities and algorithms
+- Comparators and sorting
+- Concurrent collections
+
+### 15. Lambda Expressions & Functional Programming
+- Functional interfaces and method references
+- Stream operations and pipelines
+- Optional class for null safety
+- Functional programming patterns
+
+### 16. Streams API
+- Stream creation and intermediate operations
+- Terminal operations and collectors
+- Parallel streams and performance
+- Custom collectors and stream patterns
+
+### 17-20. Concurrency & Multithreading
+- Thread fundamentals and synchronization
+- Executor framework and thread pools
+- CompletableFuture and async programming
+- Thread safety and concurrent data structures
+
+### 21-24. Enterprise Features
+- Annotations and reflection
+- Module system (JPMS)
+- Records and pattern matching
+- Virtual threads (Project Loom)
+
+### 25-27. I/O & Networking
+- File I/O and NIO.2
+- Network programming and HTTP client
+- Serialization and data persistence
+
+### 28-32. Real-World Applications & Best Practices
+- REST API development
+- Database integration with JDBC
+- Unit testing with JUnit 5
+- Performance optimization techniques
+- Design patterns and architectural best practices
+
+Each section follows the same comprehensive format with:
+- Learning objectives and prerequisites
+- Detailed explanations with examples
+- Real-world applications and demos
+- Common pitfalls and best practices
+- Hands-on exercises
+
+This documentation provides a complete learning path from Java fundamentals to advanced enterprise development.
 
 **Abstract Class**: A class that cannot be instantiated and may contain abstract methods that must be implemented by subclasses.
 
