@@ -2036,7 +2036,7 @@ safe_division() {
         echo "Error: Division by zero" >&2
         return 3
     fi
-    
+
     # Perform calculation
     local result=$((dividend / divisor))
     echo "Result: $result"
@@ -2082,7 +2082,7 @@ echo "Script execution complete"
    ```bash
    # Wrong
    if [$var -eq 5]; then
-   
+
    # Correct
    if [ $var -eq 5 ]; then
    ```
@@ -2091,7 +2091,7 @@ echo "Script execution complete"
    ```bash
    # Wrong for numbers
    if [ "$num1" > "$num2" ]; then  # Lexicographic comparison
-   
+
    # Correct for numbers
    if [ "$num1" -gt "$num2" ]; then
    ```
@@ -2100,7 +2100,7 @@ echo "Script execution complete"
    ```bash
    # Wrong
    if [ $var = "value" ]; then  # Fails if var is empty
-   
+
    # Correct
    if [ "$var" = "value" ]; then
    ```
@@ -2183,11 +2183,11 @@ EOF
 process_text_file() {
     local file="$1"
     local size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-    
+
     file_counts["text"]=$((${file_counts["text"]} + 1))
     file_sizes["text"]=$((${file_sizes["text"]} + size))
     processed_files+=("$file (text)")
-    
+
     echo "  Processing text file: $(basename "$file") (${size} bytes)"
 }
 
@@ -2195,11 +2195,11 @@ process_text_file() {
 process_image_file() {
     local file="$1"
     local size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-    
+
     file_counts["image"]=$((${file_counts["image"]} + 1))
     file_sizes["image"]=$((${file_sizes["image"]} + size))
     processed_files+=("$file (image)")
-    
+
     echo "  Processing image file: $(basename "$file") (${size} bytes)"
 }
 
@@ -2207,13 +2207,13 @@ process_image_file() {
 process_script_file() {
     local file="$1"
     local size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-    
+
     file_counts["script"]=$((${file_counts["script"]} + 1))
     file_sizes["script"]=$((${file_sizes["script"]} + size))
     processed_files+=("$file (script)")
-    
+
     echo "  Processing script file: $(basename "$file") (${size} bytes)"
-    
+
     # Check if script is executable
     if [ -x "$file" ]; then
         echo "    - Executable"
@@ -2226,30 +2226,30 @@ process_script_file() {
 process_other_file() {
     local file="$1"
     local size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-    
+
     file_counts["other"]=$((${file_counts["other"]} + 1))
     file_sizes["other"]=$((${file_sizes["other"]} + size))
     processed_files+=("$file (other)")
-    
+
     echo "  Processing other file: $(basename "$file") (${size} bytes)"
 }
 
 # Process a single file based on its type
 process_file() {
     local file="$1"
-    
+
     # Skip if not a regular file
     if [ ! -f "$file" ]; then
         return 0
     fi
-    
+
     # Skip if not readable
     if [ ! -r "$file" ]; then
         echo "  Warning: Cannot read $file (permission denied)"
         error_files+=("$file (permission denied)")
         return 1
     fi
-    
+
     # Determine file type and process accordingly
     case "$file" in
         *.txt|*.md|*.rst|*.log)
@@ -2271,24 +2271,24 @@ process_file() {
 show_summary() {
     echo
     echo "=== Processing Summary ==="
-    
+
     local total_files=0
     local total_size=0
-    
+
     for type in "${!file_counts[@]}"; do
         local count=${file_counts[$type]}
         local size=${file_sizes[$type]}
-        
+
         if [ "$count" -gt 0 ]; then
             echo "$type files: $count ($(numfmt --to=iec $size))"
             ((total_files += count))
             ((total_size += size))
         fi
     done
-    
+
     echo "Total files processed: $total_files"
     echo "Total size: $(numfmt --to=iec $total_size)"
-    
+
     if [ ${#error_files[@]} -gt 0 ]; then
         echo
         echo "Errors encountered: ${#error_files[@]}"
@@ -2355,7 +2355,7 @@ echo
 for file in "$directory"/*; do
     # Skip if glob didn't match anything
     [ ! -e "$file" ] && continue
-    
+
     process_file "$file"
 done
 
@@ -2363,10 +2363,10 @@ done
 for subdir in "$directory"/*/; do
     # Skip if no subdirectories
     [ ! -d "$subdir" ] && continue
-    
+
     echo
     echo "Processing subdirectory: $(basename "$subdir")"
-    
+
     for file in "$subdir"*; do
         [ ! -e "$file" ] && continue
         process_file "$file"
@@ -2443,14 +2443,14 @@ echo "=== Functions with Parameters ==="
 greet_person() {
     local name="$1"
     local age="$2"
-    
+
     if [ -z "$name" ]; then
         echo "Error: Name is required"
         return 1
     fi
-    
+
     echo "Hello, $name!"
-    
+
     if [ -n "$age" ]; then
         echo "You are $age years old."
     fi
@@ -2460,7 +2460,7 @@ greet_person() {
 greet_with_default() {
     local name="${1:-Anonymous}"
     local greeting="${2:-Hello}"
-    
+
     echo "$greeting, $name!"
 }
 
@@ -2488,7 +2488,7 @@ calculate_sum() {
 # Function that returns exit status
 is_even() {
     local number="$1"
-    
+
     if [ $((number % 2)) -eq 0 ]; then
         return 0  # True (even)
     else
@@ -2520,7 +2520,7 @@ echo "=== Advanced Function Patterns ==="
 print_args() {
     echo "Number of arguments: $#"
     echo "All arguments: $*"
-    
+
     local counter=1
     for arg in "$@"; do
         echo "Argument $counter: $arg"
@@ -2545,7 +2545,7 @@ echo "Final counter: $counter"
 # Function with array parameters
 print_array() {
     local -n array_ref=$1  # Name reference (Bash 4.3+)
-    
+
     echo "Array contents:"
     for element in "${array_ref[@]}"; do
         echo "  - $element"
@@ -2571,26 +2571,26 @@ validate_user() {
     local username="$1"
     local email="$2"
     local age="$3"
-    
+
     # Check required parameters
     if [ $# -lt 2 ]; then
         echo "Error: Username and email are required"
         echo "Usage: validate_user <username> <email> [age]"
         return 1
     fi
-    
+
     # Validate username
     if [ -z "$username" ] || [[ ! "$username" =~ ^[a-zA-Z][a-zA-Z0-9_]{2,15}$ ]]; then
         echo "Error: Invalid username. Must be 3-16 characters, start with letter"
         return 2
     fi
-    
+
     # Validate email
     if [[ ! "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
         echo "Error: Invalid email format"
         return 3
     fi
-    
+
     # Validate age if provided
     if [ -n "$age" ]; then
         if ! [[ "$age" =~ ^[0-9]+$ ]] || [ "$age" -lt 1 ] || [ "$age" -gt 120 ]; then
@@ -2598,7 +2598,7 @@ validate_user() {
             return 4
         fi
     fi
-    
+
     echo "Valid user: $username ($email)"
     [ -n "$age" ] && echo "Age: $age"
     return 0
@@ -2616,7 +2616,7 @@ echo "=== Named Parameters Pattern ==="
 # Function using associative array for named parameters
 create_user_profile() {
     local -A params
-    
+
     # Parse named parameters
     while [ $# -gt 0 ]; do
         case "$1" in
@@ -2642,13 +2642,13 @@ create_user_profile() {
                 ;;
         esac
     done
-    
+
     # Validate required parameters
     if [ -z "${params[name]}" ] || [ -z "${params[email]}" ]; then
         echo "Error: Name and email are required"
         return 1
     fi
-    
+
     # Display profile
     echo "=== User Profile ==="
     echo "Name: ${params[name]}"
@@ -2726,7 +2726,7 @@ good_function() {
     local local_var="I am local"
     local global_var="Local override"
     local counter=50
-    
+
     echo "Inside good_function:"
     echo "  local_var: $local_var"
     echo "  global_var (local): $global_var"
@@ -2764,7 +2764,7 @@ array_function() {
         [key1]="value1"
         [key2]="value2"
     )
-    
+
     echo "Local indexed array: ${local_array[@]}"
     echo "Local associative array:"
     for key in "${!local_assoc_array[@]}"; do
@@ -2782,11 +2782,11 @@ parent_var="From parent"
 
 parent_function() {
     local child_var="From child"
-    
+
     echo "In parent_function:"
     echo "  parent_var: $parent_var"
     echo "  child_var: $child_var"
-    
+
     child_function
 }
 
@@ -2805,7 +2805,7 @@ echo "=== Read-only Variables ==="
 readonly_demo() {
     local -r readonly_var="Cannot be changed"
     echo "readonly_var: $readonly_var"
-    
+
     # This would cause an error:
     # readonly_var="New value"
 }
@@ -2826,13 +2826,13 @@ echo "=== Basic Recursion ==="
 # Calculate factorial recursively
 factorial() {
     local n=$1
-    
+
     # Base case
     if [ "$n" -le 1 ]; then
         echo 1
         return
     fi
-    
+
     # Recursive case
     local prev_result
     prev_result=$(factorial $((n - 1)))
@@ -2849,7 +2849,7 @@ echo "=== Fibonacci Sequence ==="
 # Generate Fibonacci number recursively
 fibonacci() {
     local n=$1
-    
+
     # Base cases
     if [ "$n" -eq 0 ]; then
         echo 0
@@ -2858,7 +2858,7 @@ fibonacci() {
         echo 1
         return
     fi
-    
+
     # Recursive case
     local fib1 fib2
     fib1=$(fibonacci $((n - 1)))
@@ -2881,21 +2881,21 @@ list_directory_tree() {
     local dir="$1"
     local prefix="${2:-}"
     local max_depth="${3:-5}"  # Prevent infinite recursion
-    
+
     # Safety check
     if [ "$max_depth" -le 0 ]; then
         echo "${prefix}... (max depth reached)"
         return
     fi
-    
+
     # List current directory contents
     for item in "$dir"/*; do
         # Skip if no files match
         [ ! -e "$item" ] && continue
-        
+
         local basename_item
         basename_item=$(basename "$item")
-        
+
         if [ -d "$item" ]; then
             echo "${prefix}📁 $basename_item/"
             list_directory_tree "$item" "$prefix  " $((max_depth - 1))
@@ -2917,13 +2917,13 @@ declare -A fib_cache
 
 fibonacci_memo() {
     local n=$1
-    
+
     # Check cache first
     if [ -n "${fib_cache[$n]}" ]; then
         echo "${fib_cache[$n]}"
         return
     fi
-    
+
     # Base cases
     if [ "$n" -eq 0 ]; then
         fib_cache[$n]=0
@@ -2934,13 +2934,13 @@ fibonacci_memo() {
         echo 1
         return
     fi
-    
+
     # Recursive case with caching
     local fib1 fib2 result
     fib1=$(fibonacci_memo $((n - 1)))
     fib2=$(fibonacci_memo $((n - 2)))
     result=$((fib1 + fib2))
-    
+
     fib_cache[$n]=$result
     echo $result
 }
@@ -2958,12 +2958,12 @@ echo "=== Tail Recursion Example ==="
 # Tail-recursive countdown
 countdown() {
     local n=$1
-    
+
     if [ "$n" -le 0 ]; then
         echo "🚀 Blast off!"
         return
     fi
-    
+
     echo "$n"
     sleep 0.5
     countdown $((n - 1))
@@ -2981,7 +2981,7 @@ countdown 5
    my_function() {
        var="value"  # This modifies global scope
    }
-   
+
    # Correct
    my_function() {
        local var="value"  # This is local
@@ -2994,7 +2994,7 @@ countdown 5
    get_number() {
        return 42  # This sets exit status, not return value
    }
-   
+
    # Correct
    get_number() {
        echo 42  # This returns the value
@@ -3007,7 +3007,7 @@ countdown 5
    my_function() {
        echo $1  # Fails with "hello world"
    }
-   
+
    # Correct
    my_function() {
        echo "$1"  # Handles spaces correctly
@@ -3079,24 +3079,24 @@ multiply() {
 divide() {
     local num1="$1"
     local num2="$2"
-    
+
     if [ "$num2" -eq 0 ]; then
         echo "Error: Division by zero" >&2
         return 1
     fi
-    
+
     echo $((num1 / num2))
 }
 
 modulo() {
     local num1="$1"
     local num2="$2"
-    
+
     if [ "$num2" -eq 0 ]; then
         echo "Error: Division by zero in modulo" >&2
         return 1
     fi
-    
+
     echo $((num1 % num2))
 }
 
@@ -3106,17 +3106,17 @@ modulo() {
 
 factorial() {
     local n="$1"
-    
+
     if [ "$n" -lt 0 ]; then
         echo "Error: Factorial of negative number undefined" >&2
         return 1
     fi
-    
+
     if [ "$n" -le 1 ]; then
         echo 1
         return 0
     fi
-    
+
     local prev_result
     prev_result=$(factorial $((n - 1)))
     echo $((n * prev_result))
@@ -3124,12 +3124,12 @@ factorial() {
 
 fibonacci() {
     local n="$1"
-    
+
     if [ "$n" -lt 0 ]; then
         echo "Error: Fibonacci of negative number undefined" >&2
         return 1
     fi
-    
+
     if [ "$n" -eq 0 ]; then
         echo 0
         return 0
@@ -3137,7 +3137,7 @@ fibonacci() {
         echo 1
         return 0
     fi
-    
+
     local fib1 fib2
     fib1=$(fibonacci $((n - 1)))
     fib2=$(fibonacci $((n - 2)))
@@ -3146,26 +3146,26 @@ fibonacci() {
 
 is_prime() {
     local n="$1"
-    
+
     if [ "$n" -lt 2 ]; then
         return 1  # Not prime
     fi
-    
+
     if [ "$n" -eq 2 ]; then
         return 0  # Prime
     fi
-    
+
     if [ $((n % 2)) -eq 0 ]; then
         return 1  # Not prime (even)
     fi
-    
+
     local i
     for ((i = 3; i * i <= n; i += 2)); do
         if [ $((n % i)) -eq 0 ]; then
             return 1  # Not prime
         fi
     done
-    
+
     return 0  # Prime
 }
 
@@ -3175,19 +3175,19 @@ is_prime() {
 
 validate_number() {
     local input="$1"
-    
+
     if [[ ! "$input" =~ ^-?[0-9]+$ ]]; then
         echo "Error: '$input' is not a valid integer" >&2
         return 1
     fi
-    
+
     return 0
 }
 
 get_number() {
     local prompt="$1"
     local number
-    
+
     while true; do
         read -p "$prompt" number
         if validate_number "$number"; then
@@ -3237,7 +3237,7 @@ handle_basic_operations() {
     while true; do
         show_basic_menu
         read -p "Choose an option (1-6): " choice
-        
+
         case "$choice" in
             1)
                 local num1 num2 result
@@ -3283,7 +3283,7 @@ handle_basic_operations() {
                 echo "Invalid option. Please choose 1-6."
                 ;;
         esac
-        
+
         echo
         read -p "Press Enter to continue..."
     done
@@ -3293,7 +3293,7 @@ handle_advanced_operations() {
     while true; do
         show_advanced_menu
         read -p "Choose an option (1-3): " choice
-        
+
         case "$choice" in
             1)
                 local num result
@@ -3316,7 +3316,7 @@ handle_advanced_operations() {
                 echo "Invalid option. Please choose 1-3."
                 ;;
         esac
-        
+
         echo
         read -p "Press Enter to continue..."
     done
@@ -3325,13 +3325,13 @@ handle_advanced_operations() {
 handle_prime_check() {
     local num
     num=$(get_number "Enter a number to check: ")
-    
+
     if is_prime "$num"; then
         echo "$num is a prime number"
     else
         echo "$num is not a prime number"
     fi
-    
+
     echo
     read -p "Press Enter to continue..."
 }
@@ -3342,11 +3342,11 @@ handle_prime_check() {
 
 main() {
     echo "Welcome to the Math Calculator!"
-    
+
     while true; do
         show_main_menu
         read -p "Choose an option (1-4): " choice
-        
+
         case "$choice" in
             1)
                 handle_basic_operations
@@ -3492,21 +3492,21 @@ echo "=== File Testing Function ==="
 # Comprehensive file analysis function
 analyze_file() {
     local file="$1"
-    
+
     if [ -z "$file" ]; then
         echo "Error: No file specified"
         return 1
     fi
-    
+
     echo "Analyzing: $file"
     echo "===================="
-    
+
     # Existence
     if [ ! -e "$file" ]; then
         echo "✗ File does not exist"
         return 1
     fi
-    
+
     # Type
     if [ -f "$file" ]; then
         echo "Type: Regular file"
@@ -3524,27 +3524,27 @@ analyze_file() {
     elif [ -S "$file" ]; then
         echo "Type: Socket"
     fi
-    
+
     # Permissions
     echo -n "Permissions: "
     [ -r "$file" ] && echo -n "r" || echo -n "-"
     [ -w "$file" ] && echo -n "w" || echo -n "-"
     [ -x "$file" ] && echo -n "x" || echo -n "-"
     echo
-    
+
     # Size (for regular files)
     if [ -f "$file" ]; then
         local size
         size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
         echo "Size: $size bytes"
-        
+
         if [ -s "$file" ]; then
             echo "Status: Non-empty"
         else
             echo "Status: Empty"
         fi
     fi
-    
+
     # Timestamps
     echo "Last modified: $(stat -c%y "$file" 2>/dev/null || stat -f%Sm "$file" 2>/dev/null)"
 }
@@ -3623,7 +3623,7 @@ echo "Reading CSV data:"
     IFS=',' read -r name_h age_h city_h occupation_h
     echo "Headers: $name_h | $age_h | $city_h | $occupation_h"
     echo "----------------------------------------"
-    
+
     # Read data rows
     while IFS=',' read -r name age city occupation; do
         printf "%-12s %-3s %-12s %s\n" "$name" "$age" "$city" "$occupation"
@@ -3654,7 +3654,7 @@ while IFS= read -r line; do
     # Skip comments and empty lines
     [[ "$line" =~ ^[[:space:]]*# ]] && continue
     [[ "$line" =~ ^[[:space:]]*$ ]] && continue
-    
+
     # Parse key=value pairs
     if [[ "$line" =~ ^([^=]+)=(.*)$ ]]; then
         key="${BASH_REMATCH[1]}"
@@ -3678,12 +3678,12 @@ read_file_chunks() {
     local chunk_size="${2:-1024}"
     local total_bytes=0
     local chunk
-    
+
     while IFS= read -r -n "$chunk_size" chunk; do
         total_bytes=$((total_bytes + ${#chunk}))
         echo "Read chunk of ${#chunk} bytes"
     done < "$file"
-    
+
     echo "Total bytes read: $total_bytes"
 }
 
@@ -3816,14 +3816,14 @@ write_secure_file() {
     local filename="$1"
     local content="$2"
     local permissions="${3:-600}"
-    
+
     # Create file with restrictive permissions
     touch "$filename"
     chmod "$permissions" "$filename"
-    
+
     # Write content
     echo "$content" > "$filename"
-    
+
     echo "Secure file created: $filename"
     ls -la "$filename"
 }
@@ -3838,7 +3838,7 @@ write_atomic() {
     local target_file="$1"
     local content="$2"
     local temp_file="${target_file}.tmp.$$"
-    
+
     # Write to temporary file
     if echo "$content" > "$temp_file"; then
         # Move to final location (atomic operation)
@@ -3862,13 +3862,13 @@ echo "=== Backup and Write ==="
 backup_and_write() {
     local file="$1"
     local new_content="$2"
-    
+
     # Create backup if file exists
     if [ -f "$file" ]; then
         cp "$file" "${file}.backup.$(date +%Y%m%d_%H%M%S)"
         echo "Backup created: ${file}.backup.*"
     fi
-    
+
     # Write new content
     echo "$new_content" > "$file"
     echo "New content written to $file"
@@ -3911,12 +3911,12 @@ ls -la test_files/src/
 safe_copy() {
     local source="$1"
     local destination="$2"
-    
+
     if [ ! -f "$source" ]; then
         echo "Error: Source file '$source' does not exist"
         return 1
     fi
-    
+
     if [ -f "$destination" ]; then
         echo -n "Destination '$destination' exists. Overwrite? (y/n): "
         read -r response
@@ -3925,7 +3925,7 @@ safe_copy() {
             return 1
         fi
     fi
-    
+
     if cp "$source" "$destination"; then
         echo "Successfully copied '$source' to '$destination'"
         return 0
@@ -3948,21 +3948,21 @@ bulk_rename() {
     local directory="$1"
     local old_pattern="$2"
     local new_pattern="$3"
-    
+
     if [ ! -d "$directory" ]; then
         echo "Error: Directory '$directory' does not exist"
         return 1
     fi
-    
+
     local count=0
     for file in "$directory"/*"$old_pattern"*; do
         [ ! -f "$file" ] && continue
-        
+
         local basename_file
         basename_file=$(basename "$file")
         local new_name="${basename_file/$old_pattern/$new_pattern}"
         local new_path="$directory/$new_name"
-        
+
         if mv "$file" "$new_path"; then
             echo "Renamed: $basename_file -> $new_name"
             ((count++))
@@ -3970,7 +3970,7 @@ bulk_rename() {
             echo "Failed to rename: $basename_file"
         fi
     done
-    
+
     echo "Renamed $count files"
 }
 
@@ -3990,36 +3990,36 @@ sync_directories() {
     local source_dir="$1"
     local dest_dir="$2"
     local backup_dir="${3:-}"
-    
+
     if [ ! -d "$source_dir" ]; then
         echo "Error: Source directory does not exist"
         return 1
     fi
-    
+
     mkdir -p "$dest_dir"
     [ -n "$backup_dir" ] && mkdir -p "$backup_dir"
-    
+
     echo "Synchronizing $source_dir -> $dest_dir"
-    
+
     for source_file in "$source_dir"/*; do
         [ ! -f "$source_file" ] && continue
-        
+
         local filename
         filename=$(basename "$source_file")
         local dest_file="$dest_dir/$filename"
         local backup_file="$backup_dir/$filename.backup"
-        
+
         # Check if destination exists and is different
         if [ -f "$dest_file" ]; then
             if ! cmp -s "$source_file" "$dest_file"; then
                 echo "File differs: $filename"
-                
+
                 # Create backup if backup directory specified
                 if [ -n "$backup_dir" ]; then
                     cp "$dest_file" "$backup_file"
                     echo "  Backup created: $backup_file"
                 fi
-                
+
                 cp "$source_file" "$dest_file"
                 echo "  Updated: $filename"
             else
@@ -4043,9 +4043,9 @@ echo "=== File Cleanup Operations ==="
 cleanup_empty_files() {
     local directory="$1"
     local dry_run="${2:-false}"
-    
+
     echo "Searching for empty files in: $directory"
-    
+
     local count=0
     while IFS= read -r -d '' file; do
         if [ "$dry_run" = "true" ]; then
@@ -4056,7 +4056,7 @@ cleanup_empty_files() {
         fi
         ((count++))
     done < <(find "$directory" -type f -empty -print0)
-    
+
     echo "Found $count empty files"
 }
 
@@ -4081,16 +4081,16 @@ create_archive() {
     local source_dir="$1"
     local archive_name="${2:-archive_$(date +%Y%m%d_%H%M%S).tar.gz}"
     local exclude_pattern="${3:-}"
-    
+
     echo "Creating archive: $archive_name"
-    
+
     local tar_opts="-czf $archive_name"
-    
+
     if [ -n "$exclude_pattern" ]; then
         tar_opts="$tar_opts --exclude=$exclude_pattern"
         echo "Excluding pattern: $exclude_pattern"
     fi
-    
+
     if tar $tar_opts "$source_dir"; then
         echo "Archive created successfully"
         echo "Archive size: $(stat -c%s "$archive_name" 2>/dev/null || stat -f%z "$archive_name" 2>/dev/null) bytes"
@@ -4128,7 +4128,7 @@ rm -rf test_files test_backup.tar.gz
 
 ### 🏋️ Exercise 6: File Management System
 
-**Difficulty:** 🟡 Intermediate  
+**Difficulty:** 🟡 Intermediate
 **Estimated Time:** 40 minutes
 
 Create a script called `file_manager.sh` that implements:
@@ -4188,23 +4188,23 @@ show_progress() {
 create_backup() {
     local source_file="$1"
     local backup_name="${2:-}"
-    
+
     if [ ! -f "$source_file" ]; then
         echo "Error: Source file does not exist: $source_file"
         return 1
     fi
-    
+
     mkdir -p "$backup_dir"
-    
+
     local filename=$(basename "$source_file")
     local timestamp=$(date '+%Y%m%d_%H%M%S')
-    
+
     if [ -z "$backup_name" ]; then
         backup_name="${filename}.backup.${timestamp}"
     fi
-    
+
     local backup_path="$backup_dir/$backup_name"
-    
+
     if cp "$source_file" "$backup_path"; then
         log_message "Backup created: $backup_path"
         echo "$backup_path"
@@ -4234,15 +4234,15 @@ calculate_checksum() {
 verify_integrity() {
     local file="$1"
     local stored_checksum="$2"
-    
+
     if [ ! -f "$file" ]; then
         echo "File not found: $file"
         return 1
     fi
-    
+
     local current_checksum
     current_checksum=$(calculate_checksum "$file")
-    
+
     if [ "$current_checksum" = "$stored_checksum" ]; then
         echo "✓ Integrity verified: $file"
         return 0
@@ -4262,34 +4262,34 @@ batch_rename() {
     local directory="$1"
     local pattern="$2"
     local replacement="$3"
-    
+
     if [ ! -d "$directory" ]; then
         echo "Error: Directory does not exist: $directory"
         return 1
     fi
-    
+
     local files=("$directory"/*"$pattern"*)
     local total=${#files[@]}
     local current=0
     local success=0
-    
+
     for file in "${files[@]}"; do
         ((current++))
         show_progress "$current" "$total"
-        
+
         [ ! -f "$file" ] && continue
-        
+
         local basename_file=$(basename "$file")
         local new_name="${basename_file/$pattern/$replacement}"
         local new_path="$directory/$new_name"
-        
+
         if [ "$basename_file" != "$new_name" ]; then
             if mv "$file" "$new_path" 2>/dev/null; then
                 ((success++))
             fi
         fi
     done
-    
+
     echo
     log_message "Batch rename completed: $success/$total files renamed"
 }
@@ -4302,15 +4302,15 @@ cleanup_old_files() {
     local directory="$1"
     local days_old="${2:-30}"
     local dry_run="${3:-false}"
-    
+
     if [ ! -d "$directory" ]; then
         echo "Error: Directory does not exist: $directory"
         return 1
     fi
-    
+
     local count=0
     echo "Searching for files older than $days_old days in: $directory"
-    
+
     while IFS= read -r -d '' file; do
         if [ "$dry_run" = "true" ]; then
             echo "Would remove: $file"
@@ -4321,7 +4321,7 @@ cleanup_old_files() {
         fi
         ((count++))
     done < <(find "$directory" -type f -mtime +$days_old -print0)
-    
+
     echo "Found $count files older than $days_old days"
 }
 
@@ -4376,11 +4376,11 @@ handle_integrity() {
 
 main() {
     log_message "File Manager started"
-    
+
     while true; do
         show_menu
         read -p "Choose option (1-6): " choice
-        
+
         case "$choice" in
             1) handle_backup ;;
             2) handle_integrity ;;
@@ -4415,7 +4415,7 @@ main() {
                 echo "Invalid option"
                 ;;
         esac
-        
+
         echo
         read -p "Press Enter to continue..."
     done
@@ -4671,7 +4671,7 @@ echo "=== Filter Examples ==="
 # Create sample data
 cat > data.txt << 'EOF'
 John,25,Engineer,New York
-Jane,30,Designer,Los Angeles  
+Jane,30,Designer,Los Angeles
 Bob,22,Student,Chicago
 Alice,28,Manager,Boston
 Charlie,35,Developer,Seattle
@@ -4760,7 +4760,7 @@ generate_config() {
     local app_name="$1"
     local port="$2"
     local debug="${3:-false}"
-    
+
     cat << EOF
 # Configuration for $app_name
 app_name=$app_name
@@ -4802,7 +4802,7 @@ OPTIONS:
 
 ARGUMENTS:
     file           Input file to process
-    
+
 Examples:
     myscript -v input.txt
     myscript --quiet data.csv
@@ -4818,7 +4818,7 @@ send_email() {
     local to="$1"
     local subject="$2"
     local name="$3"
-    
+
     # Simulate sending email
     cat << EOF > email.txt
 To: $to
@@ -4832,7 +4832,7 @@ This is an automated message generated on $(date).
 Best regards,
 The Team
 EOF
-    
+
     echo "Email saved to email.txt"
 }
 
@@ -4847,7 +4847,7 @@ echo "=== Here Documents with Command Substitution ==="
 create_sql_script() {
     local table_name="$1"
     local timestamp=$(date '+%Y%m%d_%H%M%S')
-    
+
     cat << EOF > "${table_name}_script.sql"
 -- Auto-generated script for $table_name
 -- Created: $(date)
@@ -4858,14 +4858,14 @@ CREATE TABLE IF NOT EXISTS $table_name (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO $table_name (name) VALUES 
+INSERT INTO $table_name (name) VALUES
     ('Sample Data 1'),
     ('Sample Data 2'),
     ('Sample Data 3');
 
 -- Script generated at: $timestamp
 EOF
-    
+
     echo "SQL script created: ${table_name}_script.sql"
 }
 
@@ -4883,8 +4883,8 @@ rm -f email.txt users_script.sql
    ```bash
    # Wrong
    command 2>&1 > file  # stderr goes to terminal, stdout to file
-   
-   # Correct  
+
+   # Correct
    command > file 2>&1  # both to file
    ```
 
@@ -4901,7 +4901,7 @@ rm -f email.txt users_script.sql
 
 ### 🏋️ Exercise 7: Advanced I/O System
 
-**Difficulty:** 🔴 Advanced  
+**Difficulty:** 🔴 Advanced
 **Estimated Time:** 50 minutes
 
 Create a script called `log_processor.sh` that:
@@ -4984,7 +4984,7 @@ initialize() {
 
 create_sample_logs() {
     debug "Creating sample log files"
-    
+
     # Access log
     cat << 'EOF' > "$TEMP_DIR/access.log"
 192.168.1.1 - - [01/Jan/2024:10:00:01] "GET /index.html" 200 1024
@@ -4995,7 +4995,7 @@ create_sample_logs() {
 192.168.1.4 - - [01/Jan/2024:10:00:06] "GET /admin" 403 128
 192.168.1.1 - - [01/Jan/2024:10:00:07] "GET /data" 200 4096
 EOF
-    
+
     # Error log
     cat << 'EOF' > "$TEMP_DIR/error.log"
 [01/Jan/2024:10:00:03] [error] Authentication failed for 192.168.1.1
@@ -5004,46 +5004,46 @@ EOF
 [01/Jan/2024:10:00:08] [info] Daily backup completed
 [01/Jan/2024:10:00:09] [error] Database connection timeout
 EOF
-    
+
     debug "Sample logs created"
 }
 
 process_access_log() {
     local log_file="$1"
     debug "Processing access log: $log_file"
-    
+
     # Create named pipes for parallel processing
     mkfifo "$TEMP_DIR/ip_pipe" "$TEMP_DIR/status_pipe" "$TEMP_DIR/size_pipe"
-    
+
     # Process IPs in background
     {
         cut -d' ' -f1 "$log_file" | sort | uniq -c | sort -nr
     } > "$TEMP_DIR/ip_stats.txt" &
-    
-    # Process status codes in background  
+
+    # Process status codes in background
     {
         awk '{print $9}' "$log_file" | sort | uniq -c | sort -nr
     } > "$TEMP_DIR/status_stats.txt" &
-    
+
     # Process request sizes
     {
         awk '{sum += $10; count++} END {print "Average size:", sum/count, "bytes"}'  "$log_file"
     } > "$TEMP_DIR/size_stats.txt" &
-    
+
     wait  # Wait for all background processes
-    
+
     log_stat "Access log processed: $(wc -l < "$log_file") requests"
 }
 
 process_error_log() {
     local log_file="$1"
     debug "Processing error log: $log_file"
-    
+
     # Error level analysis
     grep -o '\[error\]' "$log_file" | wc -l > "$TEMP_DIR/error_count.txt"
-    grep -o '\[warn\]' "$log_file" | wc -l > "$TEMP_DIR/warn_count.txt"  
+    grep -o '\[warn\]' "$log_file" | wc -l > "$TEMP_DIR/warn_count.txt"
     grep -o '\[info\]' "$log_file" | wc -l > "$TEMP_DIR/info_count.txt"
-    
+
     log_stat "Error log processed: $(wc -l < "$log_file") entries"
 }
 
@@ -5054,7 +5054,7 @@ process_error_log() {
 generate_report() {
     local report_file="$REPORT_DIR/log_report_$(date +%Y%m%d_%H%M%S).html"
     debug "Generating report: $report_file"
-    
+
     # Generate HTML report using here document
     cat << EOF > "$report_file"
 <!DOCTYPE html>
@@ -5075,7 +5075,7 @@ generate_report() {
 <body>
     <h1>Log Analysis Report</h1>
     <p>Generated on: $(date)</p>
-    
+
     <h2>Summary Statistics</h2>
     <table>
         <tr><th>Metric</th><th>Value</th></tr>
@@ -5085,25 +5085,25 @@ generate_report() {
         <tr><td class="warn">Warnings</td><td>$(cat "$TEMP_DIR/warn_count.txt")</td></tr>
         <tr><td class="info">Info Messages</td><td>$(cat "$TEMP_DIR/info_count.txt")</td></tr>
     </table>
-    
+
     <h2>Top IP Addresses</h2>
     <table>
         <tr><th>Requests</th><th>IP Address</th></tr>
 EOF
-    
+
     # Add IP statistics to report
     head -5 "$TEMP_DIR/ip_stats.txt" | while read count ip; do
         echo "        <tr><td>$count</td><td>$ip</td></tr>" >> "$report_file"
     done
-    
+
     cat << EOF >> "$report_file"
     </table>
-    
+
     <h2>HTTP Status Codes</h2>
     <table>
         <tr><th>Count</th><th>Status Code</th><th>Description</th></tr>
 EOF
-    
+
     # Add status code statistics
     while read count status; do
         case "$status" in
@@ -5115,26 +5115,26 @@ EOF
         esac
         echo "        <tr><td>$count</td><td>$status</td><td>$desc</td></tr>" >> "$report_file"
     done < "$TEMP_DIR/status_stats.txt"
-    
+
     cat << EOF >> "$report_file"
     </table>
-    
+
     <h2>Performance Metrics</h2>
     <p>$(cat "$TEMP_DIR/size_stats.txt")</p>
-    
+
     <h2>Generated Files</h2>
     <ul>
         <li>Debug log: $TEMP_DIR/debug.log</li>
         <li>Statistics log: $TEMP_DIR/stats.log</li>
         <li>Error log: $TEMP_DIR/errors.log</li>
     </ul>
-    
+
     <hr>
     <p><small>Report generated by log_processor.sh</small></p>
 </body>
 </html>
 EOF
-    
+
     echo "$report_file"
 }
 
@@ -5145,18 +5145,18 @@ EOF
 main() {
     initialize
     create_sample_logs
-    
+
     echo "Processing logs..."
     process_access_log "$TEMP_DIR/access.log"
     process_error_log "$TEMP_DIR/error.log"
-    
+
     echo "Generating report..."
     local report_file
     report_file=$(generate_report)
-    
+
     echo "Report generated: $report_file"
     echo "Debug information available in: $TEMP_DIR"
-    
+
     log_stat "Processing complete"
 }
 
@@ -5251,7 +5251,7 @@ touch app.config app.json app.yaml
 echo "?(pattern) - Zero or one occurrence:"
 ls app.?(config|json)
 
-echo "*(pattern) - Zero or more occurrences:"  
+echo "*(pattern) - Zero or more occurrences:"
 ls test.*(txt|log|bak)
 
 echo "+(pattern) - One or more occurrences:"
@@ -5272,7 +5272,7 @@ rm -rf test_glob
 Pattern matching in conditionals and case statements:
 
 ```bash
-#!/bin/bash  
+#!/bin/bash
 # pattern_matching.sh - Advanced pattern matching techniques
 
 echo "=== Pattern Matching in Conditionals ==="
@@ -5280,27 +5280,27 @@ echo "=== Pattern Matching in Conditionals ==="
 test_patterns() {
     local string="$1"
     echo "Testing string: '$string'"
-    
+
     # Basic pattern matching with [[ ]]
     if [[ "$string" == *".txt"* ]]; then
         echo "  Contains .txt"
     fi
-    
+
     if [[ "$string" == [0-9]* ]]; then
         echo "  Starts with digit"
     fi
-    
+
     if [[ "$string" =~ ^[a-zA-Z]+$ ]]; then
         echo "  Contains only letters"
     fi
-    
+
     # Case-insensitive matching (Bash 4.0+)
     shopt -s nocasematch
     if [[ "$string" == *"FILE"* ]]; then
         echo "  Contains 'file' (case-insensitive)"
     fi
     shopt -u nocasematch
-    
+
     echo
 }
 
@@ -5313,7 +5313,7 @@ echo "=== Pattern Matching in Case Statements ==="
 
 classify_file() {
     local filename="$1"
-    
+
     case "$filename" in
         *.txt|*.md|*.rst)
             echo "$filename: Text document"
@@ -5356,7 +5356,7 @@ echo "=== Advanced Pattern Examples ==="
 # Email validation pattern
 validate_email() {
     local email="$1"
-    
+
     if [[ "$email" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$ ]]; then
         echo "Valid email: $email"
         return 0
@@ -5375,7 +5375,7 @@ echo
 # Phone number patterns
 validate_phone() {
     local phone="$1"
-    
+
     case "$phone" in
         [0-9][0-9][0-9]-[0-9][0-9][0-9]-[0-9][0-9][0-9][0-9])
             echo "Valid US phone: $phone"
@@ -5412,7 +5412,7 @@ echo "=== Regular Expressions with grep ==="
 # Create test data
 cat > sample_data.txt << 'EOF'
 John Doe, john@example.com, 555-1234
-Jane Smith, jane.smith@company.org, (555) 567-8900  
+Jane Smith, jane.smith@company.org, (555) 567-8900
 Bob Johnson, bob123@test.net, 555.789.0123
 Alice Brown, alice_brown@domain.co.uk, +1-555-999-8888
 Charlie Wilson, charlie@invalid, 123-45-67
@@ -5523,9 +5523,9 @@ if [[ "$url" =~ ^https?://[a-zA-Z0-9.-]+(/.*)?$ ]]; then
     protocol="${BASH_REMATCH[1]}"
     domain="${BASH_REMATCH[2]}"
     path="${BASH_REMATCH[3]}"
-    
+
     echo "  Protocol: $protocol"
-    echo "  Domain: $domain"  
+    echo "  Domain: $domain"
     echo "  Path: $path"
 fi
 
@@ -5583,11 +5583,11 @@ reverse_string() {
     local str="$1"
     local reversed=""
     local i
-    
+
     for ((i=${#str}-1; i>=0; i--)); do
         reversed="${reversed}${str:$i:1}"
     done
-    
+
     echo "$reversed"
 }
 
@@ -5595,11 +5595,11 @@ count_words() {
     local text="$1"
     local count=0
     local word
-    
+
     for word in $text; do
         ((count++))
     done
-    
+
     echo "$count"
 }
 
@@ -5614,12 +5614,12 @@ title_case() {
     local text="$1"
     local result=""
     local word
-    
+
     for word in $text; do
         # Capitalize first letter, lowercase rest
         result="$result ${word^${word:1},,}"
     done
-    
+
     echo "${result# }"  # Remove leading space
 }
 
@@ -5635,7 +5635,7 @@ echo "=== Pattern-based Validation ==="
 validate_input() {
     local input="$1"
     local type="$2"
-    
+
     case "$type" in
         "username")
             [[ "$input" =~ ^[a-zA-Z][a-zA-Z0-9_]{2,15}$ ]]
@@ -5661,7 +5661,7 @@ validate_input() {
 test_validation() {
     local input="$1"
     local type="$2"
-    
+
     if validate_input "$input" "$type"; then
         echo "✓ Valid $type: $input"
     else
@@ -5755,12 +5755,12 @@ validate_field() {
     local value="$1"
     local type="$2"
     local pattern="${validation_rules[$type]}"
-    
+
     if [[ -z "$pattern" ]]; then
         echo "Unknown validation type: $type"
         return 1
     fi
-    
+
     if [[ "$value" =~ $pattern ]]; then
         return 0
     else
@@ -5771,12 +5771,12 @@ validate_field() {
 validate_data_file() {
     local file="$1"
     local format="$2"
-    
+
     if [[ ! -f "$file" ]]; then
         error_messages+=("File not found: $file")
         return 1
     fi
-    
+
     case "$format" in
         "csv")
             validate_csv_file "$file"
@@ -5799,41 +5799,41 @@ validate_csv_file() {
     local line_num=0
     local errors=0
     local warnings=0
-    
+
     echo "Validating CSV file: $file"
-    
+
     while IFS=',' read -r name email phone date; do
         ((line_num++))
-        
+
         # Skip header line
         [[ $line_num -eq 1 ]] && continue
-        
+
         # Validate each field
         if ! validate_field "$name" "username"; then
             echo "  Line $line_num: Invalid name '$name'"
             ((errors++))
         fi
-        
+
         if ! validate_field "$email" "email"; then
             echo "  Line $line_num: Invalid email '$email'"
             ((errors++))
         fi
-        
+
         if ! validate_field "$phone" "phone"; then
             echo "  Line $line_num: Invalid phone '$phone'"
             ((warnings++))
         fi
-        
+
         if ! validate_field "$date" "date"; then
             echo "  Line $line_num: Invalid date '$date'"
             ((errors++))
         fi
-        
+
     done < "$file"
-    
+
     validation_results["$file"]="Lines: $line_num, Errors: $errors, Warnings: $warnings"
     processed_files+=("$file")
-    
+
     echo "  Summary: $line_num lines, $errors errors, $warnings warnings"
 }
 
@@ -5843,29 +5843,29 @@ validate_log_file() {
     local error_lines=0
     local warning_lines=0
     local info_lines=0
-    
+
     echo "Validating log file: $file"
-    
+
     # Count different log levels
     total_lines=$(wc -l < "$file")
     error_lines=$(grep -c "\[ERROR\]" "$file" 2>/dev/null || echo 0)
     warning_lines=$(grep -c "\[WARN\]" "$file" 2>/dev/null || echo 0)
     info_lines=$(grep -c "\[INFO\]" "$file" 2>/dev/null || echo 0)
-    
+
     # Validate timestamp format
     local invalid_timestamps
     invalid_timestamps=$(grep -v '^\[20[0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]' "$file" | wc -l)
-    
+
     echo "  Total lines: $total_lines"
     echo "  Errors: $error_lines"
     echo "  Warnings: $warning_lines"
     echo "  Info: $info_lines"
     echo "  Invalid timestamps: $invalid_timestamps"
-    
+
     # Extract unique IP addresses
     echo "  Unique IPs found:"
     grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' "$file" | sort -u | head -5
-    
+
     validation_results["$file"]="Total: $total_lines, Errors: $error_lines, Warnings: $warning_lines"
     processed_files+=("$file")
 }
@@ -5875,19 +5875,19 @@ validate_config_file() {
     local valid_keys=0
     local invalid_lines=0
     local comments=0
-    
+
     echo "Validating config file: $file"
-    
+
     while IFS= read -r line; do
         # Skip empty lines
         [[ -z "$line" ]] && continue
-        
+
         # Count comments
         if [[ "$line" =~ ^[[:space:]]*# ]]; then
             ((comments++))
             continue
         fi
-        
+
         # Validate key=value format
         if [[ "$line" =~ ^[a-zA-Z_][a-zA-Z0-9_]*=[^[:space:]]+ ]]; then
             ((valid_keys++))
@@ -5895,13 +5895,13 @@ validate_config_file() {
             echo "  Invalid line: $line"
             ((invalid_lines++))
         fi
-        
+
     done < "$file"
-    
+
     echo "  Valid keys: $valid_keys"
     echo "  Invalid lines: $invalid_lines"
     echo "  Comments: $comments"
-    
+
     validation_results["$file"]="Keys: $valid_keys, Invalid: $invalid_lines, Comments: $comments"
     processed_files+=("$file")
 }
@@ -5920,7 +5920,7 @@ bob123,invalid-email,123-456-7890,2024-01-03
 alice_b,alice@domain.co.uk,555.789.0123,invalid-date
 charlie,charlie@test.com,+1-555-999-8888,2024-01-05
 EOF
-    
+
     # Create sample log
     cat > sample.log << 'EOF'
 [2024-01-01 10:00:01] [INFO] Server started on port 8080
@@ -5930,7 +5930,7 @@ Invalid timestamp format ERROR: Something went wrong
 [2024-01-01 10:01:15] [ERROR] Authentication failed for 192.168.1.200
 [2024-01-01 10:01:30] [INFO] User logged in from 10.0.0.1
 EOF
-    
+
     # Create sample config
     cat > sample.config << 'EOF'
 # Database configuration
@@ -5960,12 +5960,12 @@ generate_report() {
     echo "=== VALIDATION REPORT ==="
     echo "Generated on: $(date)"
     echo
-    
+
     echo "Files processed:"
     for file in "${processed_files[@]}"; do
         echo "  $file: ${validation_results[$file]}"
     done
-    
+
     echo
     if [[ ${#error_messages[@]} -gt 0 ]]; then
         echo "Errors encountered:"
@@ -5975,7 +5975,7 @@ generate_report() {
     else
         echo "No critical errors found."
     fi
-    
+
     echo
     echo "Validation rules used:"
     for rule in "${!validation_rules[@]}"; do
@@ -6006,10 +6006,10 @@ EOF
 
 main() {
     init_validation_rules
-    
+
     local format=""
     local use_samples=false
-    
+
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -6035,15 +6035,15 @@ main() {
                 ;;
         esac
     done
-    
+
     if [[ "$use_samples" == true ]]; then
         echo "Creating sample data..."
         create_sample_data
-        
+
         validate_data_file "sample.csv" "csv"
-        validate_data_file "sample.log" "log"  
+        validate_data_file "sample.log" "log"
         validate_data_file "sample.config" "config"
-        
+
         # Clean up samples
         rm -f sample.csv sample.log sample.config
     else
@@ -6051,27 +6051,27 @@ main() {
             echo "No files specified. Use -h for help."
             exit 1
         fi
-        
+
         for file in "$@"; do
             local file_format="$format"
-            
+
             # Auto-detect format if not specified
             if [[ -z "$file_format" ]]; then
                 case "$file" in
                     *.csv) file_format="csv" ;;
                     *.log) file_format="log" ;;
                     *.conf|*.config|*.ini) file_format="config" ;;
-                    *) 
+                    *)
                         echo "Cannot determine format for $file. Use -f option."
                         continue
                         ;;
                 esac
             fi
-            
+
             validate_data_file "$file" "$file_format"
         done
     fi
-    
+
     generate_report
 }
 
@@ -6117,7 +6117,7 @@ echo "Starting background jobs..."
 sleep 10 &
 echo "Started sleep 10 (PID: $!)"
 
-sleep 15 &  
+sleep 15 &
 echo "Started sleep 15 (PID: $!)"
 
 # List jobs
@@ -6197,14 +6197,14 @@ background_task() {
     local task_name="$1"
     local duration="$2"
     local output_file="$3"
-    
+
     echo "[$task_name] Starting at $(date)" > "$output_file"
-    
+
     for i in $(seq 1 "$duration"); do
         echo "[$task_name] Step $i/$(duration) at $(date)" >> "$output_file"
         sleep 1
     done
-    
+
     echo "[$task_name] Completed at $(date)" >> "$output_file"
 }
 
@@ -6225,7 +6225,7 @@ echo "Started tasks with PIDs: $task1_pid, $task2_pid, $task3_pid"
 monitor_process() {
     local pid="$1"
     local name="$2"
-    
+
     while kill -0 "$pid" 2>/dev/null; do
         echo "$name (PID: $pid) is still running..."
         sleep 1
@@ -6235,7 +6235,7 @@ monitor_process() {
 
 # Wait for all tasks to complete
 wait $task1_pid && echo "Task1 completed"
-wait $task2_pid && echo "Task2 completed"  
+wait $task2_pid && echo "Task2 completed"
 wait $task3_pid && echo "Task3 completed"
 
 echo
@@ -6249,15 +6249,15 @@ mkfifo result_queue
 worker_process() {
     local worker_id="$1"
     echo "Worker $worker_id started"
-    
+
     while read task < task_queue; do
         [[ "$task" == "QUIT" ]] && break
-        
+
         echo "Worker $worker_id processing: $task"
         sleep $((RANDOM % 3 + 1))  # Simulate work
         echo "Worker $worker_id completed: $task" > result_queue
     done
-    
+
     echo "Worker $worker_id shutting down"
 }
 
@@ -6271,7 +6271,7 @@ worker2_pid=$!
 # Send tasks to workers
 {
     echo "Task A"
-    echo "Task B" 
+    echo "Task B"
     echo "Task C"
     echo "Task D"
     echo "QUIT"
@@ -6308,7 +6308,7 @@ cleanup_handler() {
     echo
     echo "Cleanup handler called (signal received)"
     echo "Performing cleanup operations..."
-    
+
     # Kill background processes
     for pid in "${background_pids[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
@@ -6316,10 +6316,10 @@ cleanup_handler() {
             kill "$pid"
         fi
     done
-    
+
     # Remove temporary files
     rm -f /tmp/signal_test_*
-    
+
     echo "Cleanup completed"
     exit 0
 }
@@ -6351,7 +6351,7 @@ for i in {1..3}; do
             sleep 2
         done
     } &
-    
+
     background_pids+=($!)
     echo "Started background process $i (PID: $!)"
 done
@@ -6403,13 +6403,13 @@ echo "Send SIGTERM to exit: kill $$"
 counter=0
 while true; do
     ((counter++))
-    
+
     if [[ "$debug_mode" == "on" ]]; then
         echo "Debug: Main loop iteration $counter"
     fi
-    
+
     sleep 2
-    
+
     # Auto-exit after reasonable time
     if [[ $counter -gt 20 ]]; then
         echo "Demo completed"
@@ -6460,7 +6460,7 @@ echo "=== Output Process Substitution ==="
 echo "Writing to process substitution:"
 {
     echo "Data line 1"
-    echo "Data line 2" 
+    echo "Data line 2"
     echo "Data line 3"
 } > >(sed 's/^/Processed: /' > processed_output.txt)
 
@@ -6503,7 +6503,7 @@ echo "=== Process Substitution with Functions ==="
 process_data() {
     local input_source="$1"
     local filter="$2"
-    
+
     while read line; do
         if [[ "$line" =~ $filter ]]; then
             echo "Matched: $line"
@@ -6594,7 +6594,7 @@ log_message() {
 
 cleanup_handler() {
     log_message "INFO" "Cleanup handler called"
-    
+
     # Stop all managed processes
     for pid in "${managed_processes[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
@@ -6604,10 +6604,10 @@ cleanup_handler() {
             kill -KILL "$pid" 2>/dev/null || true
         fi
     done
-    
+
     # Clean up pipes and temp files
     rm -rf "$LOG_DIR"
-    
+
     log_message "INFO" "Cleanup completed"
     exit 0
 }
@@ -6629,7 +6629,7 @@ reload_handler() {
 start_worker_process() {
     local worker_id="$1"
     local task_type="$2"
-    
+
     case "$task_type" in
         "cpu")
             start_cpu_worker "$worker_id"
@@ -6650,10 +6650,10 @@ start_worker_process() {
 start_cpu_worker() {
     local worker_id="$1"
     local log_file="$LOG_DIR/cpu_worker_$worker_id.log"
-    
+
     {
         while true; do
-            echo "CPU Worker $worker_id: $(date) - Computing..." 
+            echo "CPU Worker $worker_id: $(date) - Computing..."
             # Simulate CPU-intensive work
             for i in {1..1000000}; do
                 : $((i * i))
@@ -6661,12 +6661,12 @@ start_cpu_worker() {
             sleep 2
         done
     } > "$log_file" 2>&1 &
-    
+
     local pid=$!
     managed_processes+=("$pid")
     process_info["$pid"]="cpu_worker_$worker_id"
     process_logs["$pid"]="$log_file"
-    
+
     log_message "INFO" "Started CPU worker $worker_id (PID: $pid)"
     echo "$pid"
 }
@@ -6675,9 +6675,9 @@ start_io_worker() {
     local worker_id="$1"
     local log_file="$LOG_DIR/io_worker_$worker_id.log"
     local work_dir="$LOG_DIR/io_work_$worker_id"
-    
+
     mkdir -p "$work_dir"
-    
+
     {
         while true; do
             echo "IO Worker $worker_id: $(date) - File operations..."
@@ -6690,12 +6690,12 @@ start_io_worker() {
             sleep 3
         done
     } > "$log_file" 2>&1 &
-    
+
     local pid=$!
     managed_processes+=("$pid")
     process_info["$pid"]="io_worker_$worker_id"
     process_logs["$pid"]="$log_file"
-    
+
     log_message "INFO" "Started I/O worker $worker_id (PID: $pid)"
     echo "$pid"
 }
@@ -6703,7 +6703,7 @@ start_io_worker() {
 start_network_worker() {
     local worker_id="$1"
     local log_file="$LOG_DIR/network_worker_$worker_id.log"
-    
+
     {
         while true; do
             echo "Network Worker $worker_id: $(date) - Network operations..."
@@ -6714,12 +6714,12 @@ start_network_worker() {
             sleep 5
         done
     } > "$log_file" 2>&1 &
-    
+
     local pid=$!
     managed_processes+=("$pid")
     process_info["$pid"]="network_worker_$worker_id"
     process_logs["$pid"]="$log_file"
-    
+
     log_message "INFO" "Started network worker $worker_id (PID: $pid)"
     echo "$pid"
 }
@@ -6734,7 +6734,7 @@ show_status() {
     echo "Manager PID: $$"
     echo "Log Directory: $LOG_DIR"
     echo
-    
+
     echo "Managed Processes:"
     for pid in "${managed_processes[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
@@ -6742,7 +6742,7 @@ show_status() {
             cpu_usage=$(ps -p "$pid" -o %cpu --no-headers 2>/dev/null || echo "N/A")
             local mem_usage
             mem_usage=$(ps -p "$pid" -o %mem --no-headers 2>/dev/null || echo "N/A")
-            
+
             echo "  PID: $pid (${process_info[$pid]})"
             echo "    Status: Running"
             echo "    CPU: ${cpu_usage}%"
@@ -6752,7 +6752,7 @@ show_status() {
             echo "  PID: $pid (${process_info[$pid]}) - STOPPED"
         fi
     done
-    
+
     echo
     echo "System Resources:"
     echo "  Load Average: $(uptime | awk '{print $NF}')"
@@ -6763,20 +6763,20 @@ monitor_processes() {
     while true; do
         {
             echo "=== Process Monitor Report $(date) ==="
-            
+
             # Check process health
             for pid in "${managed_processes[@]}"; do
                 if ! kill -0 "$pid" 2>/dev/null; then
                     log_message "WARN" "Process $pid (${process_info[$pid]}) has stopped"
                 fi
             done
-            
+
             # Resource usage summary
             echo "Resource Usage Summary:"
             ps -p "${managed_processes[@]}" -o pid,ppid,%cpu,%mem,cmd 2>/dev/null || true
-            
+
         } > >(tee -a "$LOG_DIR/monitor.log" >/dev/null)
-        
+
         sleep 10
     done
 }
@@ -6787,7 +6787,7 @@ monitor_processes() {
 
 setup_command_interface() {
     mkfifo "$COMMAND_PIPE" "$RESPONSE_PIPE"
-    
+
     {
         while true; do
             if read -r command < "$COMMAND_PIPE"; then
@@ -6825,19 +6825,19 @@ setup_command_interface() {
 initialize() {
     # Create log directory
     mkdir -p "$LOG_DIR"
-    
+
     # Set up signal handlers
     trap cleanup_handler INT TERM EXIT
     trap status_handler USR1
     trap reload_handler USR2
-    
+
     # Initialize logging
     log_message "INFO" "Process Manager starting (PID: $$)"
     log_message "INFO" "Log directory: $LOG_DIR"
-    
+
     # Set up command interface
     setup_command_interface
-    
+
     log_message "INFO" "Initialization completed"
 }
 
@@ -6847,24 +6847,24 @@ initialize() {
 
 main() {
     initialize
-    
+
     # Start initial workers
     start_worker_process 1 "cpu"
     start_worker_process 2 "io"
     start_worker_process 3 "network"
-    
+
     # Start monitoring
     monitor_processes &
     local monitor_pid=$!
-    
+
     log_message "INFO" "Process manager fully operational"
     log_message "INFO" "Send SIGUSR1 for status: kill -USR1 $$"
     log_message "INFO" "Send commands to: $COMMAND_PIPE"
-    
+
     # Main loop
     while true; do
         sleep 5
-        
+
         # Cleanup stopped processes from our tracking
         local active_processes=()
         for pid in "${managed_processes[@]}"; do
@@ -6876,7 +6876,7 @@ main() {
             fi
         done
         managed_processes=("${active_processes[@]}")
-        
+
         # Check if we have any processes left
         if [[ ${#managed_processes[@]} -eq 0 ]]; then
             log_message "WARN" "No active processes remaining"
@@ -6928,35 +6928,35 @@ echo "=== Basic Error Handling ==="
 safe_operation() {
     local operation="$1"
     local file="$2"
-    
+
     case "$operation" in
         "read")
             if [[ ! -f "$file" ]]; then
                 echo "Error: File '$file' does not exist" >&2
                 return 1
             fi
-            
+
             if [[ ! -r "$file" ]]; then
                 echo "Error: File '$file' is not readable" >&2
                 return 2
             fi
-            
+
             cat "$file"
             ;;
         "write")
             local dir
             dir=$(dirname "$file")
-            
+
             if [[ ! -d "$dir" ]]; then
                 echo "Error: Directory '$dir' does not exist" >&2
                 return 1
             fi
-            
+
             if [[ ! -w "$dir" ]]; then
                 echo "Error: Directory '$dir' is not writable" >&2
                 return 2
             fi
-            
+
             echo "Safe write operation to $file"
             ;;
         *)
@@ -7003,37 +7003,37 @@ log_info() {
 process_file() {
     local input_file="$1"
     local output_file="$2"
-    
+
     log_debug "Starting file processing: $input_file -> $output_file"
-    
+
     # Validate input
     if [[ -z "$input_file" ]] || [[ -z "$output_file" ]]; then
         log_error "Missing required parameters"
         return 1
     fi
-    
+
     if [[ ! -f "$input_file" ]]; then
         log_error "Input file does not exist: $input_file"
         return 2
     fi
-    
+
     # Check file size
     local file_size
     file_size=$(stat -c%s "$input_file" 2>/dev/null || stat -f%z "$input_file" 2>/dev/null)
-    
+
     if [[ "$file_size" -eq 0 ]]; then
         log_error "Input file is empty: $input_file"
         return 3
     fi
-    
+
     log_debug "Input file size: $file_size bytes"
-    
+
     # Process file with error checking
     if ! cp "$input_file" "$output_file"; then
         log_error "Failed to copy file"
         return 4
     fi
-    
+
     log_info "File processed successfully: $input_file -> $output_file"
     return 0
 }
@@ -7054,27 +7054,27 @@ retry_operation() {
     local delay="$2"
     shift 2
     local command=("$@")
-    
+
     local attempt=1
     while [[ $attempt -le $max_attempts ]]; do
         log_debug "Attempt $attempt/$max_attempts: ${command[*]}"
-        
+
         if "${command[@]}"; then
             log_info "Operation successful on attempt $attempt"
             return 0
         else
             local exit_code=$?
             log_error "Attempt $attempt failed with exit code $exit_code"
-            
+
             if [[ $attempt -lt $max_attempts ]]; then
                 log_info "Retrying in $delay seconds..."
                 sleep "$delay"
             fi
         fi
-        
+
         ((attempt++))
     done
-    
+
     log_error "All $max_attempts attempts failed"
     return 1
 }
@@ -7114,26 +7114,26 @@ verbose_print() {
 complex_function() {
     local param1="$1"
     local param2="$2"
-    
+
     debug_print "Entering complex_function with params: '$param1', '$param2'"
     verbose_print "Function called with $# parameters"
-    
+
     # Validate parameters
     if [[ -z "$param1" ]]; then
         debug_print "param1 is empty"
         return 1
     fi
-    
+
     # Simulate complex processing
     local result
     if [[ "$param1" == "error" ]]; then
         debug_print "Simulating error condition"
         return 2
     fi
-    
+
     result="processed_${param1}_${param2}"
     debug_print "Processing result: $result"
-    
+
     echo "$result"
     debug_print "Exiting complex_function successfully"
     return 0
@@ -7155,22 +7155,22 @@ echo "=== Trace Execution ==="
 trace_execution() {
     # Enable execution tracing
     set -x
-    
+
     local file="/tmp/trace_test.txt"
     echo "Creating test file"
     echo "test content" > "$file"
-    
+
     echo "Reading test file"
     cat "$file"
-    
+
     echo "Processing content"
     local content
     content=$(cat "$file" | tr '[:lower:]' '[:upper:]')
     echo "Processed: $content"
-    
+
     echo "Cleaning up"
     rm "$file"
-    
+
     # Disable execution tracing
     set +x
 }
@@ -7198,10 +7198,10 @@ debug_breakpoint() {
 function_with_breakpoints() {
     local data="$1"
     debug_breakpoint "Starting function with data: $data"
-    
+
     local processed_data="${data}_processed"
     debug_breakpoint "Data processed: $processed_data"
-    
+
     echo "$processed_data"
     debug_breakpoint "Function completed"
 }
@@ -7217,7 +7217,7 @@ echo "=== Stack Trace Implementation ==="
 print_stack_trace() {
     local frame=0
     echo "Stack trace:"
-    
+
     while caller $frame; do
         ((frame++))
     done | while read line func file; do
@@ -7228,13 +7228,13 @@ print_stack_trace() {
 # Function that calls stack trace on error
 function_with_stack_trace() {
     local param="$1"
-    
+
     if [[ "$param" == "error" ]]; then
         echo "Error occurred in function_with_stack_trace"
         print_stack_trace
         return 1
     fi
-    
+
     echo "Function executed successfully"
 }
 
@@ -7279,7 +7279,7 @@ CURRENT_LOG_LEVEL=${LOG_LEVEL:-$LOG_LEVEL_INFO}
 # Initialize logging
 init_logging() {
     mkdir -p "$LOG_DIR"
-    
+
     # Set up log rotation
     for log in "$LOG_FILE" "$ERROR_LOG" "$DEBUG_LOG" "$AUDIT_LOG"; do
         if [[ -f "$log" ]] && [[ $(stat -c%s "$log" 2>/dev/null || stat -f%z "$log" 2>/dev/null) -gt 1048576 ]]; then
@@ -7294,7 +7294,7 @@ log() {
     local message="$2"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     local caller_info="${BASH_SOURCE[2]##*/}:${BASH_LINENO[1]}:${FUNCNAME[2]}"
-    
+
     case "$level" in
         "ERROR")
             [[ $CURRENT_LOG_LEVEL -ge $LOG_LEVEL_ERROR ]] && \
@@ -7321,7 +7321,7 @@ audit_log() {
     local details="$2"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     local user="${USER:-unknown}"
-    
+
     echo "[$timestamp] [$user] [$action] $details" >> "$AUDIT_LOG"
 }
 
@@ -7331,19 +7331,19 @@ performance_monitor() {
     local start_time
     local end_time
     local duration
-    
+
     start_time=$(date +%s.%N)
-    
+
     # Execute the operation
     "$@"
     local exit_code=$?
-    
+
     end_time=$(date +%s.%N)
     duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "N/A")
-    
+
     log "INFO" "Operation '$operation' completed in ${duration}s with exit code $exit_code"
     audit_log "PERFORMANCE" "$operation took ${duration}s"
-    
+
     return $exit_code
 }
 
@@ -7395,9 +7395,9 @@ assert_equals() {
     local expected="$1"
     local actual="$2"
     local test_name="${3:-test_$TESTS_RUN}"
-    
+
     ((TESTS_RUN++))
-    
+
     if [[ "$expected" == "$actual" ]]; then
         echo "✓ PASS: $test_name"
         ((TESTS_PASSED++))
@@ -7416,9 +7416,9 @@ assert_not_equals() {
     local not_expected="$1"
     local actual="$2"
     local test_name="${3:-test_$TESTS_RUN}"
-    
+
     ((TESTS_RUN++))
-    
+
     if [[ "$not_expected" != "$actual" ]]; then
         echo "✓ PASS: $test_name"
         ((TESTS_PASSED++))
@@ -7436,9 +7436,9 @@ assert_not_equals() {
 assert_true() {
     local condition="$1"
     local test_name="${2:-test_$TESTS_RUN}"
-    
+
     ((TESTS_RUN++))
-    
+
     if eval "$condition"; then
         echo "✓ PASS: $test_name"
         ((TESTS_PASSED++))
@@ -7455,7 +7455,7 @@ assert_true() {
 assert_file_exists() {
     local file="$1"
     local test_name="${2:-file_exists_test}"
-    
+
     assert_true "[[ -f '$file' ]]" "$test_name"
 }
 
@@ -7477,11 +7477,11 @@ string_reverse() {
     local str="$1"
     local reversed=""
     local i
-    
+
     for ((i=${#str}-1; i>=0; i--)); do
         reversed="${reversed}${str:$i:1}"
     done
-    
+
     echo "$reversed"
 }
 
@@ -7625,7 +7625,7 @@ declare -A ERROR_MESSAGES=(
 
 init_logging() {
     mkdir -p "$LOG_DIR"
-    
+
     # Initialize configuration if it doesn't exist
     if [[ ! -f "$CONFIG_FILE" ]]; then
         cat > "$CONFIG_FILE" << EOF
@@ -7637,7 +7637,7 @@ TIMEOUT=30
 ENABLE_MONITORING=true
 EOF
     fi
-    
+
     source "$CONFIG_FILE"
 }
 
@@ -7647,10 +7647,10 @@ log() {
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     local pid="$$"
     local caller="${FUNCNAME[2]:-main}"
-    
+
     echo "[$timestamp] [$pid] [$level] [$caller] $message" | \
         tee -a "${LOG_DIR}/application.log"
-    
+
     # Also log to specific level files
     case "$level" in
         "ERROR") echo "[$timestamp] [$pid] $message" >> "${LOG_DIR}/errors.log" ;;
@@ -7668,12 +7668,12 @@ throw_error() {
     local error_type="$1"
     local context="${2:-No additional context}"
     local exit_code="${ERROR_CODES[$error_type]}"
-    
+
     log "ERROR" "${ERROR_MESSAGES[$error_type]}: $context"
-    
+
     # Update metrics
     update_metrics "errors" "$error_type"
-    
+
     return "$exit_code"
 }
 
@@ -7683,13 +7683,13 @@ retry_with_backoff() {
     local max_delay=60
     shift
     local command=("$@")
-    
+
     local attempt=1
     local delay="$base_delay"
-    
+
     while [[ $attempt -le $max_attempts ]]; do
         log "INFO" "Attempt $attempt/$max_attempts: ${command[*]}"
-        
+
         if "${command[@]}"; then
             log "INFO" "Operation successful on attempt $attempt"
             update_metrics "retries" "success_$attempt"
@@ -7697,17 +7697,17 @@ retry_with_backoff() {
         else
             local exit_code=$?
             log "WARN" "Attempt $attempt failed with exit code $exit_code"
-            
+
             if [[ $attempt -lt $max_attempts ]]; then
                 log "INFO" "Retrying in ${delay}s..."
                 sleep "$delay"
                 delay=$(( delay > max_delay ? max_delay : delay * 2 ))
             fi
         fi
-        
+
         ((attempt++))
     done
-    
+
     update_metrics "retries" "exhausted"
     throw_error "GENERAL_ERROR" "All $max_attempts retry attempts failed"
 }
@@ -7732,10 +7732,10 @@ update_metrics() {
     local category="$1"
     local key="$2"
     local value="${3:-1}"
-    
+
     # Simple JSON update (in real implementation, use jq or similar)
     local temp_file="${METRICS_FILE}.tmp"
-    
+
     if [[ -f "$METRICS_FILE" ]]; then
         # Basic metrics update (simplified for this example)
         cp "$METRICS_FILE" "$temp_file"
@@ -7747,23 +7747,23 @@ performance_monitor() {
     local operation_name="$1"
     shift
     local command=("$@")
-    
+
     local start_time=$(date +%s.%N)
     local start_memory=$(ps -o vsz= -p $$ | tr -d ' ')
-    
+
     log "DEBUG" "Starting performance monitoring for: $operation_name"
-    
+
     "${command[@]}"
     local exit_code=$?
-    
+
     local end_time=$(date +%s.%N)
     local end_memory=$(ps -o vsz= -p $$ | tr -d ' ')
     local duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "0")
     local memory_diff=$((end_memory - start_memory))
-    
+
     log "INFO" "Performance: $operation_name took ${duration}s, memory change: ${memory_diff}KB"
     update_metrics "performance" "$operation_name" "$duration"
-    
+
     return $exit_code
 }
 
@@ -7774,7 +7774,7 @@ performance_monitor() {
 validate_input() {
     local input="$1"
     local input_type="$2"
-    
+
     case "$input_type" in
         "file")
             [[ -f "$input" ]] || throw_error "FILE_NOT_FOUND" "$input"
@@ -7796,16 +7796,16 @@ validate_input() {
 process_file() {
     local input_file="$1"
     local output_file="$2"
-    
+
     log "INFO" "Processing file: $input_file -> $output_file"
-    
+
     validate_input "$input_file" "file"
-    
+
     # Simulate processing with potential failure
     if [[ "$(basename "$input_file")" == "error_file.txt" ]]; then
         throw_error "GENERAL_ERROR" "Simulated processing error"
     fi
-    
+
     # Perform actual processing
     if cp "$input_file" "$output_file"; then
         log "INFO" "File processed successfully"
@@ -7823,9 +7823,9 @@ process_file() {
 run_tests() {
     local test_count=0
     local test_passed=0
-    
+
     echo "Running test suite..."
-    
+
     # Test 1: Successful operation
     ((test_count++))
     echo "Test content" > /tmp/test_input.txt
@@ -7835,7 +7835,7 @@ run_tests() {
     else
         echo "✗ Test 1 FAILED: Successful file processing"
     fi
-    
+
     # Test 2: File not found
     ((test_count++))
     if ! process_file "/nonexistent/file.txt" "/tmp/output.txt" 2>/dev/null; then
@@ -7844,7 +7844,7 @@ run_tests() {
     else
         echo "✗ Test 2 FAILED: Should have failed for nonexistent file"
     fi
-    
+
     # Test 3: Input validation
     ((test_count++))
     if validate_input "123" "number" 2>/dev/null; then
@@ -7853,7 +7853,7 @@ run_tests() {
     else
         echo "✗ Test 3 FAILED: Number validation"
     fi
-    
+
     # Test 4: Retry mechanism
     ((test_count++))
     echo "error_content" > /tmp/error_file.txt
@@ -7863,13 +7863,13 @@ run_tests() {
     else
         echo "✗ Test 4 FAILED: Retry should have failed"
     fi
-    
+
     echo
     echo "Test Results: $test_passed/$test_count passed"
-    
+
     # Cleanup
     rm -f /tmp/test_input.txt /tmp/test_output.txt /tmp/error_file.txt
-    
+
     [[ $test_passed -eq $test_count ]]
 }
 
@@ -7904,9 +7904,9 @@ main() {
     # Initialize systems
     init_logging
     init_metrics
-    
+
     log "INFO" "$SCRIPT_NAME v$VERSION starting"
-    
+
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -7925,7 +7925,7 @@ main() {
                 if [[ $# -lt 3 ]]; then
                     throw_error "INVALID_INPUT" "Process command requires input and output files"
                 fi
-                
+
                 performance_monitor "file_processing" \
                     retry_with_backoff \
                     process_file "$2" "$3"
@@ -7954,13 +7954,13 @@ main() {
                 ;;
         esac
     done
-    
+
     # If no command provided, show help
     if [[ $# -eq 0 ]] && [[ "${1:-}" != "monitor" ]]; then
         show_help
         exit 0
     fi
-    
+
     log "INFO" "$SCRIPT_NAME completed successfully"
 }
 
@@ -8034,9 +8034,9 @@ die() {
 
 main() {
     log "INFO" "Starting $SCRIPT_NAME"
-    
+
     # Script logic here
-    
+
     log "INFO" "Completed successfully"
 }
 
@@ -8203,27 +8203,27 @@ Handling configuration files and settings:
 # Load configuration from file
 load_config() {
     local config_file="$1"
-    
+
     if [[ ! -f "$config_file" ]]; then
         echo "Error: Configuration file not found: $config_file" >&2
         return 1
     fi
-    
+
     # Read configuration file, ignoring comments and empty lines
     while IFS='=' read -r key value; do
         # Skip comments and empty lines
         [[ "$key" =~ ^[[:space:]]*# ]] && continue
         [[ -z "$key" ]] && continue
-        
+
         # Remove quotes from value
         value="${value%\"}"
         value="${value#\"}"
         value="${value%\'}"
         value="${value#\'}"
-        
+
         # Export as environment variable
         export "$key"="$value"
-        
+
     done < <(grep -E '^[^#]*=' "$config_file")
 }
 
@@ -8231,7 +8231,7 @@ load_config() {
 get_config() {
     local key="$1"
     local default="${2:-}"
-    
+
     if [[ -n "${!key:-}" ]]; then
         echo "${!key}"
     else
@@ -8243,7 +8243,7 @@ get_config() {
 require_config() {
     local key="$1"
     local description="${2:-$key}"
-    
+
     if [[ -z "${!key:-}" ]]; then
         echo "Error: Required configuration missing: $description" >&2
         return 1
@@ -8305,7 +8305,7 @@ source "$(dirname "$0")/lib/notification.sh"
 
 main() {
     log_info "Starting backup process"
-    
+
     # Create backup
     if create_backup "/home/user" "/backup/user_$(date +%Y%m%d).tar.gz"; then
         log_info "Backup completed successfully"
@@ -8395,7 +8395,7 @@ echo "Original filename: $filename"
 # Remove from beginning (shortest match)
 echo "Remove path (shortest): '${filename#*/}'"
 
-# Remove from beginning (longest match)  
+# Remove from beginning (longest match)
 echo "Remove path (longest): '${filename##*/}'"
 
 # Remove from end (shortest match)
@@ -8496,22 +8496,22 @@ Advanced command substitution techniques:
 
 
         echo
-        
+
         # Memory Information
         echo "=== MEMORY INFORMATION ==="
         free -h
         echo
-        
+
         # Disk Usage
         echo "=== DISK USAGE ==="
         df -h
         echo
-        
+
         # Network Interfaces
         echo "=== NETWORK INTERFACES ==="
         ip addr show | grep -E "(^[0-9]|inet )"
         echo
-        
+
         # Running Services
         echo "=== CRITICAL SERVICES ==="
         for service in sshd cron rsyslog; do
@@ -8557,10 +8557,10 @@ Advanced command substitution techniques:
             local command="$1"
             local result
             local exit_code
-    
+
             result=$(eval "$command" 2>/dev/null)
             exit_code=$?
-    
+
             if [[ $exit_code -eq 0 ]]; then
                 echo "$result"
             else
@@ -8592,7 +8592,7 @@ Advanced command substitution techniques:
         echo "Running bash processes: $running_bash_processes"
 
         # File processing
-        largest_log=$(find /var/log -name "*.log" -type f -exec ls -la {} \; 2>/dev/null | 
+        largest_log=$(find /var/log -name "*.log" -type f -exec ls -la {} \; 2>/dev/null |
                       sort -k5 -nr | head -1 | awk '{print $NF}' || echo "No logs found")
         echo "Largest log file: $largest_log"
         ```
@@ -8603,7 +8603,7 @@ Advanced command substitution techniques:
            ```bash
            # Bad
            result=`command`
-   
+
            # Good
            result=$(command)
            ```
@@ -8612,7 +8612,7 @@ Advanced command substitution techniques:
            ```bash
            # Bad
            result=$(command_that_might_fail)
-   
+
            # Good
            if result=$(command_that_might_fail 2>/dev/null); then
                echo "Success: $result"
@@ -8641,20 +8641,20 @@ Advanced command substitution techniques:
             local uptime_info=$(uptime)
             local disk_usage=$(df -h / | awk 'NR==2 {print $5}')
             local memory_usage=$(free | awk 'NR==2{printf "%.2f%%", $3*100/$2}')
-    
+
             echo "[$timestamp] System Status:"
             echo "  Uptime: $uptime_info"
             echo "  Disk Usage: $disk_usage"
             echo "  Memory Usage: $memory_usage"
-    
+
             # Advanced arithmetic
             local load_avg=$(uptime | awk '{print $NF}' | cut -d',' -f1)
             local alert_threshold=2.0
-    
+
             if (( $(echo "$load_avg > $alert_threshold" | bc -l) )); then
                 echo "  ⚠️ High load detected: $load_avg"
             fi
-    
+
             # Brace expansion for multiple checks
             for service in {ssh,nginx,mysql}; do
                 if systemctl is-active --quiet "$service"; then
@@ -8709,9 +8709,9 @@ log() {
     shift
     local message="$*"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    
+
     echo "[$timestamp] [$level] $message" | tee -a "$LOG_DIR/system_admin.log"
-    
+
     # Send critical messages to syslog
     if [[ "$level" == "ERROR" || "$level" == "CRITICAL" ]]; then
         logger -t "system_admin" "$level: $message"
@@ -8724,42 +8724,42 @@ log() {
 
 monitor_system_health() {
     local report_file="$LOG_DIR/health_report_$(date +%Y%m%d_%H%M%S).txt"
-    
+
     log "INFO" "Generating system health report"
-    
+
     {
         echo "=== SYSTEM HEALTH REPORT ==="
         echo "Generated: $(date)"
         echo "Hostname: $(hostname)"
         echo
-        
+
         # System uptime and load
         echo "=== SYSTEM STATUS ==="
         uptime
         echo
-        
+
         # Memory usage
         echo "=== MEMORY USAGE ==="
         free -h
         echo
-        
+
         # Disk usage
         echo "=== DISK USAGE ==="
         df -h
         echo
-        
+
         # Top processes
         echo "=== TOP PROCESSES ==="
         ps aux --sort=-%cpu | head -10
         echo
-        
+
         # Network connections
         echo "=== NETWORK CONNECTIONS ==="
         ss -tuln | head -20
         echo
-        
+
     } > "$report_file"
-    
+
     log "INFO" "Health report generated: $report_file"
     echo "$report_file"
 }
@@ -8768,24 +8768,24 @@ check_system_resources() {
     local cpu_threshold=80
     local memory_threshold=85
     local disk_threshold=90
-    
+
     # Check CPU usage
     local cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | sed 's/%us,//')
     if (( $(echo "$cpu_usage > $cpu_threshold" | bc -l) )); then
         log "WARN" "High CPU usage detected: ${cpu_usage}%"
     fi
-    
+
     # Check memory usage
     local memory_usage=$(free | awk 'NR==2{printf "%.2f", $3*100/$2}')
     if (( $(echo "$memory_usage > $memory_threshold" | bc -l) )); then
         log "WARN" "High memory usage detected: ${memory_usage}%"
     fi
-    
+
     # Check disk usage
     while read -r line; do
         local usage=$(echo "$line" | awk '{print $5}' | sed 's/%//')
         local mount=$(echo "$line" | awk '{print $6}')
-        
+
         if [[ "$usage" -gt "$disk_threshold" ]]; then
             log "WARN" "High disk usage on $mount: ${usage}%"
         fi
@@ -8799,22 +8799,22 @@ check_system_resources() {
 backup_system_configs() {
     local backup_name="system_config_$(date +%Y%m%d_%H%M%S)"
     local backup_path="$BACKUP_DIR/$backup_name.tar.gz"
-    
+
     log "INFO" "Starting system configuration backup"
-    
+
     local config_dirs=(
         "/etc"
         "/boot"
         "/var/spool/cron"
     )
-    
+
     if tar -czf "$backup_path" "${config_dirs[@]}" 2>/dev/null; then
         log "INFO" "System backup completed: $backup_path"
         chmod 600 "$backup_path"
-        
+
         # Keep only last 30 days of backups
         find "$BACKUP_DIR" -name "system_config_*.tar.gz" -mtime +30 -delete
-        
+
         echo "$backup_path"
     else
         log "ERROR" "System backup failed"
@@ -8828,14 +8828,14 @@ backup_system_configs() {
 
 system_cleanup() {
     log "INFO" "Starting system cleanup"
-    
+
     # Clean temporary files
     find /tmp -type f -mtime +7 -delete 2>/dev/null || true
     find /var/tmp -type f -mtime +30 -delete 2>/dev/null || true
-    
+
     # Clean old logs
     find /var/log -name "*.log.*" -mtime +30 -delete 2>/dev/null || true
-    
+
     # Package manager cleanup
     if command -v apt >/dev/null; then
         apt autoremove -y
@@ -8844,7 +8844,7 @@ system_cleanup() {
         yum autoremove -y
         yum clean all
     fi
-    
+
     log "INFO" "System cleanup completed"
 }
 
@@ -8861,7 +8861,7 @@ Usage: $0 [COMMAND] [OPTIONS]
 Commands:
   monitor         Generate system health report
   check-resources Check system resource usage
-  backup          Backup system configurations  
+  backup          Backup system configurations
   cleanup         Clean temporary files and caches
   all            Run all maintenance tasks
   help           Show this help message
@@ -8938,11 +8938,11 @@ readonly DEPLOY_DIR="$PROJECT_ROOT/deploy"
 build_application() {
     local environment="${1:-development}"
     local version="${2:-$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d_%H%M%S)}"
-    
+
     echo "🔨 Building application for $environment environment (version: $version)"
-    
+
     mkdir -p "$BUILD_DIR"
-    
+
     # Language-specific build process
     if [[ -f "package.json" ]]; then
         npm ci
@@ -8956,16 +8956,16 @@ build_application() {
         make clean
         make build ENV="$environment"
     fi
-    
+
     echo "$version" > "$BUILD_DIR/VERSION"
     echo "✅ Build completed: $version"
 }
 
 run_tests() {
     local test_type="${1:-unit}"
-    
+
     echo "🧪 Running $test_type tests..."
-    
+
     case "$test_type" in
         unit)
             if [[ -f "package.json" ]]; then
@@ -8993,16 +8993,16 @@ run_tests() {
             fi
             ;;
     esac
-    
+
     echo "✅ $test_type tests completed"
 }
 
 deploy_application() {
     local environment="$1"
     local version="$2"
-    
+
     echo "🚀 Deploying version $version to $environment"
-    
+
     case "$environment" in
         staging)
             deploy_to_staging "$version"
@@ -9020,19 +9020,19 @@ deploy_application() {
 deploy_to_staging() {
     local version="$1"
     local staging_server="staging.example.com"
-    
+
     echo "📦 Deploying to staging server..."
-    
+
     # Deploy with rsync for efficiency
     rsync -avz --delete "$BUILD_DIR/" "deploy@$staging_server:/var/www/staging/"
-    
+
     # Restart services
     ssh "deploy@$staging_server" "systemctl restart myapp-staging"
-    
+
     # Health check
     local health_url="http://$staging_server/health"
     local retries=5
-    
+
     for ((i=1; i<=retries; i++)); do
         if curl -f "$health_url" >/dev/null 2>&1; then
             echo "✅ Staging deployment successful"
@@ -9041,7 +9041,7 @@ deploy_to_staging() {
         echo "⏳ Health check attempt $i/$retries failed, retrying..."
         sleep 10
     done
-    
+
     echo "❌ Staging deployment failed health check"
     exit 1
 }
@@ -9049,22 +9049,22 @@ deploy_to_staging() {
 deploy_to_production() {
     local version="$1"
     local production_servers=("prod1.example.com" "prod2.example.com")
-    
+
     echo "🔄 Starting blue-green deployment to production..."
-    
+
     for server in "${production_servers[@]}"; do
         echo "📦 Deploying to $server..."
-        
+
         # Create backup
         ssh "deploy@$server" "cp -r /var/www/current /var/www/backup-$(date +%Y%m%d_%H%M%S)" || true
-        
+
         # Deploy new version
         rsync -avz --delete "$BUILD_DIR/" "deploy@$server:/var/www/new/"
-        
+
         # Atomic switch
         ssh "deploy@$server" "ln -sfn /var/www/new /var/www/current"
         ssh "deploy@$server" "systemctl reload myapp"
-        
+
         # Health check
         local health_url="http://$server/health"
         if curl -f "$health_url" >/dev/null 2>&1; then
@@ -9081,27 +9081,27 @@ deploy_to_production() {
 run_complete_pipeline() {
     local environment="$1"
     local skip_tests="${2:-false}"
-    
+
     echo "🎯 Starting complete CI/CD pipeline for $environment"
-    
+
     local version
     if git rev-parse --git-dir >/dev/null 2>&1; then
         version="$(git describe --tags --always --dirty)"
     else
         version="$(date +%Y%m%d_%H%M%S)"
     fi
-    
+
     # Pipeline stages
     build_application "$environment" "$version"
-    
+
     if [[ "$skip_tests" != "true" ]]; then
         run_tests "unit"
         run_tests "integration"
         run_tests "security"
     fi
-    
+
     deploy_application "$environment" "$version"
-    
+
     echo "🎉 Pipeline completed successfully for $environment (version: $version)"
 }
 
@@ -9191,15 +9191,15 @@ process_csv_data() {
     local input_file="$1"
     local output_file="$2"
     local operations="${3:-clean,validate,transform}"
-    
+
     echo "📊 Processing CSV data: $input_file -> $output_file"
-    
+
     [[ ! -f "$input_file" ]] && { echo "❌ Input file not found: $input_file"; return 1; }
-    
+
     local temp_file
     temp_file=$(mktemp)
     cp "$input_file" "$temp_file"
-    
+
     # Process operations
     for operation in ${operations//,/ }; do
         case "$operation" in
@@ -9212,14 +9212,14 @@ process_csv_data() {
                 echo "✅ Validating data..."
                 local expected_cols
                 expected_cols=$(head -1 "$temp_file" | tr ',' '\n' | wc -l)
-                
+
                 awk -F',' -v cols="$expected_cols" '
                 NR == 1 { next }
-                NF != cols { 
+                NF != cols {
                     print "⚠️ Line " NR " has " NF " columns, expected " cols > "/dev/stderr"
                     error_count++
                 }
-                END { 
+                END {
                     if (error_count > 0) {
                         print "Found " error_count " validation errors" > "/dev/stderr"
                     }
@@ -9232,19 +9232,19 @@ process_csv_data() {
                 {
                     # Convert dates to ISO format
                     gsub(/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/, "\\3-\\1-\\2")
-                    
+
                     # Normalize whitespace
                     for(i=1; i<=NF; i++) {
                         gsub(/^[ \t]+|[ \t]+$/, "", $i)
                     }
-                    
+
                     print
                 }' "$temp_file" > "${temp_file}.transform"
                 mv "${temp_file}.transform" "$temp_file"
                 ;;
         esac
     done
-    
+
     mv "$temp_file" "$output_file"
     echo "✅ CSV processing completed: $output_file"
 }
@@ -9252,43 +9252,43 @@ process_csv_data() {
 generate_data_report() {
     local data_file="$1"
     local report_file="${2:-${data_file%.*}_report.txt}"
-    
+
     echo "📋 Generating data report for $data_file"
-    
+
     {
         echo "=== DATA ANALYSIS REPORT ==="
         echo "File: $data_file"
         echo "Generated: $(date)"
         echo
-        
+
         # Basic file info
         echo "=== FILE STATISTICS ==="
         echo "Total lines: $(wc -l < "$data_file")"
         echo "Data lines: $(($(wc -l < "$data_file") - 1))"
         echo "File size: $(du -h "$data_file" | cut -f1)"
         echo
-        
+
         # Column analysis
         echo "=== COLUMN ANALYSIS ==="
         local cols
         cols=$(head -1 "$data_file" | tr ',' '\n' | wc -l)
         echo "Number of columns: $cols"
-        
+
         head -1 "$data_file" | tr ',' '\n' | nl -w2 -s': '
         echo
-        
+
         # Numeric column statistics
         for ((i=1; i<=cols; i++)); do
             local col_name
             col_name=$(head -1 "$data_file" | cut -d',' -f"$i")
-            
+
             # Check if column contains numeric data
             local numeric_count
             numeric_count=$(awk -F',' -v col="$i" '
                 NR > 1 && $col ~ /^[0-9]+\.?[0-9]*$/ { count++ }
                 END { print count+0 }
             ' "$data_file")
-            
+
             if [[ "$numeric_count" -gt 0 ]]; then
                 echo "=== STATISTICS for $col_name ==="
                 awk -F',' -v col="$i" '
@@ -9305,7 +9305,7 @@ generate_data_report() {
                         print "Average: " (sum/count)
                         print "Min: " min
                         print "Max: " max
-                        
+
                         # Calculate median
                         asort(values)
                         if (count % 2 == 1) {
@@ -9319,9 +9319,9 @@ generate_data_report() {
                 echo
             fi
         done
-        
+
     } > "$report_file"
-    
+
     echo "✅ Report generated: $report_file"
 }
 
@@ -9329,9 +9329,9 @@ create_data_visualization() {
     local data_file="$1"
     local column="${2:-2}"
     local chart_type="${3:-bar}"
-    
+
     echo "📊 Creating $chart_type chart for column $column"
-    
+
     case "$chart_type" in
         bar)
             awk -F',' -v col="$column" '
@@ -9667,4 +9667,4 @@ Thank you for helping make this documentation better for everyone! 🎉
 
 ---
 
-*This documentation is maintained by the community. Last updated: December 2024*
+*This documentation is maintained by the community. Last updated: August 2025*
