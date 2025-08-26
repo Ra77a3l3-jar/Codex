@@ -1,4 +1,4 @@
-# 🚀 Git Documentation
+# 🐙 Git Documentation
 *Version: 2.45+ | Last Updated: 2024*
 
 Git is a distributed version control system designed to handle everything from small to very large projects with speed and efficiency. It's the backbone of modern software development, enabling teams to collaborate seamlessly and track changes in their codebase with precision.
