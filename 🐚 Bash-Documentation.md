@@ -7982,6 +7982,346 @@ main "$@"
 
 ---
 
+## 📦 Script Organization and Modularity
+
+Organizing Bash scripts for maintainability and reusability.
+
+### Script Structure
+
+Best practices for organizing script files:
+
+```📚 Documentation/🐚 Bash-Documentation.md#L7986-8020
+#!/bin/bash
+# my_script.sh - Example of well-structured script
+# Version: 1.0.0
+# Description: Demonstrates good script organization
+# Author: Your Name
+# Usage: ./my_script.sh [options] [arguments]
+
+set -euo pipefail
+
+#===============================================
+# CONFIGURATION
+#===============================================
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPT_NAME="$(basename "$0")"
+readonly LOG_FILE="/var/log/${SCRIPT_NAME%.sh}.log"
+readonly CONFIG_FILE="$SCRIPT_DIR/config.conf"
+
+# Default values
+DEFAULT_TIMEOUT=30
+DEFAULT_RETRIES=3
+
+#===============================================
+# UTILITY FUNCTIONS
+#===============================================
+
+log() {
+    local level="$1"
+    shift
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $*" | tee -a "$LOG_FILE"
+}
+
+die() {
+    log "ERROR" "$*"
+    exit 1
+}
+
+#===============================================
+# MAIN FUNCTIONS
+#===============================================
+
+main() {
+    log "INFO" "Starting $SCRIPT_NAME"
+    
+    # Script logic here
+    
+    log "INFO" "Completed successfully"
+}
+
+# Only run main if script is executed directly
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
+```
+
+### Including External Scripts
+
+Methods for including and sourcing external scripts:
+
+```📚 Documentation/🐚 Bash-Documentation.md#L8021-8070
+#!/bin/bash
+# main_script.sh - Demonstrates script inclusion
+
+# Source utility functions
+source "$(dirname "$0")/lib/utils.sh"
+source "$(dirname "$0")/lib/logging.sh"
+
+# Alternative: check if file exists before sourcing
+if [[ -f "$(dirname "$0")/lib/optional.sh" ]]; then
+    source "$(dirname "$0")/lib/optional.sh"
+fi
+
+# Function to safely source files
+safe_source() {
+    local file="$1"
+    if [[ -f "$file" && -r "$file" ]]; then
+        source "$file"
+        return 0
+    else
+        echo "Warning: Cannot source $file" >&2
+        return 1
+    fi
+}
+
+# Use safe sourcing
+safe_source "$(dirname "$0")/config/settings.conf"
+safe_source "$(dirname "$0")/lib/database.sh"
+
+# Example directory structure:
+# project/
+# ├── main_script.sh
+# ├── config/
+# │   └── settings.conf
+# └── lib/
+#     ├── utils.sh
+#     ├── logging.sh
+#     └── database.sh
+```
+
+### Creating Libraries
+
+Building reusable function libraries:
+
+```📚 Documentation/🐚 Bash-Documentation.md#L8071-8150
+#!/bin/bash
+# lib/utils.sh - Utility function library
+
+# Prevent multiple inclusions
+if [[ -n "${UTILS_LOADED:-}" ]]; then
+    return 0
+fi
+readonly UTILS_LOADED=1
+
+#===============================================
+# STRING UTILITIES
+#===============================================
+
+# Check if string is empty
+is_empty() {
+    [[ -z "${1:-}" ]]
+}
+
+# Trim whitespace from string
+trim() {
+    local var="$1"
+    # Remove leading whitespace
+    var="${var#"${var%%[![:space:]]*}"}"
+    # Remove trailing whitespace
+    var="${var%"${var##*[![:space:]]}"}"
+    echo "$var"
+}
+
+# Convert to uppercase
+to_upper() {
+    echo "${1^^}"
+}
+
+# Convert to lowercase
+to_lower() {
+    echo "${1,,}"
+}
+
+#===============================================
+# FILE UTILITIES
+#===============================================
+
+# Check if file is readable
+is_readable() {
+    [[ -f "$1" && -r "$1" ]]
+}
+
+# Get file size in bytes
+file_size() {
+    if [[ -f "$1" ]]; then
+        stat -c%s "$1" 2>/dev/null || stat -f%z "$1" 2>/dev/null
+    else
+        return 1
+    fi
+}
+
+# Create directory if it doesn't exist
+ensure_dir() {
+    local dir="$1"
+    if [[ ! -d "$dir" ]]; then
+        mkdir -p "$dir"
+    fi
+}
+
+#===============================================
+# VALIDATION UTILITIES
+#===============================================
+
+# Check if value is a valid email
+is_email() {
+    local email="$1"
+    [[ "$email" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]
+}
+
+# Check if value is a valid IP address
+is_ip() {
+    local ip="$1"
+    [[ "$ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]
+}
+
+# Check if port is valid
+is_valid_port() {
+    local port="$1"
+    [[ "$port" =~ ^[0-9]+$ && "$port" -ge 1 && "$port" -le 65535 ]]
+}
+```
+
+### Configuration Management
+
+Handling configuration files and settings:
+
+```📚 Documentation/🐚 Bash-Documentation.md#L8151-8220
+#!/bin/bash
+# lib/config.sh - Configuration management library
+
+# Configuration file format (config.conf):
+# # Comments start with #
+# KEY=value
+# ANOTHER_KEY="value with spaces"
+# NUMERIC_KEY=123
+
+#===============================================
+# CONFIGURATION FUNCTIONS
+#===============================================
+
+# Load configuration from file
+load_config() {
+    local config_file="$1"
+    
+    if [[ ! -f "$config_file" ]]; then
+        echo "Error: Configuration file not found: $config_file" >&2
+        return 1
+    fi
+    
+    # Read configuration file, ignoring comments and empty lines
+    while IFS='=' read -r key value; do
+        # Skip comments and empty lines
+        [[ "$key" =~ ^[[:space:]]*# ]] && continue
+        [[ -z "$key" ]] && continue
+        
+        # Remove quotes from value
+        value="${value%\"}"
+        value="${value#\"}"
+        value="${value%\'}"
+        value="${value#\'}"
+        
+        # Export as environment variable
+        export "$key"="$value"
+        
+    done < <(grep -E '^[^#]*=' "$config_file")
+}
+
+# Get configuration value with default
+get_config() {
+    local key="$1"
+    local default="${2:-}"
+    
+    if [[ -n "${!key:-}" ]]; then
+        echo "${!key}"
+    else
+        echo "$default"
+    fi
+}
+
+# Validate required configuration
+require_config() {
+    local key="$1"
+    local description="${2:-$key}"
+    
+    if [[ -z "${!key:-}" ]]; then
+        echo "Error: Required configuration missing: $description" >&2
+        return 1
+    fi
+}
+
+# Example usage:
+# load_config "config/app.conf"
+# DATABASE_URL=$(get_config "DATABASE_URL" "localhost:5432")
+# require_config "API_KEY" "API Key for external service"
+```
+
+### ⚠️ Common Pitfalls
+
+1. **Forgetting to make scripts executable**:
+   ```bash
+   chmod +x script.sh
+   ```
+
+2. **Not handling missing dependencies**:
+   ```bash
+   # Good - check before sourcing
+   if ! source lib/utils.sh; then
+       echo "Error: Required library missing" >&2
+       exit 1
+   fi
+   ```
+
+3. **Circular dependencies between scripts**
+
+### ✅ Best Practices
+
+1. **Use consistent directory structure**
+2. **Document dependencies clearly**
+3. **Implement proper error handling**
+4. **Use meaningful function and variable names**
+5. **Keep functions focused and single-purpose**
+
+### 🏋️ Exercise 12: Modular Script System
+
+Create a modular backup system:
+
+```📚 Documentation/🐚 Bash-Documentation.md#L8221-8280
+# Project structure:
+# backup_system/
+# ├── backup.sh (main script)
+# ├── config/
+# │   └── backup.conf
+# └── lib/
+#     ├── logging.sh
+#     ├── compression.sh
+#     └── notification.sh
+
+# Main script (backup.sh):
+#!/bin/bash
+source "$(dirname "$0")/lib/logging.sh"
+source "$(dirname "$0")/lib/compression.sh"
+source "$(dirname "$0")/lib/notification.sh"
+
+main() {
+    log_info "Starting backup process"
+    
+    # Create backup
+    if create_backup "/home/user" "/backup/user_$(date +%Y%m%d).tar.gz"; then
+        log_info "Backup completed successfully"
+        send_notification "Backup completed" "User backup finished successfully"
+    else
+        log_error "Backup failed"
+        send_notification "Backup failed" "User backup encountered errors"
+        exit 1
+    fi
+}
+
+main "$@"
+```
+
+---
+
 ## 🚀 Advanced Features
 
 📊 **Chapter 11 of 13**
@@ -8154,1086 +8494,7 @@ done
 
 Advanced command substitution techniques:
 
-```bash
-#!/bin/bash
-# command_substitution.sh - Advanced command substitution
 
-echo "=== Basic Command Substitution ==="
-
-# Modern syntax (preferred)
-current_date=$(date)
-echo "Current date: $current_date"
-
-# Legacy syntax (avoid)
-current_user=`whoami`
-echo "Current user: $current_user"
-
-echo
-echo "=== Nested Command Substitution ==="
-
-# Nested substitution
-echo "Files in current directory: $(ls -1 $(pwd) | wc -l)"
-
-# Complex nested example
-echo "Largest file: $(ls -la $(find . -type f -name "*.txt" 2>/dev/null | head -1) 2>/dev/null || echo "No files found")"
-
-echo
-echo "=== Command Substitution with Error Handling ==="
-
-# Safe command substitution
-safe_command_sub() {
-    local command="$1"
-    local result
-    local exit_code
-    
-    result=$(eval "$command" 2>/dev/null)
-    exit_code=$?
-    
-    if [[ $exit_code -eq 0 ]]; then
-        echo "$result"
-    else
-        echo "Command failed: $command" >&2
-        return $exit_code
-    fi
-}
-
-echo "Safe command substitution:"
-safe_command_sub "date"
-safe_command_sub "nonexistent_command" || echo "Handled error gracefully"
-
-echo
-echo "=== Advanced Patterns ==="
-
-# Multi-line command substitution
-config_info=$(cat << 'EOF'
-System Information:
-- Hostname: $(hostname)
-- Uptime: $(uptime | cut -d',' -f1)
-- Load: $(uptime | awk '{print $NF}')
-EOF
-)
-
-echo "Config info template created"
-
-# Process list filtering
-running_bash_processes=$(ps aux | grep bash | grep -v grep | wc -l)
-echo "Running bash processes: $running_bash_processes"
-
-# File processing
-largest_log=$(find /var/log -name "*.log" -type f -exec ls -la {} \; 2>/dev/null | 
-              sort -k5 -nr | head -1 | awk '{print $NF}' || echo "No logs found")
-echo "Largest log file: $largest_log"
-```
-
-### Arithmetic Expansion
-
-Mathematical operations in Bash:
-
-```bash
-#!/bin/bash
-# arithmetic_expansion.sh - Arithmetic expansion techniques
-
-echo "=== Basic Arithmetic ==="
-
-# Basic operations
-a=10
-b=3
-
-echo "a = $a, b = $b"
-echo "Addition: $((a + b))"
-echo "Subtraction: $((a - b))"
-echo "Multiplication: $((a * b))"
-echo "Division: $((a / b))"
-echo "Modulo: $((a % b))"
-echo "Exponentiation: $((a ** 2))"
-
-echo
-echo "=== Advanced Arithmetic ==="
-
-# Complex expressions
-result=$((a * b + 5))
-echo "Complex expression (a * b + 5): $result"
-
-# Increment/decrement
-counter=0
-echo "Initial counter: $counter"
-echo "Pre-increment: $((++counter))"
-echo "Post-increment: $((counter++))"
-echo "Final counter: $counter"
-
-# Comparison operations
-x=15
-y=20
-echo "x = $x, y = $y"
-echo "x < y: $((x < y))"
-echo "x > y: $((x > y))"
-echo "x == y: $((x == y))"
-echo "x != y: $((x != y))"
-
-echo
-echo "=== Bitwise Operations ==="
-
-num1=12  # 1100 in binary
-num2=5   # 0101 in binary
-
-echo "num1 = $num1, num2 = $num2"
-echo "AND: $((num1 & num2))"
-echo "OR: $((num1 | num2))"
-echo "XOR: $((num1 ^ num2))"
-echo "Left shift: $((num1 << 1))"
-echo "Right shift: $((num1 >> 1))"
-echo "NOT num1: $((~num1))"
-
-echo
-echo "=== Arithmetic with Variables ==="
-
-# Using variables in arithmetic
-calculate() {
-    local expr="$1"
-    echo "$expr = $((expr))"
-}
-
-calculate "5 + 3 * 2"
-calculate "100 / 4 - 5"
-
-# Base conversions
-decimal=255
-echo "Decimal $decimal in:"
-echo "  Binary: $(echo "obase=2; $decimal" | bc)"
-echo "  Octal: $(echo "obase=8; $decimal" | bc)"  
-echo "  Hex: $(echo "obase=16; $decimal" | bc)"
-
-# Different base inputs
-echo "Binary 1111 to decimal: $((2#1111))"
-echo "Octal 377 to decimal: $((8#377))"
-echo "Hex FF to decimal: $((16#FF))"
-
-echo
-echo "=== Practical Examples ==="
-
-# Calculate file sizes
-total_size=0
-for file in /etc/passwd /etc/hosts /etc/fstab; do
-    if [[ -f "$file" ]]; then
-        size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-        echo "$(basename "$file"): $size bytes"
-        ((total_size += size))
-    fi
-done
-echo "Total size: $total_size bytes"
-
-# Time calculations
-start_time=$(date +%s)
-sleep 2
-end_time=$(date +%s)
-duration=$((end_time - start_time))
-echo "Operation took $duration seconds"
-
-# Percentage calculations
-completed=75
-total=100
-percentage=$((completed * 100 / total))
-echo "Progress: $completed/$total ($percentage%)"
-```
-
-### Brace Expansion
-
-Advanced brace expansion for automation:
-
-```bash
-#!/bin/bash
-# brace_expansion.sh - Advanced brace expansion techniques
-
-echo "=== Basic Brace Expansion ==="
-
-# Simple list expansion
-echo "Colors: " {red,green,blue}
-echo "Numbers: " {1,2,3,4,5}
-
-# Mixed types
-echo "Mixed: " {a,1,x,9}
-
-echo
-echo "=== Range Expansion ==="
-
-# Numeric ranges
-echo "Numbers 1-10: " {1..10}
-echo "Numbers 10-1: " {10..1}
-echo "Even numbers: " {0..20..2}
-echo "Odd numbers: " {1..19..2}
-
-# Character ranges
-echo "Letters a-z: " {a..z}
-echo "Letters A-Z: " {A..Z}
-echo "Subset: " {m..r}
-
-# Zero-padded numbers
-echo "Zero-padded: " {001..010}
-echo "Zero-padded with step: " {000..100..10}
-
-echo
-echo "=== Nested Brace Expansion ==="
-
-# Nested expansions
-echo "Nested: " {a,b}{1,2,3}
-echo "Complex nested: " {red,blue}_{light,dark}_{shirt,pants}
-
-# File extension patterns
-echo "Web files: " index.{html,php,jsp}
-echo "Image files: " photo.{jpg,png,gif}
-
-# Directory structure
-echo "Paths: " /home/{user1,user2,user3}/{Documents,Downloads,Pictures}
-
-echo
-echo "=== Practical Applications ==="
-
-# Create directory structure
-echo "Creating directory structure..."
-mkdir -p project/{src,docs,tests}/{main,backup}
-echo "Created directories:"
-find project -type d | sort
-
-# Backup files with timestamped copies
-echo
-echo "File backup pattern:"
-for file in {config,data,log}.txt; do
-    echo "Backing up: $file -> ${file%.txt}_{$(date +%Y%m%d),backup}.txt"
-done
-
-# Network testing
-echo
-echo "Network test commands:"
-for host in {192.168.1.{1,10,100},google.com,github.com}; do
-    echo "ping -c1 $host"
-done
-
-# Log rotation pattern
-echo
-echo "Log rotation:"
-for log in {access,error,debug}.log; do
-    for i in {1..5}; do
-        echo "$log -> $log.$i"
-    done
-done
-
-echo
-echo "=== Advanced Patterns ==="
-
-# Combining with other expansions
-files=(/etc/{passwd,hosts,fstab})
-echo "System files: ${files[@]}"
-
-# Using with command substitution
-echo "Process info:"
-for pid in {1..5}; do
-    echo "PID $pid: $(ps -p $pid -o comm= 2>/dev/null || echo 'not found')"
-done
-
-# Complex file operations
-echo
-echo "Complex file patterns:"
-echo "Logs: " app_{$(date +%Y),$(date +%Y --date='1 year ago')}.{access,error}.log
-echo "Configs: " {dev,staging,prod}.{database,server,cache}.conf
-echo "Backups: " backup_{daily,weekly,monthly}_{full,incremental}.tar.gz
-
-# Clean up test directory
-rm -rf project
-
-echo
-echo "=== Brace Expansion with Variables ==="
-
-# Using variables in brace expansion (requires eval)
-prefix="test"
-suffix="log"
-eval echo "Files: $prefix.{1..3}.$suffix"
-
-# Dynamic brace expansion
-create_numbered_files() {
-    local base="$1"
-    local count="$2"
-    local ext="$3"
-    
-    eval echo "Would create: $base.{1..$count}.$ext"
-}
-
-create_numbered_files "data" 5 "txt"
-```
-
-    [[ -n "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"
-    [[ -n "$PID_FILE" ]] && rm -f "$PID_FILE"
-}
-
-# Dependency checking
-check_dependencies() {
-    local missing=()
-    
-    for cmd in "${REQUIRED_COMMANDS[@]}"; do
-        if ! command -v "$cmd" >/dev/null 2>&1; then
-            missing+=("$cmd")
-        fi
-    done
-    
-    if [[ ${#missing[@]} -gt 0 ]]; then
-        die "Missing required dependencies: ${missing[*]}" "$EXIT_DEPENDENCY_ERROR"
-    fi
-}
-
-#===============================================
-# CONFIGURATION MANAGEMENT
-#===============================================
-
-load_configuration() {
-    if [[ -f "$CONFIG_FILE" ]]; then
-        log_debug "Loading configuration from $CONFIG_FILE"
-        source "$CONFIG_FILE"
-    else
-        log_info "Configuration file not found, creating default: $CONFIG_FILE"
-        create_default_config
-    fi
-}
-
-create_default_config() {
-    mkdir -p "$(dirname "$CONFIG_FILE")"
-    cat > "$CONFIG_FILE" << EOF
-# $SCRIPT_NAME Configuration File
-# Generated on: $(date)
-
-# Logging configuration
-LOG_LEVEL="$DEFAULT_LOG_LEVEL"
-
-# Timeout settings
-TIMEOUT=$DEFAULT_TIMEOUT
-
-# Feature toggles
-VERBOSE=false
-DRY_RUN=false
-
-# Custom settings
-# Add your custom configuration here
-EOF
-    log_info "Default configuration created: $CONFIG_FILE"
-}
-
-#===============================================
-# MAIN FUNCTIONS
-#===============================================
-
-main() {
-    log_info "$SCRIPT_NAME v$SCRIPT_VERSION starting"
-    
-    # Initialize
-    check_dependencies
-    load_configuration
-    
-    # Set up signal handlers
-    trap cleanup EXIT
-    trap 'die "Script interrupted" 130' INT TERM
-    
-    # Parse arguments and execute
-    parse_arguments "$@"
-    execute_main_logic
-    
-    log_info "$SCRIPT_NAME completed successfully"
-}
-
-parse_arguments() {
-    while [[ $# -gt 0 ]]; do
-        case "$1" in
-            -h|--help)
-                show_help
-                exit 0
-                ;;
-            -v|--verbose)
-                VERBOSE=true
-                LOG_LEVEL="DEBUG"
-                shift
-                ;;
-            --version)
-                echo "$SCRIPT_NAME v$SCRIPT_VERSION"
-                exit 0
-                ;;
-            *)
-                # Handle remaining arguments
-                break
-                ;;
-        esac
-    done
-}
-
-execute_main_logic() {
-    # Main script logic goes here
-    log_info "Executing main logic..."
-}
-
-show_help() {
-    cat << EOF
-$SCRIPT_NAME v$SCRIPT_VERSION - $SCRIPT_DESCRIPTION
-
-Usage: $SCRIPT_NAME [OPTIONS] [ARGUMENTS]
-
-Options:
-  -h, --help      Show this help message
-  -v, --verbose   Enable verbose output
-  --version       Show version information
-
-Examples:
-  $SCRIPT_NAME --help
-  $SCRIPT_NAME --verbose
-
-Author: $SCRIPT_AUTHOR
-EOF
-}
-
-# Entry point
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    main "$@"
-fi
-```
-
-### Including External Scripts
-
-Techniques for including and sourcing external scripts:
-
-```bash
-#!/bin/bash
-# including_scripts.sh - Including external scripts and libraries
-
-echo "=== Basic Script Inclusion ==="
-
-# Method 1: Source relative to script location
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Safe sourcing with error handling
-safe_source() {
-    local script_path="$1"
-    
-    if [[ -f "$script_path" ]]; then
-        if source "$script_path"; then
-            echo "Successfully loaded: $script_path"
-        else
-            echo "Error loading: $script_path" >&2
-            return 1
-        fi
-    else
-        echo "Script not found: $script_path" >&2
-        return 1
-    fi
-}
-
-# Create a sample library
-mkdir -p libs
-cat > libs/utils.sh << 'EOF'
-#!/bin/bash
-# utils.sh - Utility functions library
-
-# String utilities
-string_reverse() {
-    local str="$1"
-    echo "$str" | rev
-}
-
-string_uppercase() {
-    local str="$1"
-    echo "$str" | tr '[:lower:]' '[:upper:]'
-}
-
-# Math utilities
-is_prime() {
-    local num="$1"
-    if [[ $num -lt 2 ]]; then
-        return 1
-    fi
-    
-    for ((i=2; i*i<=num; i++)); do
-        if [[ $((num % i)) -eq 0 ]]; then
-            return 1
-        fi
-    done
-    return 0
-}
-
-# System utilities
-get_memory_usage() {
-    free -m | awk '/^Mem:/ {printf "%.1f", $3/$2*100}'
-}
-
-# Export functions
-export -f string_reverse string_uppercase is_prime get_memory_usage
-EOF
-
-# Test sourcing
-echo "Loading utility library:"
-safe_source "libs/utils.sh"
-
-# Test library functions
-echo "Testing library functions:"
-echo "Reverse 'hello': $(string_reverse 'hello')"
-echo "Uppercase 'world': $(string_uppercase 'world')"
-echo "Is 17 prime? $(is_prime 17 && echo "Yes" || echo "No")"
-echo "Memory usage: $(get_memory_usage)%"
-
-echo
-echo "=== Advanced Inclusion Patterns ==="
-
-# Create a configuration library
-cat > libs/config.sh << 'EOF'
-#!/bin/bash
-# config.sh - Configuration management library
-
-declare -A CONFIG
-CONFIG[app_name]="MyApp"
-CONFIG[version]="1.0.0"
-CONFIG[debug]="false"
-
-load_config() {
-    local config_file="$1"
-    
-    if [[ -f "$config_file" ]]; then
-        while IFS='=' read -r key value; do
-            [[ "$key" =~ ^[[:space:]]*# ]] && continue
-            [[ -z "$key" ]] && continue
-            CONFIG["$key"]="$value"
-        done < "$config_file"
-    fi
-}
-
-get_config() {
-    local key="$1"
-    local default="$2"
-    echo "${CONFIG[$key]:-$default}"
-}
-
-set_config() {
-    local key="$1"
-    local value="$2"
-    CONFIG["$key"]="$value"
-}
-EOF
-
-# Load configuration library
-safe_source "libs/config.sh"
-
-echo "Configuration library loaded:"
-echo "App name: $(get_config 'app_name')"
-echo "Version: $(get_config 'version')"
-echo "Debug mode: $(get_config 'debug')"
-
-# Clean up
-rm -rf libs
-```
-
-### Creating Libraries
-
-Building reusable function libraries:
-
-```bash
-#!/bin/bash
-# library_creation.sh - Creating reusable libraries
-
-echo "=== Creating a Logging Library ==="
-
-mkdir -p mylibs
-
-cat > mylibs/logging.sh << 'EOF'
-#!/bin/bash
-# logging.sh - Comprehensive logging library
-# Version: 1.0.0
-# Usage: source logging.sh
-
-# Configuration
-LOG_LEVEL=${LOG_LEVEL:-INFO}
-LOG_FILE=${LOG_FILE:-}
-LOG_FORMAT=${LOG_FORMAT:-"[%s] [%s] %s\n"}
-
-# Log levels
-declare -A LOG_LEVELS=(
-    [DEBUG]=0
-    [INFO]=1
-    [WARN]=2
-    [ERROR]=3
-)
-
-# Current log level numeric value
-CURRENT_LOG_LEVEL=${LOG_LEVELS[$LOG_LEVEL]}
-
-# Internal logging function
-_log() {
-    local level="$1"
-    local message="$2"
-    local timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
-    local level_num="${LOG_LEVELS[$level]}"
-    
-    # Check if message should be logged
-    if [[ $level_num -ge $CURRENT_LOG_LEVEL ]]; then
-        printf "$LOG_FORMAT" "$timestamp" "$level" "$message"
-        
-        # Also log to file if specified
-        if [[ -n "$LOG_FILE" ]]; then
-            printf "$LOG_FORMAT" "$timestamp" "$level" "$message" >> "$LOG_FILE"
-        fi
-    fi
-}
-
-# Public logging functions
-log_debug() { _log "DEBUG" "$1"; }
-log_info()  { _log "INFO" "$1"; }
-log_warn()  { _log "WARN" "$1"; }
-log_error() { _log "ERROR" "$1" >&2; }
-
-# Utility functions
-log_set_level() {
-    LOG_LEVEL="$1"
-    CURRENT_LOG_LEVEL="${LOG_LEVELS[$LOG_LEVEL]}"
-}
-
-log_set_file() {
-    LOG_FILE="$1"
-    mkdir -p "$(dirname "$LOG_FILE")"
-}
-
-# Export functions for use in scripts
-export -f log_debug log_info log_warn log_error log_set_level log_set_file
-EOF
-
-echo "Created logging library"
-
-# Test the logging library
-source mylibs/logging.sh
-
-echo "Testing logging library:"
-log_info "This is an info message"
-log_warn "This is a warning"
-log_error "This is an error"
-
-echo
-echo "Testing with debug level:"
-log_set_level "DEBUG"
-log_debug "This debug message should now appear"
-
-echo
-echo "=== Creating a Database Library ==="
-
-cat > mylibs/database.sh << 'EOF'
-#!/bin/bash
-# database.sh - Simple file-based database library
-
-# Database configuration
-DB_DIR="${DB_DIR:-./db}"
-DB_EXTENSION=".db"
-
-# Initialize database
-db_init() {
-    local db_name="$1"
-    local db_file="$DB_DIR/${db_name}${DB_EXTENSION}"
-    
-    mkdir -p "$DB_DIR"
-    touch "$db_file"
-    echo "Database initialized: $db_file"
-}
-
-# Insert record
-db_insert() {
-    local db_name="$1"
-    local record="$2"
-    local db_file="$DB_DIR/${db_name}${DB_EXTENSION}"
-    
-    if [[ ! -f "$db_file" ]]; then
-        db_init "$db_name"
-    fi
-    
-    echo "$(date '+%Y-%m-%d %H:%M:%S')|$record" >> "$db_file"
-}
-
-# Query records
-db_query() {
-    local db_name="$1"
-    local pattern="$2"
-    local db_file="$DB_DIR/${db_name}${DB_EXTENSION}"
-    
-    if [[ -f "$db_file" ]]; then
-        if [[ -n "$pattern" ]]; then
-            grep "$pattern" "$db_file"
-        else
-            cat "$db_file"
-        fi
-    else
-        echo "Database not found: $db_name" >&2
-        return 1
-    fi
-}
-
-# Count records
-db_count() {
-    local db_name="$1"
-    local pattern="$2"
-    local db_file="$DB_DIR/${db_name}${DB_EXTENSION}"
-    
-    if [[ -f "$db_file" ]]; then
-        if [[ -n "$pattern" ]]; then
-            grep -c "$pattern" "$db_file"
-        else
-            wc -l < "$db_file"
-        fi
-    else
-        echo 0
-    fi
-}
-
-# Delete records
-db_delete() {
-    local db_name="$1"
-    local pattern="$2"
-    local db_file="$DB_DIR/${db_name}${DB_EXTENSION}"
-    
-    if [[ -f "$db_file" ]]; then
-        if [[ -n "$pattern" ]]; then
-            sed -i "/$pattern/d" "$db_file"
-            echo "Deleted records matching: $pattern"
-        else
-            > "$db_file"
-            echo "Cleared database: $db_name"
-        fi
-    fi
-}
-
-export -f db_init db_insert db_query db_count db_delete
-EOF
-
-# Test database library
-source mylibs/database.sh
-
-echo "Testing database library:"
-db_init "users"
-db_insert "users" "john|john@example.com|admin"
-db_insert "users" "jane|jane@example.com|user"
-db_insert "users" "bob|bob@example.com|user"
-
-echo "All users:"
-db_query "users"
-
-echo "User count: $(db_count "users")"
-echo "Admin users:"
-db_query "users" "admin"
-
-# Clean up
-rm -rf db mylibs
-
-echo
-echo "=== Library Best Practices ==="
-echo "1. Always include version information"
-echo "2. Export functions for use in other scripts"
-echo "3. Use consistent naming conventions"
-echo "4. Provide clear documentation"
-echo "5. Handle errors gracefully"
-echo "6. Make libraries configurable"
-echo "7. Test all library functions"
-```
-
-### Configuration Management
-
-Advanced configuration management techniques:
-
-```bash
-#!/bin/bash
-# configuration_management.sh - Advanced configuration management
-
-echo "=== Configuration Management System ==="
-
-# Create configuration management library
-mkdir -p config_system
-
-cat > config_system/config_manager.sh << 'EOF'
-#!/bin/bash
-# config_manager.sh - Advanced configuration management
-
-declare -A CONFIGS
-declare -A CONFIG_SOURCES
-declare -A CONFIG_TYPES
-
-# Configuration sources priority (higher number = higher priority)
-declare -A SOURCE_PRIORITY=(
-    [default]=1
-    [file]=2
-    [env]=3
-    [cli]=4
-)
-
-# Set configuration value
-config_set() {
-    local key="$1"
-    local value="$2"
-    local source="${3:-default}"
-    local type="${4:-string}"
-    
-    # Only update if new source has higher or equal priority
-    local current_priority="${SOURCE_PRIORITY[${CONFIG_SOURCES[$key]:-default}]}"
-    local new_priority="${SOURCE_PRIORITY[$source]}"
-    
-    if [[ $new_priority -ge $current_priority ]]; then
-        CONFIGS["$key"]="$value"
-        CONFIG_SOURCES["$key"]="$source"
-        CONFIG_TYPES["$key"]="$type"
-    fi
-}
-
-# Get configuration value
-config_get() {
-    local key="$1"
-    local default="$2"
-    echo "${CONFIGS[$key]:-$default}"
-}
-
-# Load from file
-config_load_file() {
-    local config_file="$1"
-    local section=""
-    
-    if [[ ! -f "$config_file" ]]; then
-        echo "Config file not found: $config_file" >&2
-        return 1
-    fi
-    
-    while IFS= read -r line; do
-        # Skip empty lines and comments
-        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
-        
-        # Handle sections
-        if [[ "$line" =~ ^\[([^\]]+)\] ]]; then
-            section="${BASH_REMATCH[1]}"
-            continue
-        fi
-        
-        # Handle key=value pairs
-        if [[ "$line" =~ ^([^=]+)=(.*)$ ]]; then
-            local key="${BASH_REMATCH[1]}"
-            local value="${BASH_REMATCH[2]}"
-            
-            # Remove leading/trailing whitespace
-            key="$(echo "$key" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-            value="$(echo "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-            
-            # Add section prefix if in a section
-            if [[ -n "$section" ]]; then
-                key="${section}.${key}"
-            fi
-            
-            config_set "$key" "$value" "file"
-        fi
-    done < "$config_file"
-}
-
-# Load from environment variables
-config_load_env() {
-    local prefix="${1:-}"
-    
-    for var in $(compgen -v); do
-        if [[ -n "$prefix" && "$var" == "${prefix}"* ]]; then
-            local key="${var#$prefix}"
-            key="$(echo "$key" | tr '[:upper:]' '[:lower:]' | tr '_' '.')"
-            config_set "$key" "${!var}" "env"
-        fi
-    done
-}
-
-# Validate configuration
-config_validate() {
-    local -A validations=()
-    local errors=()
-    
-    # Define validation rules (would be passed as parameters in real implementation)
-    validations[app.name]="required"
-    validations[app.port]="integer,range:1-65535"
-    validations[database.url]="required,url"
-    
-    for key in "${!validations[@]}"; do
-        local value="$(config_get "$key")"
-        local rules="${validations[$key]}"
-        
-        for rule in ${rules//,/ }; do
-            case "$rule" in
-                required)
-                    if [[ -z "$value" ]]; then
-                        errors+=("$key is required but not set")
-                    fi
-                    ;;
-                integer)
-                    if [[ -n "$value" && ! "$value" =~ ^[0-9]+$ ]]; then
-                        errors+=("$key must be an integer, got: $value")
-                    fi
-                    ;;
-                range:*)
-                    local range="${rule#range:}"
-                    local min="${range%-*}"
-                    local max="${range#*-}"
-                    if [[ -n "$value" && ( "$value" -lt "$min" || "$value" -gt "$max" ) ]]; then
-                        errors+=("$key must be between $min and $max, got: $value")
-                    fi
-                    ;;
-            esac
-        done
-    done
-    
-    if [[ ${#errors[@]} -gt 0 ]]; then
-        printf "Configuration errors:\n"
-        printf "  - %s\n" "${errors[@]}"
-        return 1
-    fi
-    
-    return 0
-}
-
-# Display all configuration
-config_show() {
-    printf "%-30s %-15s %-10s %s\n" "Key" "Value" "Source" "Type"
-    printf "%-30s %-15s %-10s %s\n" "---" "-----" "------" "----"
-    
-    for key in $(printf "%s\n" "${!CONFIGS[@]}" | sort); do
-        printf "%-30s %-15s %-10s %s\n" \
-            "$key" \
-            "${CONFIGS[$key]}" \
-            "${CONFIG_SOURCES[$key]}" \
-            "${CONFIG_TYPES[$key]}"
-    done
-}
-
-export -f config_set config_get config_load_file config_load_env config_validate config_show
-EOF
-
-# Test the configuration system
-source config_system/config_manager.sh
-
-# Create sample configuration file
-cat > config_system/app.conf << 'EOF'
-# Application Configuration
-
-[app]
-name = MyApplication
-port = 8080
-debug = true
-
-[database]
-host = localhost
-port = 5432
-name = myapp_db
-
-[logging]
-level = INFO
-file = /var/log/myapp.log
-EOF
-
-echo "Testing configuration management:"
-
-# Set some default values
-config_set "app.name" "DefaultApp" "default"
-config_set "app.port" "3000" "default"
-
-# Load from file
-echo "Loading configuration from file:"
-config_load_file "config_system/app.conf"
-
-# Override with environment variables
-export MYAPP_APP_PORT=9000
-export MYAPP_DATABASE_HOST=remote.db.com
-
-echo "Loading environment variables with prefix MYAPP_:"
-config_load_env "MYAPP_"
-
-# Override with command line (simulated)
-config_set "app.debug" "false" "cli"
-
-echo
-echo "Final configuration:"
-config_show
-
-echo
-echo "Testing configuration retrieval:"
-echo "App name: $(config_get 'app.name')"
-echo "App port: $(config_get 'app.port')"
-echo "Database host: $(config_get 'database.host')"
-echo "Non-existent key with default: $(config_get 'missing.key' 'default_value')"
-
-# Clean up
-unset MYAPP_APP_PORT MYAPP_DATABASE_HOST
-rm -rf config_system
-```
-
----
-
-## 🚀 Real-World Applications
-
-📊 **Chapter 13 of 13**
-🎯 **Learning Objectives:**
-- Build practical system administration scripts
-- Implement DevOps automation workflows
-- Create data processing pipelines
-- Apply all learned concepts in real scenarios
-
-⏱️ **Estimated Reading Time:** 30 minutes
-📋 **Prerequisites:** All previous chapters
-
-### System Administration Scripts
-
-Real-world system administration automation:
-
-```bash
-#!/bin/bash
-# system_admin.sh - Comprehensive system administration toolkit
-# Version: 2.0.0
-# Author: System Administrator
-# Description: Complete system administration automation suite
-
-set -euo pipefail
-
-#===============================================
-# CONFIGURATION
-#===============================================
-
-readonly SCRIPT_NAME="system_admin"
-readonly VERSION="2.0.0"
-readonly LOG_DIR="/var/log/sysadmin"
-readonly BACKUP_DIR="/backup/system"
-readonly CONFIG_DIR="/etc/sysadmin"
-
-# Create necessary directories
-mkdir -p "$LOG_DIR" "$BACKUP_DIR" "$CONFIG_DIR"
-
-#===============================================
-# LOGGING SETUP
-#===============================================
-
-log() {
-    local level="$1"
-    local message="$2"
-    local timestamp="$(date '+%Y-%m-%d %H:%M:%S')"
-    
-    echo "[$timestamp] [$level] $message" | tee -a "$LOG_DIR/sysadmin.log"
-    
-    # Send critical errors to syslog
-    if [[ "$level" == "ERROR" ]]; then
-        logger -t "$SCRIPT_NAME" "$message"
-    fi
-}
-
-#===============================================
-# SYSTEM MONITORING FUNCTIONS
-#===============================================
-
-monitor_system_health() {
-    local report_file="$LOG_DIR/health_report_$(date +%Y%m%d_%H%M%S).txt"
-    
-    log "INFO" "Starting system health check"
-    
-    {
-        echo "=== SYSTEM HEALTH REPORT ==="
-        echo "Generated: $(date)"
-        echo "Hostname: $(hostname)"
-        echo
-        
-        # CPU Information
-        echo "=== CPU INFORMATION ==="
-        lscpu | grep -E "(Model name|CPU\(s\)|Thread|Core)"
-        echo "Load Average: $(uptime | awk -F'load average:' '{print $2}')"
         echo
         
         # Memory Information
@@ -9261,10 +8522,241 @@ monitor_system_health() {
             fi
         done
         echo
+        ### Command Substitution
+
+        Advanced command substitution techniques:
+
+        ```bash
+        #!/bin/bash
+        # command_substitution.sh - Advanced command substitution
+
+        echo "=== Basic Command Substitution ==="
+
+        # Modern syntax (preferred)
+        current_date=$(date)
+        echo "Current date: $current_date"
+
+        # Legacy syntax (avoid)
+        current_user=`whoami`
+        echo "Current user: $current_user"
+
+        echo
+        echo "=== Nested Command Substitution ==="
+
+        # Nested substitution
+        echo "Files in current directory: $(ls -1 $(pwd) | wc -l)"
+
+        # Complex nested example
+        echo "Largest file: $(ls -la $(find . -type f -name "*.txt" 2>/dev/null | head -1) 2>/dev/null || echo "No files found")"
+
+        echo
+        echo "=== Command Substitution with Error Handling ==="
+
+        # Safe command substitution
+        safe_command_sub() {
+            local command="$1"
+            local result
+            local exit_code
+    
+            result=$(eval "$command" 2>/dev/null)
+            exit_code=$?
+    
+            if [[ $exit_code -eq 0 ]]; then
+                echo "$result"
+            else
+                echo "Command failed: $command" >&2
+                return $exit_code
+            fi
+        }
+
+        echo "Safe command substitution:"
+        safe_command_sub "date"
+        safe_command_sub "nonexistent_command" || echo "Handled error gracefully"
+
+        echo
+        echo "=== Advanced Patterns ==="
+
+        # Multi-line command substitution
+        config_info=$(cat << 'EOF'
+        System Information:
+        - Hostname: $(hostname)
+        - Uptime: $(uptime | cut -d',' -f1)
+        - Load: $(uptime | awk '{print $NF}')
+        EOF
+        )
+
+        echo "Config info template created"
+
+        # Process list filtering
+        running_bash_processes=$(ps aux | grep bash | grep -v grep | wc -l)
+        echo "Running bash processes: $running_bash_processes"
+
+        # File processing
+        largest_log=$(find /var/log -name "*.log" -type f -exec ls -la {} \; 2>/dev/null | 
+                      sort -k5 -nr | head -1 | awk '{print $NF}' || echo "No logs found")
+        echo "Largest log file: $largest_log"
+        ```
+
+        ### ⚠️ Common Pitfalls
+
+        1. **Using backticks instead of `$()`**:
+           ```bash
+           # Bad
+           result=`command`
+   
+           # Good
+           result=$(command)
+           ```
+
+        2. **Not handling command failures**:
+           ```bash
+           # Bad
+           result=$(command_that_might_fail)
+   
+           # Good
+           if result=$(command_that_might_fail 2>/dev/null); then
+               echo "Success: $result"
+           else
+               echo "Command failed"
+           fi
+           ```
+
+        ### ✅ Best Practices
+
+        1. **Always use `$()` over backticks**
+        2. **Quote command substitutions when used as strings**
+        3. **Handle potential failures**
+        4. **Use local variables in functions**
+
+        ### 🏋️ Exercise 11: Advanced Features Mastery
+
+        Create a system monitoring script that uses all advanced features:
+
+        ```bash
+        #!/bin/bash
+        # system_monitor.sh - Advanced system monitoring
+
+        monitor_system() {
+            local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+            local uptime_info=$(uptime)
+            local disk_usage=$(df -h / | awk 'NR==2 {print $5}')
+            local memory_usage=$(free | awk 'NR==2{printf "%.2f%%", $3*100/$2}')
+    
+            echo "[$timestamp] System Status:"
+            echo "  Uptime: $uptime_info"
+            echo "  Disk Usage: $disk_usage"
+            echo "  Memory Usage: $memory_usage"
+    
+            # Advanced arithmetic
+            local load_avg=$(uptime | awk '{print $NF}' | cut -d',' -f1)
+            local alert_threshold=2.0
+    
+            if (( $(echo "$load_avg > $alert_threshold" | bc -l) )); then
+                echo "  ⚠️ High load detected: $load_avg"
+            fi
+    
+            # Brace expansion for multiple checks
+            for service in {ssh,nginx,mysql}; do
+                if systemctl is-active --quiet "$service"; then
+                    echo "  ✅ $service is running"
+                else
+                    echo "  ❌ $service is not running"
+                fi
+            done
+        }
+
+        monitor_system
+        ```
+
+        *This documentation is maintained by the community. Last updated: December 2024*
+
+---
+
+## 🚀 Real-World Applications
+
+Practical applications and complete project examples.
+
+### System Administration Scripts
+
+Complete system administration tools:
+
+```bash
+#!/bin/bash
+# system_admin.sh - Comprehensive system administration toolkit
+# Version: 2.0.0
+# Description: Complete system monitoring and maintenance
+
+set -euo pipefail
+
+#===============================================
+# CONFIGURATION
+#===============================================
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly LOG_DIR="/var/log/sysadmin"
+readonly BACKUP_DIR="/var/backups/system"
+readonly VERSION="2.0.0"
+
+# Ensure directories exist
+mkdir -p "$LOG_DIR" "$BACKUP_DIR"
+
+#===============================================
+# LOGGING FUNCTIONS
+#===============================================
+
+log() {
+    local level="$1"
+    shift
+    local message="$*"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    
+    echo "[$timestamp] [$level] $message" | tee -a "$LOG_DIR/system_admin.log"
+    
+    # Send critical messages to syslog
+    if [[ "$level" == "ERROR" || "$level" == "CRITICAL" ]]; then
+        logger -t "system_admin" "$level: $message"
+    fi
+}
+
+#===============================================
+# MONITORING FUNCTIONS
+#===============================================
+
+monitor_system_health() {
+    local report_file="$LOG_DIR/health_report_$(date +%Y%m%d_%H%M%S).txt"
+    
+    log "INFO" "Generating system health report"
+    
+    {
+        echo "=== SYSTEM HEALTH REPORT ==="
+        echo "Generated: $(date)"
+        echo "Hostname: $(hostname)"
+        echo
         
-        # Recent System Errors
-        echo "=== RECENT ERRORS ==="
-        journalctl --since "1 hour ago" --priority=err --no-pager -n 10
+        # System uptime and load
+        echo "=== SYSTEM STATUS ==="
+        uptime
+        echo
+        
+        # Memory usage
+        echo "=== MEMORY USAGE ==="
+        free -h
+        echo
+        
+        # Disk usage
+        echo "=== DISK USAGE ==="
+        df -h
+        echo
+        
+        # Top processes
+        echo "=== TOP PROCESSES ==="
+        ps aux --sort=-%cpu | head -10
+        echo
+        
+        # Network connections
+        echo "=== NETWORK CONNECTIONS ==="
+        ss -tuln | head -20
+        echo
         
     } > "$report_file"
     
@@ -9272,48 +8764,32 @@ monitor_system_health() {
     echo "$report_file"
 }
 
-check_disk_usage() {
-    local threshold="${1:-85}"
+check_system_resources() {
+    local cpu_threshold=80
+    local memory_threshold=85
+    local disk_threshold=90
     
-    log "INFO" "Checking disk usage (threshold: ${threshold}%)"
+    # Check CPU usage
+    local cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | sed 's/%us,//')
+    if (( $(echo "$cpu_usage > $cpu_threshold" | bc -l) )); then
+        log "WARN" "High CPU usage detected: ${cpu_usage}%"
+    fi
     
+    # Check memory usage
+    local memory_usage=$(free | awk 'NR==2{printf "%.2f", $3*100/$2}')
+    if (( $(echo "$memory_usage > $memory_threshold" | bc -l) )); then
+        log "WARN" "High memory usage detected: ${memory_usage}%"
+    fi
+    
+    # Check disk usage
     while read -r line; do
         local usage=$(echo "$line" | awk '{print $5}' | sed 's/%//')
         local mount=$(echo "$line" | awk '{print $6}')
         
-        if [[ "$usage" -gt "$threshold" ]]; then
+        if [[ "$usage" -gt "$disk_threshold" ]]; then
             log "WARN" "High disk usage on $mount: ${usage}%"
-            
-            # Find large files
-            echo "Largest files in $mount:"
-            find "$mount" -type f -size +100M -exec ls -lh {} \; 2>/dev/null | head -5
-            
-            # Send alert email (if configured)
-            if command -v mail >/dev/null; then
-                echo "Disk usage on $mount is ${usage}%" | mail -s "Disk Alert: $(hostname)" admin@company.com
-            fi
         fi
     done < <(df -h | grep -E '^/dev/')
-}
-
-monitor_log_files() {
-    local log_dir="${1:-/var/log}"
-    local max_size="${2:-100M}"
-    
-    log "INFO" "Monitoring log files in $log_dir (max size: $max_size)"
-    
-    find "$log_dir" -name "*.log" -size +"$max_size" -type f | while read -r logfile; do
-        log "WARN" "Large log file found: $logfile ($(du -h "$logfile" | cut -f1))"
-        
-        # Rotate log if it's too large
-        if [[ -w "$logfile" ]]; then
-            local backup="${logfile}.$(date +%Y%m%d_%H%M%S)"
-            mv "$logfile" "$backup"
-            gzip "$backup"
-            touch "$logfile"
-            log "INFO" "Rotated log file: $logfile -> $backup.gz"
-        fi
-    done
 }
 
 #===============================================
@@ -9326,175 +8802,50 @@ backup_system_configs() {
     
     log "INFO" "Starting system configuration backup"
     
-    # Directories to backup
     local config_dirs=(
         "/etc"
-        "/root/.ssh"
-        "/home/*/.ssh"
+        "/boot"
         "/var/spool/cron"
     )
     
-    # Create backup
     if tar -czf "$backup_path" "${config_dirs[@]}" 2>/dev/null; then
-        log "INFO" "System configuration backup completed: $backup_path"
-        
-        # Set proper permissions
+        log "INFO" "System backup completed: $backup_path"
         chmod 600 "$backup_path"
         
-        # Clean old backups (keep last 30 days)
+        # Keep only last 30 days of backups
         find "$BACKUP_DIR" -name "system_config_*.tar.gz" -mtime +30 -delete
         
         echo "$backup_path"
     else
-        log "ERROR" "System configuration backup failed"
+        log "ERROR" "System backup failed"
         return 1
     fi
-}
-
-backup_user_data() {
-    local username="$1"
-    local backup_name="user_${username}_$(date +%Y%m%d_%H%M%S)"
-    local backup_path="$BACKUP_DIR/$backup_name.tar.gz"
-    local user_home="/home/$username"
-    
-    if [[ ! -d "$user_home" ]]; then
-        log "ERROR" "User home directory not found: $user_home"
-        return 1
-    fi
-    
-    log "INFO" "Backing up user data for: $username"
-    
-    # Exclude common temporary and cache directories
-    local exclude_patterns=(
-        --exclude="$user_home/.cache/*"
-        --exclude="$user_home/.tmp/*"
-        --exclude="$user_home/Downloads/*"
-        --exclude="*.tmp"
-    )
-    
-    if tar -czf "$backup_path" "${exclude_patterns[@]}" "$user_home"; then
-        log "INFO" "User backup completed: $backup_path"
-        chmod 600 "$backup_path"
-        echo "$backup_path"
-    else
-        log "ERROR" "User backup failed for: $username"
-        return 1
-    fi
-}
-
-#===============================================
-# SECURITY FUNCTIONS
-#===============================================
-
-security_audit() {
-    local audit_file="$LOG_DIR/security_audit_$(date +%Y%m%d_%H%M%S).txt"
-    
-    log "INFO" "Starting security audit"
-    
-    {
-        echo "=== SECURITY AUDIT REPORT ==="
-        echo "Generated: $(date)"
-        echo
-        
-        # Check for failed login attempts
-        echo "=== FAILED LOGIN ATTEMPTS (Last 24 hours) ==="
-        journalctl --since "24 hours ago" | grep -i "failed password" | tail -10
-        echo
-        
-        # Check for users with empty passwords
-        echo "=== USERS WITH EMPTY PASSWORDS ==="
-        awk -F: '($2 == "") {print $1}' /etc/shadow 2>/dev/null || echo "Permission denied or no empty passwords found"
-        echo
-        
-        # Check for world-writable files
-        echo "=== WORLD-WRITABLE FILES IN SYSTEM DIRECTORIES ==="
-        find /etc /bin /sbin /usr/bin /usr/sbin -type f -perm -002 2>/dev/null | head -10
-        echo
-        
-        # Check for SUID files
-        echo "=== SUID FILES ==="
-        find /usr /bin /sbin -type f -perm -4000 2>/dev/null
-        echo
-        
-        # Check listening ports
-        echo "=== LISTENING PORTS ==="
-        netstat -tlnp 2>/dev/null | grep LISTEN
-        echo
-        
-        # Check last logins
-        echo "=== RECENT LOGINS ==="
-        last -n 10
-        
-    } > "$audit_file"
-    
-    log "INFO" "Security audit completed: $audit_file"
-    echo "$audit_file"
-}
-
-update_system() {
-    log "INFO" "Starting system update"
-    
-    # Update package lists
-    if command -v apt >/dev/null; then
-        apt update
-        apt upgrade -y
-        apt autoremove -y
-        apt autoclean
-    elif command -v yum >/dev/null; then
-        yum update -y
-        yum autoremove -y
-    elif command -v dnf >/dev/null; then
-        dnf update -y
-        dnf autoremove -y
-    fi
-    
-    log "INFO" "System update completed"
 }
 
 #===============================================
 # MAINTENANCE FUNCTIONS
 #===============================================
 
-cleanup_system() {
+system_cleanup() {
     log "INFO" "Starting system cleanup"
     
     # Clean temporary files
     find /tmp -type f -mtime +7 -delete 2>/dev/null || true
     find /var/tmp -type f -mtime +30 -delete 2>/dev/null || true
     
-    # Clean old log files
+    # Clean old logs
     find /var/log -name "*.log.*" -mtime +30 -delete 2>/dev/null || true
     
-    # Clean package cache
+    # Package manager cleanup
     if command -v apt >/dev/null; then
-        apt clean
+        apt autoremove -y
+        apt autoclean
     elif command -v yum >/dev/null; then
+        yum autoremove -y
         yum clean all
     fi
     
-    # Clean user cache directories
-    find /home -name ".cache" -type d -exec rm -rf {} + 2>/dev/null || true
-    
     log "INFO" "System cleanup completed"
-}
-
-optimize_system() {
-    log "INFO" "Starting system optimization"
-    
-    # Update locate database
-    if command -v updatedb >/dev/null; then
-        updatedb
-    fi
-    
-    # Optimize disk I/O
-    echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
-    
-    # Trim SSD (if applicable)
-    if command -v fstrim >/dev/null; then
-        fstrim -av 2>/dev/null || true
-    fi
-    
-    log "INFO" "System optimization completed"
 }
 
 #===============================================
@@ -9508,24 +8859,19 @@ System Administration Toolkit v$VERSION
 Usage: $0 [COMMAND] [OPTIONS]
 
 Commands:
-  monitor                    Run complete system health check
-  backup-configs            Backup system configurations
-  backup-user <username>    Backup user home directory
-  security-audit            Perform security audit
-  update                    Update system packages
-  cleanup                   Clean up temporary files and caches
-  optimize                  Optimize system performance
-  help                      Show this help message
-
-Options:
-  --dry-run                 Show what would be done without executing
-  --verbose                 Enable verbose output
+  monitor         Generate system health report
+  check-resources Check system resource usage
+  backup          Backup system configurations  
+  cleanup         Clean temporary files and caches
+  all            Run all maintenance tasks
+  help           Show this help message
 
 Examples:
   $0 monitor
-  $0 backup-configs
-  $0 backup-user john
-  $0 security-audit
+  $0 check-resources
+  $0 backup
+  $0 cleanup
+  $0 all
 EOF
 }
 
@@ -9533,30 +8879,23 @@ main() {
     case "${1:-help}" in
         monitor)
             monitor_system_health
-            check_disk_usage
-            monitor_log_files
             ;;
-        backup-configs)
+        check-resources)
+            check_system_resources
+            ;;
+        backup)
             backup_system_configs
             ;;
-        backup-user)
-            if [[ $# -lt 2 ]]; then
-                echo "Error: Username required"
-                exit 1
-            fi
-            backup_user_data "$2"
-            ;;
-        security-audit)
-            security_audit
-            ;;
-        update)
-            update_system
-            ;;
         cleanup)
-            cleanup_system
+            system_cleanup
             ;;
-        optimize)
-            optimize_system
+        all)
+            log "INFO" "Running complete system maintenance"
+            monitor_system_health
+            check_system_resources
+            backup_system_configs
+            system_cleanup
+            log "INFO" "Complete system maintenance finished"
             ;;
         help|--help|-h)
             show_help
@@ -9574,13 +8913,12 @@ main "$@"
 
 ### Automation and DevOps
 
-DevOps automation workflows:
+CI/CD pipeline automation:
 
 ```bash
 #!/bin/bash
-# devops_automation.sh - DevOps automation workflows
+# cicd_pipeline.sh - Complete CI/CD pipeline automation
 # Version: 1.5.0
-# Description: Complete CI/CD and deployment automation
 
 set -euo pipefail
 
@@ -9592,76 +8930,78 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 readonly BUILD_DIR="$PROJECT_ROOT/build"
 readonly DEPLOY_DIR="$PROJECT_ROOT/deploy"
-readonly LOG_DIR="$PROJECT_ROOT/logs"
 
 #===============================================
-# CI/CD PIPELINE FUNCTIONS
+# PIPELINE FUNCTIONS
 #===============================================
 
-# Build application
 build_application() {
     local environment="${1:-development}"
-    local version="${2:-$(git rev-parse --short HEAD)}"
+    local version="${2:-$(git rev-parse --short HEAD 2>/dev/null || date +%Y%m%d_%H%M%S)}"
     
-    echo "Building application for $environment environment (version: $version)"
+    echo "🔨 Building application for $environment environment (version: $version)"
     
-    # Create build directory
     mkdir -p "$BUILD_DIR"
     
-    # Install dependencies
+    # Language-specific build process
     if [[ -f "package.json" ]]; then
-        npm install
-        npm run build:$environment
+        npm ci
+        npm run build:"$environment"
     elif [[ -f "requirements.txt" ]]; then
-        pip install -r requirements.txt
+        python -m pip install --user -r requirements.txt
         python setup.py build
+    elif [[ -f "Cargo.toml" ]]; then
+        cargo build --release
     elif [[ -f "Makefile" ]]; then
         make clean
-        make build ENV=$environment
+        make build ENV="$environment"
     fi
     
-    # Create version file
     echo "$version" > "$BUILD_DIR/VERSION"
-    echo "Build completed: $version"
+    echo "✅ Build completed: $version"
 }
 
-# Run tests
 run_tests() {
     local test_type="${1:-unit}"
     
-    echo "Running $test_type tests..."
+    echo "🧪 Running $test_type tests..."
     
     case "$test_type" in
         unit)
             if [[ -f "package.json" ]]; then
                 npm test
             elif [[ -f "requirements.txt" ]]; then
-                python -m pytest tests/unit/
+                python -m pytest tests/unit/ -v
+            elif [[ -f "Cargo.toml" ]]; then
+                cargo test
             fi
             ;;
         integration)
             if [[ -f "package.json" ]]; then
                 npm run test:integration
             elif [[ -f "requirements.txt" ]]; then
-                python -m pytest tests/integration/
+                python -m pytest tests/integration/ -v
             fi
             ;;
-        e2e)
-            if [[ -f "package.json" ]]; then
-                npm run test:e2e
+        security)
+            # Security scanning
+            if command -v bandit >/dev/null; then
+                bandit -r . -f json -o security-report.json || true
+            fi
+            if command -v npm-audit >/dev/null && [[ -f "package.json" ]]; then
+                npm audit --audit-level=high
             fi
             ;;
     esac
     
-    echo "$test_type tests completed"
+    echo "✅ $test_type tests completed"
 }
 
-# Deploy application
 deploy_application() {
     local environment="$1"
     local version="$2"
     
-    echo "Deploying version $version to $environment"
+    echo "🚀 Deploying version $version to $environment"
     
     case "$environment" in
         staging)
@@ -9671,7 +9011,7 @@ deploy_application() {
             deploy_to_production "$version"
             ;;
         *)
-            echo "Unknown environment: $environment"
+            echo "❌ Unknown environment: $environment"
             exit 1
             ;;
     esac
@@ -9681,42 +9021,56 @@ deploy_to_staging() {
     local version="$1"
     local staging_server="staging.example.com"
     
-    # Deploy to staging server
-    scp -r "$BUILD_DIR"/* "deploy@$staging_server:/var/www/staging/"
+    echo "📦 Deploying to staging server..."
+    
+    # Deploy with rsync for efficiency
+    rsync -avz --delete "$BUILD_DIR/" "deploy@$staging_server:/var/www/staging/"
+    
+    # Restart services
     ssh "deploy@$staging_server" "systemctl restart myapp-staging"
     
     # Health check
-    if curl -f "http://$staging_server/health" >/dev/null 2>&1; then
-        echo "Staging deployment successful"
-    else
-        echo "Staging deployment failed health check"
-        exit 1
-    fi
+    local health_url="http://$staging_server/health"
+    local retries=5
+    
+    for ((i=1; i<=retries; i++)); do
+        if curl -f "$health_url" >/dev/null 2>&1; then
+            echo "✅ Staging deployment successful"
+            return 0
+        fi
+        echo "⏳ Health check attempt $i/$retries failed, retrying..."
+        sleep 10
+    done
+    
+    echo "❌ Staging deployment failed health check"
+    exit 1
 }
 
 deploy_to_production() {
     local version="$1"
     local production_servers=("prod1.example.com" "prod2.example.com")
     
-    # Blue-green deployment
+    echo "🔄 Starting blue-green deployment to production..."
+    
     for server in "${production_servers[@]}"; do
-        echo "Deploying to $server..."
+        echo "📦 Deploying to $server..."
         
         # Create backup
-        ssh "deploy@$server" "cp -r /var/www/current /var/www/backup-$(date +%Y%m%d_%H%M%S)"
+        ssh "deploy@$server" "cp -r /var/www/current /var/www/backup-$(date +%Y%m%d_%H%M%S)" || true
         
         # Deploy new version
-        scp -r "$BUILD_DIR"/* "deploy@$server:/var/www/new/"
+        rsync -avz --delete "$BUILD_DIR/" "deploy@$server:/var/www/new/"
         
-        # Switch to new version
+        # Atomic switch
         ssh "deploy@$server" "ln -sfn /var/www/new /var/www/current"
         ssh "deploy@$server" "systemctl reload myapp"
         
         # Health check
-        if curl -f "http://$server/health" >/dev/null 2>&1; then
-            echo "Production deployment to $server successful"
+        local health_url="http://$server/health"
+        if curl -f "$health_url" >/dev/null 2>&1; then
+            echo "✅ Production deployment to $server successful"
         else
-            echo "Production deployment to $server failed, rolling back..."
+            echo "❌ Production deployment to $server failed, rolling back..."
             ssh "deploy@$server" "ln -sfn /var/www/backup-* /var/www/current"
             ssh "deploy@$server" "systemctl reload myapp"
             exit 1
@@ -9724,44 +9078,108 @@ deploy_to_production() {
     done
 }
 
-# Complete CI/CD pipeline
-run_pipeline() {
+run_complete_pipeline() {
     local environment="$1"
     local skip_tests="${2:-false}"
     
-    echo "Starting CI/CD pipeline for $environment"
+    echo "🎯 Starting complete CI/CD pipeline for $environment"
     
-    # Get version
     local version
-    if git rev-parse --git-dir > /dev/null 2>&1; then
-        version="$(git describe --tags --always)"
+    if git rev-parse --git-dir >/dev/null 2>&1; then
+        version="$(git describe --tags --always --dirty)"
     else
         version="$(date +%Y%m%d_%H%M%S)"
     fi
     
-    # Run pipeline stages
+    # Pipeline stages
     build_application "$environment" "$version"
     
     if [[ "$skip_tests" != "true" ]]; then
         run_tests "unit"
         run_tests "integration"
+        run_tests "security"
     fi
     
     deploy_application "$environment" "$version"
     
-    echo "Pipeline completed successfully for $environment (version: $version)"
+    echo "🎉 Pipeline completed successfully for $environment (version: $version)"
 }
+
+#===============================================
+# MAIN PROGRAM
+#===============================================
+
+show_pipeline_help() {
+    cat << EOF
+CI/CD Pipeline Automation v1.5.0
+
+Usage: $0 [COMMAND] [OPTIONS]
+
+Commands:
+  build [env] [version]     Build application
+  test [type]              Run tests (unit|integration|security)
+  deploy <env> <version>   Deploy to environment
+  pipeline <env>           Run complete pipeline
+  help                     Show this help
+
+Options:
+  --skip-tests            Skip test execution
+  --dry-run              Show what would be done
+
+Examples:
+  $0 build production v1.2.3
+  $0 test unit
+  $0 deploy staging v1.2.3
+  $0 pipeline production
+EOF
+}
+
+main() {
+    case "${1:-help}" in
+        build)
+            build_application "${2:-development}" "${3:-}"
+            ;;
+        test)
+            run_tests "${2:-unit}"
+            ;;
+        deploy)
+            if [[ $# -lt 3 ]]; then
+                echo "❌ Error: Environment and version required"
+                exit 1
+            fi
+            deploy_application "$2" "$3"
+            ;;
+        pipeline)
+            if [[ $# -lt 2 ]]; then
+                echo "❌ Error: Environment required"
+                exit 1
+            fi
+            local skip_tests="false"
+            [[ "${3:-}" == "--skip-tests" ]] && skip_tests="true"
+            run_complete_pipeline "$2" "$skip_tests"
+            ;;
+        help|--help|-h)
+            show_pipeline_help
+            ;;
+        *)
+            echo "❌ Unknown command: $1"
+            show_pipeline_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
 ```
 
 ### Data Processing
 
-Advanced data processing pipelines:
+Advanced data processing and analysis:
 
 ```bash
 #!/bin/bash
-# data_processing.sh - Advanced data processing pipeline
-# Version: 1.3.0
-# Description: Comprehensive data processing and analysis tools
+# data_processor.sh - Advanced data processing pipeline
+# Version: 2.0.0
 
 set -euo pipefail
 
@@ -9769,52 +9187,53 @@ set -euo pipefail
 # DATA PROCESSING FUNCTIONS
 #===============================================
 
-# Process CSV data
 process_csv_data() {
     local input_file="$1"
     local output_file="$2"
     local operations="${3:-clean,validate,transform}"
     
-    echo "Processing CSV data: $input_file -> $output_file"
+    echo "📊 Processing CSV data: $input_file -> $output_file"
     
-    # Validate input
-    if [[ ! -f "$input_file" ]]; then
-        echo "Error: Input file not found: $input_file"
-        return 1
-    fi
+    [[ ! -f "$input_file" ]] && { echo "❌ Input file not found: $input_file"; return 1; }
     
-    local temp_file=$(mktemp)
+    local temp_file
+    temp_file=$(mktemp)
     cp "$input_file" "$temp_file"
     
-    # Apply operations
+    # Process operations
     for operation in ${operations//,/ }; do
         case "$operation" in
             clean)
-                # Remove empty lines and trim whitespace
-                sed '/^[[:space:]]*$/d' "$temp_file" | \
-                sed 's/^[[:space:]]*//;s/[[:space:]]*$//' > "${temp_file}.clean"
-                mv "${temp_file}.clean" "$temp_file"
+                echo "🧹 Cleaning data..."
+                sed -i '/^[[:space:]]*$/d' "$temp_file"
+                sed -i 's/^[[:space:]]*//;s/[[:space:]]*$//' "$temp_file"
                 ;;
             validate)
-                # Check for consistent column count
+                echo "✅ Validating data..."
                 local expected_cols
                 expected_cols=$(head -1 "$temp_file" | tr ',' '\n' | wc -l)
                 
                 awk -F',' -v cols="$expected_cols" '
                 NR == 1 { next }
                 NF != cols { 
-                    print "Warning: Line " NR " has " NF " columns, expected " cols > "/dev/stderr"
+                    print "⚠️ Line " NR " has " NF " columns, expected " cols > "/dev/stderr"
+                    error_count++
+                }
+                END { 
+                    if (error_count > 0) {
+                        print "Found " error_count " validation errors" > "/dev/stderr"
+                    }
                 }' "$temp_file"
                 ;;
             transform)
-                # Apply data transformations
+                echo "🔄 Transforming data..."
                 awk -F',' 'BEGIN { OFS="," }
                 NR == 1 { print; next }
                 {
                     # Convert dates to ISO format
-                    gsub(/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/, "\\3-\\1-\\2", $0)
+                    gsub(/([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})/, "\\3-\\1-\\2")
                     
-                    # Normalize text fields
+                    # Normalize whitespace
                     for(i=1; i<=NF; i++) {
                         gsub(/^[ \t]+|[ \t]+$/, "", $i)
                     }
@@ -9827,54 +9246,91 @@ process_csv_data() {
     done
     
     mv "$temp_file" "$output_file"
-    echo "CSV processing completed: $output_file"
+    echo "✅ CSV processing completed: $output_file"
 }
 
-# Generate data statistics
-generate_statistics() {
+generate_data_report() {
     local data_file="$1"
-    local column="${2:-1}"
+    local report_file="${2:-${data_file%.*}_report.txt}"
     
-    echo "Generating statistics for column $column in $data_file"
+    echo "📋 Generating data report for $data_file"
     
-    awk -F',' -v col="$column" '
-    NR == 1 { next }
     {
-        if ($col ~ /^[0-9]+\.?[0-9]*$/) {
-            values[NR] = $col
-            sum += $col
-            if ($col > max) max = $col
-            if (min == "" || $col < min) min = $col
-            count++
-        }
-    }
-    END {
-        if (count > 0) {
-            print "Count: " count
-            print "Sum: " sum
-            print "Average: " sum/count
-            print "Min: " min
-            print "Max: " max
+        echo "=== DATA ANALYSIS REPORT ==="
+        echo "File: $data_file"
+        echo "Generated: $(date)"
+        echo
+        
+        # Basic file info
+        echo "=== FILE STATISTICS ==="
+        echo "Total lines: $(wc -l < "$data_file")"
+        echo "Data lines: $(($(wc -l < "$data_file") - 1))"
+        echo "File size: $(du -h "$data_file" | cut -f1)"
+        echo
+        
+        # Column analysis
+        echo "=== COLUMN ANALYSIS ==="
+        local cols
+        cols=$(head -1 "$data_file" | tr ',' '\n' | wc -l)
+        echo "Number of columns: $cols"
+        
+        head -1 "$data_file" | tr ',' '\n' | nl -w2 -s': '
+        echo
+        
+        # Numeric column statistics
+        for ((i=1; i<=cols; i++)); do
+            local col_name
+            col_name=$(head -1 "$data_file" | cut -d',' -f"$i")
             
-            # Calculate median
-            n = asort(values)
-            if (n % 2 == 1) {
-                median = values[(n+1)/2]
-            } else {
-                median = (values[n/2] + values[n/2+1])/2
-            }
-            print "Median: " median
-        }
-    }' "$data_file"
+            # Check if column contains numeric data
+            local numeric_count
+            numeric_count=$(awk -F',' -v col="$i" '
+                NR > 1 && $col ~ /^[0-9]+\.?[0-9]*$/ { count++ }
+                END { print count+0 }
+            ' "$data_file")
+            
+            if [[ "$numeric_count" -gt 0 ]]; then
+                echo "=== STATISTICS for $col_name ==="
+                awk -F',' -v col="$i" '
+                NR > 1 && $col ~ /^[0-9]+\.?[0-9]*$/ {
+                    values[++count] = $col
+                    sum += $col
+                    if ($col > max || max == "") max = $col
+                    if ($col < min || min == "") min = $col
+                }
+                END {
+                    if (count > 0) {
+                        print "Count: " count
+                        print "Sum: " sum
+                        print "Average: " (sum/count)
+                        print "Min: " min
+                        print "Max: " max
+                        
+                        # Calculate median
+                        asort(values)
+                        if (count % 2 == 1) {
+                            median = values[(count+1)/2]
+                        } else {
+                            median = (values[count/2] + values[count/2+1])/2
+                        }
+                        print "Median: " median
+                    }
+                }' "$data_file"
+                echo
+            fi
+        done
+        
+    } > "$report_file"
+    
+    echo "✅ Report generated: $report_file"
 }
 
-# Create data visualizations (using ASCII charts)
-create_ascii_chart() {
+create_data_visualization() {
     local data_file="$1"
-    local chart_type="${2:-bar}"
-    local column="${3:-2}"
+    local column="${2:-2}"
+    local chart_type="${3:-bar}"
     
-    echo "Creating $chart_type chart for column $column"
+    echo "📊 Creating $chart_type chart for column $column"
     
     case "$chart_type" in
         bar)
@@ -9888,14 +9344,16 @@ create_ascii_chart() {
                 }
             }
             END {
-                scale = max / 50  # Scale to 50 characters width
+                scale = max / 60  # Scale to 60 characters width
+                print "BAR CHART - Column " col
+                print "=" sprintf("%*s", 60, "")
                 for (i in data) {
                     bar_length = int(data[i] / scale)
-                    printf "%-20s |", label[i]
+                    printf "%-15s |", substr(label[i], 1, 15)
                     for (j = 1; j <= bar_length; j++) {
                         printf "█"
                     }
-                    printf " %.2f\n", data[i]
+                    printf " %.1f\n", data[i]
                 }
             }' "$data_file"
             ;;
@@ -9910,10 +9368,12 @@ create_ascii_chart() {
                 }
             }
             END {
-                scale = max_freq / 30
+                scale = max_freq / 40
+                print "HISTOGRAM - Column " col
+                print "=" sprintf("%*s", 40, "")
                 for (bucket in freq) {
                     bar_length = int(freq[bucket] / scale)
-                    printf "%3d-%3d |", bucket, bucket+9
+                    printf "%6d-%3d |", bucket, bucket+9
                     for (j = 1; j <= bar_length; j++) {
                         printf "█"
                     }
@@ -9924,46 +9384,68 @@ create_ascii_chart() {
     esac
 }
 
+#===============================================
+# MAIN PROGRAM
+#===============================================
+
+show_data_help() {
+    cat << EOF
+Data Processing Pipeline v2.0.0
+
+Usage: $0 [COMMAND] [OPTIONS]
+
+Commands:
+  process <input> <output> [ops]  Process CSV data
+  report <file> [output]          Generate data report
+  chart <file> [column] [type]    Create visualization
+  help                           Show this help
+
+Operations for process:
+  clean      - Remove empty lines and whitespace
+  validate   - Check data consistency
+  transform  - Apply data transformations
+
+Chart types:
+  bar        - Bar chart
+  histogram  - Frequency distribution
+
+Examples:
+  $0 process data.csv clean_data.csv "clean,validate"
+  $0 report sales_data.csv
+  $0 chart sales_data.csv 3 bar
+EOF
+}
+
 main() {
-    echo "Data Processing Pipeline v1.3.0"
-    
     case "${1:-help}" in
         process)
             if [[ $# -lt 3 ]]; then
-                echo "Usage: $0 process <input.csv> <output.csv> [operations]"
+                echo "❌ Error: Input and output files required"
                 exit 1
             fi
             process_csv_data "$2" "$3" "${4:-clean,validate,transform}"
             ;;
-        stats)
+        report)
             if [[ $# -lt 2 ]]; then
-                echo "Usage: $0 stats <data.csv> [column]"
+                echo "❌ Error: Data file required"
                 exit 1
             fi
-            generate_statistics "$2" "${3:-2}"
+            generate_data_report "$2" "${3:-}"
             ;;
         chart)
             if [[ $# -lt 2 ]]; then
-                echo "Usage: $0 chart <data.csv> [type] [column]"
+                echo "❌ Error: Data file required"
                 exit 1
             fi
-            create_ascii_chart "$2" "${3:-bar}" "${4:-2}"
+            create_data_visualization "$2" "${3:-2}" "${4:-bar}"
             ;;
-        help|*)
-            cat << EOF
-Data Processing Pipeline
-
-Commands:
-  process <input> <output> [ops]  Process CSV data
-  stats <file> [column]           Generate statistics
-  chart <file> [type] [column]    Create ASCII chart
-  help                           Show this help
-
-Examples:
-  $0 process data.csv clean_data.csv "clean,validate"
-  $0 stats sales_data.csv 3
-  $0 chart sales_data.csv bar 2
-EOF
+        help|--help|-h)
+            show_data_help
+            ;;
+        *)
+            echo "❌ Unknown command: $1"
+            show_data_help
+            exit 1
             ;;
     esac
 }
@@ -10185,314 +9667,4 @@ Thank you for helping make this documentation better for everyone! 🎉
 
 ---
 
-*This documentation is maintained by the community. Last updated: August 26, 2025*
-
-### Command Substitution
-
-Advanced command substitution techniques:
-
-```bash
-#!/bin/bash
-# command_substitution.sh - Advanced command substitution
-
-echo "=== Basic Command Substitution ==="
-
-# Modern syntax (preferred)
-current_date=$(date)
-echo "Current date: $current_date"
-
-# Legacy syntax (avoid)
-current_user=`whoami`
-echo "Current user: $current_user"
-
-echo
-echo "=== Nested Command Substitution ==="
-
-# Nested substitution
-echo "Files in current directory: $(ls -1 $(pwd) | wc -l)"
-
-# Complex nested example
-echo "Largest file: $(ls -la $(find . -type f -name "*.txt" 2>/dev/null | head -1) 2>/dev/null || echo "No files found")"
-
-echo
-echo "=== Command Substitution with Error Handling ==="
-
-# Safe command substitution
-safe_command_sub() {
-    local command="$1"
-    local result
-    local exit_code
-    
-    result=$(eval "$command" 2>/dev/null)
-    exit_code=$?
-    
-    if [[ $exit_code -eq 0 ]]; then
-        echo "$result"
-    else
-        echo "Command failed: $command" >&2
-        return $exit_code
-    fi
-}
-
-echo "Safe command substitution:"
-safe_command_sub "date"
-safe_command_sub "nonexistent_command" || echo "Handled error gracefully"
-
-echo
-echo "=== Advanced Patterns ==="
-
-# Multi-line command substitution
-config_info=$(cat << 'EOF'
-System Information:
-- Hostname: $(hostname)
-- Uptime: $(uptime | cut -d',' -f1)
-- Load: $(uptime | awk '{print $NF}')
-EOF
-)
-
-echo "Config info template created"
-
-# Process list filtering
-running_bash_processes=$(ps aux | grep bash | grep -v grep | wc -l)
-echo "Running bash processes: $running_bash_processes"
-
-# File processing
-largest_log=$(find /var/log -name "*.log" -type f -exec ls -la {} \; 2>/dev/null | 
-              sort -k5 -nr | head -1 | awk '{print $NF}' || echo "No logs found")
-echo "Largest log file: $largest_log"
-```
-
-### Arithmetic Expansion
-
-Mathematical operations in Bash:
-
-```bash
-#!/bin/bash
-# arithmetic_expansion.sh - Arithmetic expansion techniques
-
-echo "=== Basic Arithmetic ==="
-
-# Basic operations
-a=10
-b=3
-
-echo "a = $a, b = $b"
-echo "Addition: $((a + b))"
-echo "Subtraction: $((a - b))"
-echo "Multiplication: $((a * b))"
-echo "Division: $((a / b))"
-echo "Modulo: $((a % b))"
-echo "Exponentiation: $((a ** 2))"
-
-echo
-echo "=== Advanced Arithmetic ==="
-
-# Complex expressions
-result=$((a * b + 5))
-echo "Complex expression (a * b + 5): $result"
-
-# Increment/decrement
-counter=0
-echo "Initial counter: $counter"
-echo "Pre-increment: $((++counter))"
-echo "Post-increment: $((counter++))"
-echo "Final counter: $counter"
-
-# Comparison operations
-x=15
-y=20
-echo "x = $x, y = $y"
-echo "x < y: $((x < y))"
-echo "x > y: $((x > y))"
-echo "x == y: $((x == y))"
-echo "x != y: $((x != y))"
-
-echo
-echo "=== Bitwise Operations ==="
-
-num1=12  # 1100 in binary
-num2=5   # 0101 in binary
-
-echo "num1 = $num1, num2 = $num2"
-echo "AND: $((num1 & num2))"
-echo "OR: $((num1 | num2))"
-echo "XOR: $((num1 ^ num2))"
-echo "Left shift: $((num1 << 1))"
-echo "Right shift: $((num1 >> 1))"
-echo "NOT num1: $((~num1))"
-
-echo
-echo "=== Arithmetic with Variables ==="
-
-# Using variables in arithmetic
-calculate() {
-    local expr="$1"
-    echo "$expr = $((expr))"
-}
-
-calculate "5 + 3 * 2"
-calculate "100 / 4 - 5"
-
-# Base conversions
-decimal=255
-echo "Decimal $decimal in:"
-echo "  Binary: $(echo "obase=2; $decimal" | bc)"
-echo "  Octal: $(echo "obase=8; $decimal" | bc)"  
-echo "  Hex: $(echo "obase=16; $decimal" | bc)"
-
-# Different base inputs
-echo "Binary 1111 to decimal: $((2#1111))"
-echo "Octal 377 to decimal: $((8#377))"
-echo "Hex FF to decimal: $((16#FF))"
-
-echo
-echo "=== Practical Examples ==="
-
-# Calculate file sizes
-total_size=0
-for file in /etc/passwd /etc/hosts /etc/fstab; do
-    if [[ -f "$file" ]]; then
-        size=$(stat -c%s "$file" 2>/dev/null || stat -f%z "$file" 2>/dev/null)
-        echo "$(basename "$file"): $size bytes"
-        ((total_size += size))
-    fi
-done
-echo "Total size: $total_size bytes"
-
-# Time calculations
-start_time=$(date +%s)
-sleep 2
-end_time=$(date +%s)
-duration=$((end_time - start_time))
-echo "Operation took $duration seconds"
-
-# Percentage calculations
-completed=75
-total=100
-percentage=$((completed * 100 / total))
-echo "Progress: $completed/$total ($percentage%)"
-```
-
-### Brace Expansion
-
-Advanced brace expansion for automation:
-
-```bash
-#!/bin/bash
-# brace_expansion.sh - Advanced brace expansion techniques
-
-echo "=== Basic Brace Expansion ==="
-
-# Simple list expansion
-echo "Colors: " {red,green,blue}
-echo "Numbers: " {1,2,3,4,5}
-
-# Mixed types
-echo "Mixed: " {a,1,x,9}
-
-echo
-echo "=== Range Expansion ==="
-
-# Numeric ranges
-echo "Numbers 1-10: " {1..10}
-echo "Numbers 10-1: " {10..1}
-echo "Even numbers: " {0..20..2}
-echo "Odd numbers: " {1..19..2}
-
-# Character ranges
-echo "Letters a-z: " {a..z}
-echo "Letters A-Z: " {A..Z}
-echo "Subset: " {m..r}
-
-# Zero-padded numbers
-echo "Zero-padded: " {001..010}
-echo "Zero-padded with step: " {000..100..10}
-
-echo
-echo "=== Nested Brace Expansion ==="
-
-# Nested expansions
-echo "Nested: " {a,b}{1,2,3}
-echo "Complex nested: " {red,blue}_{light,dark}_{shirt,pants}
-
-# File extension patterns
-echo "Web files: " index.{html,php,jsp}
-echo "Image files: " photo.{jpg,png,gif}
-
-# Directory structure
-echo "Paths: " /home/{user1,user2,user3}/{Documents,Downloads,Pictures}
-
-echo
-echo "=== Practical Applications ==="
-
-# Create directory structure
-echo "Creating directory structure..."
-mkdir -p project/{src,docs,tests}/{main,backup}
-echo "Created directories:"
-find project -type d | sort
-
-# Backup files with timestamped copies
-echo
-echo "File backup pattern:"
-for file in {config,data,log}.txt; do
-    echo "Backing up: $file -> ${file%.txt}_{$(date +%Y%m%d),backup}.txt"
-done
-
-# Network testing
-echo
-echo "Network test commands:"
-for host in {192.168.1.{1,10,100},google.com,github.com}; do
-    echo "ping -c1 $host"
-done
-
-# Log rotation pattern
-echo
-echo "Log rotation:"
-for log in {access,error,debug}.log; do
-    for i in {1..5}; do
-        echo "$log -> $log.$i"
-    done
-done
-
-echo
-echo "=== Advanced Patterns ==="
-
-# Combining with other expansions
-files=(/etc/{passwd,hosts,fstab})
-echo "System files: ${files[@]}"
-
-# Using with command substitution
-echo "Process info:"
-for pid in {1..5}; do
-    echo "PID $pid: $(ps -p $pid -o comm= 2>/dev/null || echo 'not found')"
-done
-
-# Complex file operations
-echo
-echo "Complex file patterns:"
-echo "Logs: " app_{$(date +%Y),$(date +%Y --date='1 year ago')}.{access,error}.log
-echo "Configs: " {dev,staging,prod}.{database,server,cache}.conf
-echo "Backups: " backup_{daily,weekly,monthly}_{full,incremental}.tar.gz
-
-# Clean up test directory
-rm -rf project
-
-echo
-echo "=== Brace Expansion with Variables ==="
-
-# Using variables in brace expansion (requires eval)
-prefix="test"
-suffix="log"
-eval echo "Files: $prefix.{1..3}.$suffix"
-
-# Dynamic brace expansion
-create_numbered_files() {
-    local base="$1"
-    local count="$2"
-    local ext="$3"
-    
-    eval echo "Would create: $base.{1..$count}.$ext"
-}
-
-create_numbered_files "data" 5 "txt"
-```
+*This documentation is maintained by the community. Last updated: December 2024*
